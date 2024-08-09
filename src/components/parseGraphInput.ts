@@ -12,7 +12,7 @@ import { ParsedGraph } from "../types";
 export function parseGraphInput(input: string): ParsedGraph {
   const raw = input
     .split("\n")
-    .map((s) => s.trim().split(" "))
+    .map((s) => s.trim().split(/\s+/))
     .filter((nodes) => nodes[0].length);
 
   let nodes = new Set<string>();

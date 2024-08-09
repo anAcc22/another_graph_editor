@@ -44,8 +44,8 @@ export function GraphInput({ updateGraph }: Props) {
           id="graphInput"
           onChange={() => processGraphInput()}
           rows={12}
-          className="font-jetbrains resize-none border-2 rounded-md p-2
-            border-single focus:outline-none text-lg border-slate-200
+          className="font-bold font-jetbrains resize-none border-2 rounded-md
+            p-2 border-single focus:outline-none text-lg border-slate-200
             focus:border-slate-400"
         ></textarea>
         <div className="flex">

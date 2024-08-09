@@ -5,7 +5,15 @@ interface Vector2D {
   y: number;
 }
 
-const FPS = 10;
+function clamp(val: number, low: number, high: number) {
+  return Math.max(low, Math.min(val, high));
+}
+
+function euclidDist(u: Vector2D, v: Vector2D): number {
+  return Math.hypot(u.x - v.x, u.y - v.y);
+}
+
+const FPS = 30;
 
 const STROKE_COLOR = "hsl(0, 0%, 10%)";
 const FILL_COLOR = "hsl(0, 0%, 100%)";
@@ -13,25 +21,35 @@ const FILL_COLOR = "hsl(0, 0%, 100%)";
 const TEXT_COLOR = "hsl(0, 0%, 10%)";
 const TEXT_Y_OFFSET = 1;
 
+const NODE_BORDER_WIDTH_HALF = 1;
+const NODE_RADIUS = 18;
+
+const NODE_DIST = 100;
+const NODE_FRICTION = 0.05;
+
+const EDGE_BORDER_WIDTH_HALF = 1;
+
 class Node {
   pos: Vector2D;
-  static borderWidthHalf = 1;
-  static baseRadius = 18;
+  vel: Vector2D = { x: 0, y: 0 };
   constructor(x: number, y: number) {
     this.pos = {
       x,
       y,
     };
   }
-}
-
-class Edge {
-  pt1: Vector2D;
-  pt2: Vector2D;
-  static borderWidthHalf = 1;
-  constructor(pt1: Vector2D, pt2: Vector2D) {
-    this.pt1 = pt1;
-    this.pt2 = pt2;
+  inBounds(): boolean {
+    const x = this.pos.x;
+    const y = this.pos.y;
+    const xOk = x >= NODE_RADIUS && x + NODE_RADIUS <= canvasWidth;
+    const yOk = y >= NODE_RADIUS && y + NODE_RADIUS <= canvasHeight;
+    return xOk && yOk;
+  }
+  resetPos(): void {
+    this.pos = {
+      x: clamp(this.pos.x, NODE_RADIUS, canvasWidth - NODE_RADIUS),
+      y: clamp(this.pos.y, NODE_RADIUS, canvasHeight - NODE_RADIUS),
+    };
   }
 }
 
@@ -39,7 +57,6 @@ let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
 
 let edges: string[] = [];
-let edgeMap = new Map<string, Edge>();
 
 let canvasWidth: number;
 let canvasHeight: number;
@@ -50,11 +67,22 @@ function updateNodes(graph: Graph): void {
       let x = Math.random() * canvasWidth;
       let y = Math.random() * canvasHeight;
 
-      while (x <= Node.baseRadius || x >= canvasWidth - Node.baseRadius) {
+      let xFailCnt = 0;
+      let yFailCnt = 0;
+
+      while (x <= NODE_RADIUS || x >= canvasWidth - NODE_RADIUS) {
         x = Math.round(Math.random() * canvasWidth);
+        xFailCnt++;
+        if (xFailCnt === 10) {
+          break;
+        }
       }
-      while (y <= Node.baseRadius || y >= canvasHeight - Node.baseRadius) {
+      while (y <= NODE_RADIUS || y >= canvasHeight - NODE_RADIUS) {
         y = Math.round(Math.random() * canvasHeight);
+        yFailCnt++;
+        if (yFailCnt === 10) {
+          break;
+        }
       }
 
       nodes.push(u);
@@ -80,11 +108,7 @@ function updateNodes(graph: Graph): void {
 function updateEdges(graph: Graph): void {
   for (const e of graph.edges) {
     if (!edges.includes(e)) {
-      const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
-      const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
-
       edges.push(e);
-      edgeMap.set(e, new Edge(pt1, pt2));
     }
   }
 
@@ -97,10 +121,6 @@ function updateEdges(graph: Graph): void {
   }
 
   edges = edges.filter((e) => !deletedEdges.includes(e));
-
-  for (const e of deletedEdges) {
-    edgeMap.delete(e);
-  }
 }
 
 export function updateGraph(graph: Graph) {
@@ -108,11 +128,24 @@ export function updateGraph(graph: Graph) {
   updateEdges(graph);
 }
 
+export function resizeGraph(width: number, height: number) {
+  canvasWidth = width;
+  canvasHeight = height;
+}
+
+function resetMisplacedNodes() {
+  nodes.map((u) => {
+    if (!nodeMap.get(u)!.inBounds()) {
+      nodeMap.get(u)!.resetPos();
+    }
+  });
+}
+
 function renderNodes(ctx: CanvasRenderingContext2D) {
   for (const u of nodes) {
     const node = nodeMap.get(u);
 
-    ctx.lineWidth = 2 * Node.borderWidthHalf;
+    ctx.lineWidth = 2 * NODE_BORDER_WIDTH_HALF;
     ctx.lineCap = "round";
 
     ctx.strokeStyle = STROKE_COLOR;
@@ -125,7 +158,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.arc(
       node!.pos.x,
       node!.pos.y,
-      Node.baseRadius - Node.borderWidthHalf,
+      NODE_RADIUS - NODE_BORDER_WIDTH_HALF,
       0,
       2 * Math.PI,
     );
@@ -133,7 +166,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = "bold 16px JB";
+    ctx.font = "bold 18px JB";
     ctx.fillStyle = TEXT_COLOR;
     ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
   }
@@ -141,11 +174,11 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 
 function renderEdges(ctx: CanvasRenderingContext2D) {
   for (const e of edges) {
-    const pt1 = edgeMap.get(e)!.pt1;
-    const pt2 = edgeMap.get(e)!.pt2;
+    const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
+    const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
 
     ctx.strokeStyle = STROKE_COLOR;
-    ctx.lineWidth = 2 * Edge.borderWidthHalf;
+    ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
 
     ctx.beginPath();
     ctx.moveTo(pt1.x, pt1.y);
@@ -154,9 +187,47 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
   }
 }
 
-export function resizeGraph(width: number, height: number) {
-  canvasWidth = width;
-  canvasHeight = height;
+function updateVelocities() {
+  for (const u of nodes) {
+    const uPos = nodeMap.get(u)!.pos;
+
+    for (const v of nodes) {
+      if (v !== u) {
+        const vPos = nodeMap.get(v)!.pos;
+
+        const dist = euclidDist(uPos, vPos);
+
+        let aMag = 5 / (2 * Math.pow(dist, 2));
+
+        const isEdge =
+          edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
+
+        if (isEdge) {
+          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.2) / 100_000;
+          if (dist >= NODE_DIST) {
+            aMag *= -1;
+          }
+        }
+
+        const ax = vPos.x - uPos.x;
+        const ay = vPos.y - uPos.y;
+
+        const uVel = nodeMap.get(u)!.vel;
+
+        nodeMap.get(u)!.vel = {
+          x: (uVel.x - aMag * ax) * (1 - NODE_FRICTION),
+          y: (uVel.y - aMag * ay) * (1 - NODE_FRICTION),
+        };
+      }
+    }
+
+    const uVel = nodeMap.get(u)!.vel;
+
+    nodeMap.get(u)!.pos = {
+      x: uPos.x + uVel.x,
+      y: uPos.y + uVel.y,
+    };
+  }
 }
 
 export function animateGraph(ctx: CanvasRenderingContext2D) {
@@ -166,8 +237,12 @@ export function animateGraph(ctx: CanvasRenderingContext2D) {
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
+      resetMisplacedNodes();
+
       renderEdges(ctx);
       renderNodes(ctx);
+
+      updateVelocities();
     }, 1000 / FPS);
   };
   animate();

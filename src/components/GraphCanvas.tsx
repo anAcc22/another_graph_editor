@@ -60,7 +60,7 @@ export function GraphCanvas({ graph, directed }: Props) {
     };
 
     resizeCanvas();
-    animateGraph(ctx);
+    animateGraph(canvas, ctx);
 
     window.addEventListener("resize", resizeCanvas);
     return () => {
@@ -80,7 +80,7 @@ export function GraphCanvas({ graph, directed }: Props) {
     <div className="flex h-screen">
       <canvas
         ref={ref}
-        className="m-auto w-1/2 h-2/3 border-2 hover:border-slate-300 rounded-lg
+        className="active:cursor-pointer m-auto w-1/2 h-2/3 border-2 hover:border-slate-300 rounded-lg
           bg-slate-50 shadowborder-slate-100"
       ></canvas>
     </div>

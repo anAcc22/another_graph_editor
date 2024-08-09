@@ -41,7 +41,7 @@ function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.stroke();
 }
 
-const FPS = 30;
+const FPS = 45;
 
 const STROKE_COLOR = "hsl(0, 0%, 10%)";
 const FILL_COLOR = "hsl(0, 0%, 100%)";
@@ -61,6 +61,8 @@ const ARROW_LENGTH = 10;
 
 let canvasWidth: number;
 let canvasHeight: number;
+
+let mousePos: Vector2D = { x: 0, y: 0 };
 
 let directed = true;
 
@@ -90,6 +92,8 @@ class Node {
 
 let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
+
+let draggedNodes: string[] = [];
 
 let edges: string[] = [];
 
@@ -237,7 +241,7 @@ function updateVelocities() {
 
         const dist = euclidDist(uPos, vPos);
 
-        let aMag = 5 / (2 * Math.pow(dist, 2));
+        let aMag = 25 / (2 * Math.pow(dist, 2));
 
         const isEdge =
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
@@ -270,7 +274,63 @@ function updateVelocities() {
   }
 }
 
-export function animateGraph(ctx: CanvasRenderingContext2D) {
+export function animateGraph(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+) {
+  canvas.addEventListener("mousedown", (event) => {
+    event.preventDefault();
+
+    mousePos = {
+      x: event.offsetX,
+      y: event.offsetY,
+    };
+
+    nodes.map((u) => {
+      if (euclidDist(nodeMap.get(u)!.pos, mousePos) <= NODE_RADIUS) {
+        draggedNodes.push(u);
+      }
+    });
+    if (nodes.length) {
+      canvas.style.cursor = "pointer";
+    }
+  });
+
+  canvas.addEventListener("mousemove", (event) => {
+    event.preventDefault();
+
+    mousePos = {
+      x: event.offsetX,
+      y: event.offsetY,
+    };
+
+    if (draggedNodes.length === 0) {
+      let hasNode = false;
+      nodes.map((u) => {
+        if (euclidDist(nodeMap.get(u)!.pos, mousePos) <= NODE_RADIUS) {
+          hasNode = true;
+        }
+      });
+      if (hasNode) {
+        canvas.style.cursor = "pointer";
+      } else {
+        canvas.style.cursor = "default";
+      }
+    }
+  });
+
+  canvas.addEventListener("mouseup", (event) => {
+    event.preventDefault();
+    draggedNodes = [];
+    canvas.style.cursor = "default";
+  });
+
+  canvas.addEventListener("mouseleave", (event) => {
+    event.preventDefault();
+    draggedNodes = [];
+    canvas.style.cursor = "default";
+  });
+
   const animate = () => {
     setTimeout(() => {
       requestAnimationFrame(animate);
@@ -278,6 +338,13 @@ export function animateGraph(ctx: CanvasRenderingContext2D) {
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
       resetMisplacedNodes();
+
+      draggedNodes.map((u) => {
+        nodeMap.get(u)!.pos = {
+          x: clamp(mousePos.x, NODE_RADIUS, canvasWidth - NODE_RADIUS),
+          y: clamp(mousePos.y, NODE_RADIUS, canvasHeight - NODE_RADIUS),
+        };
+      });
 
       renderEdges(ctx);
       renderNodes(ctx);

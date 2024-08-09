@@ -13,6 +13,34 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
+function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+  const theta = Math.atan2(v.y - u.y, v.x - u.x);
+
+  ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+
+  ctx.strokeStyle = STROKE_COLOR;
+  ctx.fillStyle = STROKE_COLOR;
+
+  const mx = (u.x + v.x) / 2;
+  const my = (u.y + v.y) / 2;
+
+  ctx.beginPath();
+
+  ctx.moveTo(mx, my);
+  ctx.lineTo(
+    mx - ARROW_LENGTH * Math.cos(theta - Math.PI / 6),
+    my - ARROW_LENGTH * Math.sin(theta - Math.PI / 6),
+  );
+  ctx.lineTo(
+    mx - ARROW_LENGTH * Math.cos(theta + Math.PI / 6),
+    my - ARROW_LENGTH * Math.sin(theta + Math.PI / 6),
+  );
+  ctx.lineTo(mx, my);
+
+  ctx.fill();
+  ctx.stroke();
+}
+
 const FPS = 30;
 
 const STROKE_COLOR = "hsl(0, 0%, 10%)";
@@ -28,6 +56,13 @@ const NODE_DIST = 100;
 const NODE_FRICTION = 0.05;
 
 const EDGE_BORDER_WIDTH_HALF = 1;
+
+const ARROW_LENGTH = 10;
+
+let canvasWidth: number;
+let canvasHeight: number;
+
+let directed = true;
 
 class Node {
   pos: Vector2D;
@@ -57,9 +92,6 @@ let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
 
 let edges: string[] = [];
-
-let canvasWidth: number;
-let canvasHeight: number;
 
 function updateNodes(graph: Graph): void {
   for (const u of graph.nodes) {
@@ -133,6 +165,10 @@ export function resizeGraph(width: number, height: number) {
   canvasHeight = height;
 }
 
+export function updateDirected(d: boolean) {
+  directed = d;
+}
+
 function resetMisplacedNodes() {
   nodes.map((u) => {
     if (!nodeMap.get(u)!.inBounds()) {
@@ -166,7 +202,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = "bold 18px JB";
+    ctx.font = "bold 16px JB";
     ctx.fillStyle = TEXT_COLOR;
     ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
   }
@@ -184,6 +220,10 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     ctx.moveTo(pt1.x, pt1.y);
     ctx.lineTo(pt2.x, pt2.y);
     ctx.stroke();
+
+    if (directed) {
+      drawArrow(ctx, pt1, pt2);
+    }
   }
 }
 

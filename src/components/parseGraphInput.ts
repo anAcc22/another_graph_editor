@@ -41,12 +41,8 @@ export function parseGraphInput(input: string): ParsedGraph {
 
       if (!nodes.has(e[1])) {
         nodes.add(e[1]);
-        adj.set(e[1], [e[0]]);
-      } else if (!adj.get(e[1])!.includes(e[0])) {
-        adj.set(e[1], [...adj.get(e[1])!, e[0]]);
+        adj.set(e[1], []);
       }
-
-      if (e[0] > e[1]) [e[0], e[1]] = [e[1], e[0]];
 
       if (!edges.includes([e[0], e[1]].join(" "))) {
         edges.push([e[0], e[1]].join(" "));

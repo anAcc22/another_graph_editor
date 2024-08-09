@@ -2,12 +2,14 @@ import { Graph } from "../types";
 import { useRef } from "react";
 import { useEffect } from "react";
 
+import { updateDirected } from "./animateGraph";
 import { animateGraph } from "./animateGraph";
 import { resizeGraph } from "./animateGraph";
 import { updateGraph } from "./animateGraph";
 
 interface Props {
   graph: Graph;
+  directed: boolean;
 }
 
 // const EMPTY_GRAPH: Graph = {
@@ -16,7 +18,7 @@ interface Props {
 //   edges: new Array<string>(),
 // };
 
-export function GraphCanvas({ graph }: Props) {
+export function GraphCanvas({ graph, directed }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -54,10 +56,7 @@ export function GraphCanvas({ graph }: Props) {
 
       ctx.scale(pixelRatio, pixelRatio);
 
-      resizeGraph(
-        rect.width - canvasBorderX,
-        rect.height - canvasBorderY,
-      );
+      resizeGraph(rect.width - canvasBorderX, rect.height - canvasBorderY);
     };
 
     resizeCanvas();
@@ -72,6 +71,10 @@ export function GraphCanvas({ graph }: Props) {
   useEffect(() => {
     updateGraph(graph);
   }, [graph.nodes, graph.edges]);
+
+  useEffect(() => {
+    updateDirected(directed);
+  }, [directed]);
 
   return (
     <div className="flex h-screen">

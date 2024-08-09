@@ -1,12 +1,20 @@
 import { Graph } from "../types";
 import { useRef } from "react";
 import { useEffect } from "react";
+
 import { animateGraph } from "./animateGraph";
+import { resizeGraph } from "./animateGraph";
 import { updateGraph } from "./animateGraph";
 
 interface Props {
   graph: Graph;
 }
+
+// const EMPTY_GRAPH: Graph = {
+//   nodes: new Array<string>(),
+//   adj: new Map<string, string[]>(),
+//   edges: new Array<string>(),
+// };
 
 export function GraphCanvas({ graph }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
@@ -31,21 +39,34 @@ export function GraphCanvas({ graph }: Props) {
       return;
     }
 
-    const canvasBorderX = canvas.offsetWidth - canvas.clientWidth;
-    const canvasBorderY = canvas.offsetHeight - canvas.clientHeight;
+    const resizeCanvas = (): void => {
+      const canvasBorderX = canvas.offsetWidth - canvas.clientWidth;
+      const canvasBorderY = canvas.offsetHeight - canvas.clientHeight;
 
-    const pixelRatio = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
+      const pixelRatio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
 
-    const width = pixelRatio * rect.width;
-    const height = pixelRatio * rect.height;
+      const width = pixelRatio * rect.width;
+      const height = pixelRatio * rect.height;
 
-    canvas.width = width;
-    canvas.height = height;
+      canvas.width = width;
+      canvas.height = height;
 
-    ctx.scale(pixelRatio, pixelRatio);
+      ctx.scale(pixelRatio, pixelRatio);
 
-    animateGraph(rect.width - canvasBorderX, rect.height - canvasBorderY, ctx);
+      resizeGraph(
+        rect.width - canvasBorderX,
+        rect.height - canvasBorderY,
+      );
+    };
+
+    resizeCanvas();
+    animateGraph(ctx);
+
+    window.addEventListener("resize", resizeCanvas);
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
   }, []);
 
   useEffect(() => {

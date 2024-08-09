@@ -5,9 +5,9 @@ import { useState } from "react";
 
 function App() {
   const [graph, setGraph] = useState<Graph>({
-    nodes: new Array<number>(),
-    adj: new Map<number, number[]>(),
-    edges: new Array<String>(),
+    nodes: new Array<string>(),
+    adj: new Map<string, string[]>(),
+    edges: new Array<string>(),
   });
   const updateGraph = (graph: Graph) => setGraph(graph);
   return (

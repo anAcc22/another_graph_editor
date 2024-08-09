@@ -35,11 +35,11 @@ class Edge {
   }
 }
 
-let nodes: number[] = [];
-let nodeMap = new Map<number, Node>();
+let nodes: string[] = [];
+let nodeMap = new Map<string, Node>();
 
-let edges: String[] = [];
-let edgeMap = new Map<String, Edge>();
+let edges: string[] = [];
+let edgeMap = new Map<string, Edge>();
 
 let canvasWidth: number;
 let canvasHeight: number;
@@ -62,7 +62,7 @@ function updateNodes(graph: Graph): void {
     }
   }
 
-  let deletedNodes: number[] = [];
+  let deletedNodes: string[] = [];
 
   for (const u of nodes) {
     if (!graph.nodes.includes(u)) {
@@ -80,15 +80,15 @@ function updateNodes(graph: Graph): void {
 function updateEdges(graph: Graph): void {
   for (const e of graph.edges) {
     if (!edges.includes(e)) {
-      const pt1 = nodeMap.get(Number.parseInt(e.split(" ")[0]))!.pos;
-      const pt2 = nodeMap.get(Number.parseInt(e.split(" ")[1]))!.pos;
+      const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
+      const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
 
       edges.push(e);
       edgeMap.set(e, new Edge(pt1, pt2));
     }
   }
 
-  let deletedEdges: String[] = [];
+  let deletedEdges: string[] = [];
 
   for (const e of edges) {
     if (!graph.edges.includes(e)) {
@@ -133,9 +133,9 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = "bold 15px JB";
+    ctx.font = "bold 16px JB";
     ctx.fillStyle = TEXT_COLOR;
-    ctx.fillText(String(u), node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
+    ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
   }
 }
 
@@ -154,14 +154,12 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
   }
 }
 
-export function animateGraph(
-  width: number,
-  height: number,
-  ctx: CanvasRenderingContext2D,
-) {
+export function resizeGraph(width: number, height: number) {
   canvasWidth = width;
   canvasHeight = height;
+}
 
+export function animateGraph(ctx: CanvasRenderingContext2D) {
   const animate = () => {
     setTimeout(() => {
       requestAnimationFrame(animate);

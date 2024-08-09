@@ -1,7 +1,7 @@
 export interface Graph {
-  nodes: number[],
-  adj: Map<number, number[]>;
-  edges: String[]
+  nodes: string[],
+  adj: Map<string, string[]>;
+  edges: string[]
 }
 
 export interface ParsedGraph {

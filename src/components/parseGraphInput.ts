@@ -1,13 +1,13 @@
 import { ParsedGraph } from "../types";
 
-function isConvertible(s: string): boolean {
-  for (const c of s) {
-    if (!(c >= "0" && c <= "9")) {
-      return false;
-    }
-  }
-  return true;
-}
+// function isConvertibleToNum(s: string): boolean {
+//   for (const c of s) {
+//     if (!(c >= "0" && c <= "9")) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
 
 export function parseGraphInput(input: string): ParsedGraph {
   const raw = input
@@ -15,46 +15,41 @@ export function parseGraphInput(input: string): ParsedGraph {
     .map((s) => s.trim().split(" "))
     .filter((nodes) => nodes[0].length);
 
-  let nodes = new Set<number>();
-  let adj = new Map<number, number[]>();
-  let edges = new Array<String>();
+  let nodes = new Set<string>();
+  let adj = new Map<string, string[]>();
+  let edges = new Array<string>();
 
   for (const e of raw) {
-    if (e.length == 1 && isConvertible(e[0])) {
-      let u = Number.parseInt(e[0]);
-
-      if (!nodes.has(u)) {
-        nodes.add(u);
-        adj.set(u, []);
+    if (e.length == 1) {
+      if (!nodes.has(e[0])) {
+        nodes.add(e[0]);
+        adj.set(e[0], []);
       }
-    } else if (e.length == 2 && isConvertible(e[0]) && isConvertible(e[1])) {
-      let u = Number.parseInt(e[0]);
-      let v = Number.parseInt(e[1]);
-
-      if (u == v) {
+    } else if (e.length == 2) {
+      if (e[0] == e[1]) {
         return {
           status: "BAD",
         };
       }
 
-      if (!nodes.has(u)) {
-        nodes.add(u);
-        adj.set(u, [v]);
-      } else if (!adj.get(u)!.includes(v)) {
-        adj.set(u, [...adj.get(u)!, v]);
+      if (!nodes.has(e[0])) {
+        nodes.add(e[0]);
+        adj.set(e[0], [e[1]]);
+      } else if (!adj.get(e[0])!.includes(e[1])) {
+        adj.set(e[0], [...adj.get(e[0])!, e[1]]);
       }
 
-      if (!nodes.has(v)) {
-        nodes.add(v);
-        adj.set(v, [u]);
-      } else if (!adj.get(v)!.includes(u)) {
-        adj.set(v, [...adj.get(v)!, u]);
+      if (!nodes.has(e[1])) {
+        nodes.add(e[1]);
+        adj.set(e[1], [e[0]]);
+      } else if (!adj.get(e[1])!.includes(e[0])) {
+        adj.set(e[1], [...adj.get(e[1])!, e[0]]);
       }
 
-      if (u > v) [u, v] = [v, u];
+      if (e[0] > e[1]) [e[0], e[1]] = [e[1], e[0]];
 
-      if (!edges.includes([u, v].join(" "))) {
-        edges.push([u, v].join(" "));
+      if (!edges.includes([e[0], e[1]].join(" "))) {
+        edges.push([e[0], e[1]].join(" "));
       }
     } else {
       return {

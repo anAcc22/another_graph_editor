@@ -1,5 +1,5 @@
 import { parseGraphInput } from "./parseGraphInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Graph } from "../types";
 
 interface Props {
@@ -8,6 +8,27 @@ interface Props {
 
 export function GraphInput({ updateGraph }: Props) {
   const [inputStatus, setInputStatus] = useState<boolean>(true);
+
+  const processGraphInput = () => {
+    const parsedGraph = parseGraphInput(
+      (document.getElementById("graphInput") as HTMLTextAreaElement).value,
+    );
+    if (parsedGraph.status === "BAD") {
+      setInputStatus(false);
+    } else {
+      setInputStatus(true);
+      updateGraph(parsedGraph.graph!);
+    }
+  };
+
+  useEffect(() => {
+    processGraphInput();
+    window.addEventListener("resize", processGraphInput);
+    return () => {
+      window.removeEventListener("resize", processGraphInput);
+    };
+  }, []);
+
   return (
     <>
       <div
@@ -21,19 +42,7 @@ export function GraphInput({ updateGraph }: Props) {
         <textarea
           name="graphInput"
           id="graphInput"
-          onChange={(e) => {
-            let parsedGraph = parseGraphInput(e.target.value);
-            if (parsedGraph.status === "BAD") {
-              setInputStatus(false);
-            } else {
-              setInputStatus(true);
-              updateGraph(parsedGraph.graph!);
-              // console.log(`Node Count: ${parsedGraph.graph!.nodeCnt}`);
-              // parsedGraph.graph!.adj.forEach((vs, u) =>
-              //   console.log(`$u: ${u}, neighbors: ${vs}`),
-              // );
-            }
-          }}
+          onChange={() => processGraphInput()}
           rows={12}
           className="font-jetbrains resize-none border-2 rounded-md p-2
             border-single focus:outline-none text-lg border-slate-200
@@ -47,8 +56,7 @@ export function GraphInput({ updateGraph }: Props) {
               (
                 document.getElementById("graphInput") as HTMLTextAreaElement
               ).value = "";
-              let parsedGraph = parseGraphInput("");
-              updateGraph(parsedGraph.graph!);
+              processGraphInput();
             }}
           >
             Clear

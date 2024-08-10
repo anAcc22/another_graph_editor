@@ -41,7 +41,7 @@ function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.stroke();
 }
 
-const FPS = 45;
+const FPS = 60;
 
 const STROKE_COLOR = "hsl(0, 0%, 10%)";
 const FILL_COLOR = "hsl(0, 0%, 100%)";
@@ -243,13 +243,13 @@ function updateVelocities() {
 
         const dist = euclidDist(uPos, vPos);
 
-        let aMag = 150 / (2 * Math.pow(dist, 3));
+        let aMag = 1500 / (2 * Math.pow(dist, 3));
 
         const isEdge =
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
 
         if (isEdge) {
-          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.2) / 100_000;
+          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.5) / 100_000;
           if (dist >= NODE_DIST) {
             aMag *= -1;
           }

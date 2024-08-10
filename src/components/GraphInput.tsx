@@ -52,9 +52,10 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
   return (
     <>
       <div
-        className="font-jetbrains flex margin:auto flex-col border-2 rounded-lg
-          bg-slate-50 shadow-sm border-slate-100 absolute top-1/2
-          -translate-y-1/2 left-16 w-72 p-4 space-y-3"
+        className="font-jetbrains flex flex-col border-2 rounded-lg bg-slate-50
+          shadow-sm border-slate-100 sm:ml-1/8 sm:mt-1/8 sm:mr-1/8 lg:m-0
+          lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4 lg:left-1/24
+          xl:left-5/200 xl:w-1/5 p-3 space-y-3"
       >
         <h3 className="font-bold text-lg">Graph Data</h3>
 
@@ -195,7 +196,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             name="graphInputEdges"
             id="graphInputEdges"
             onChange={() => processGraphInput()}
-            rows={12}
+            rows={8}
             className="font-semibold font-jetbrains resize-none border-2
               rounded-md p-2 border-single focus:outline-none text-lg
               border-slate-200 focus:border-slate-400"

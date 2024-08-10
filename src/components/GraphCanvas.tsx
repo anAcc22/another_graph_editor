@@ -80,8 +80,9 @@ export function GraphCanvas({ graph, directed }: Props) {
     <div className="flex h-screen">
       <canvas
         ref={ref}
-        className="active:cursor-pointer m-auto w-1/2 h-2/3 border-2 hover:border-slate-300 rounded-lg
-          bg-slate-50 shadowborder-slate-100"
+        className="active:cursor-pointer m-auto sm:w-3/4 sm:h-3/4 lg:w-1/3
+          xl:w-1/2 h-2/3 border-2 hover:border-slate-300 rounded-lg bg-slate-50
+          shadowborder-slate-100"
       ></canvas>
     </div>
   );

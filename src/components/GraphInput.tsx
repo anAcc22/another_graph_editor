@@ -41,21 +41,48 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
         <label htmlFor="graphInput" className="font-bold text-lg">
           Graph Data
         </label>
+
         <div className="flex font-light text-sm justify-between">
           <span>
             <span>
               {!directed ? (
-                <span className="text-amber-700 p-0">Undirected</span>
+                <span className="text-amber-700 p-0 hover:cursor-pointer">
+                  Undirected
+                </span>
               ) : (
-                <span className="p-0">Undirected</span>
+                <span
+                  className="p-0 hover:cursor-pointer"
+                  onClick={() => {
+                    updateDirected(false);
+                    let directedCheckbox = document.getElementById(
+                      "directedCheckbox",
+                    ) as HTMLInputElement;
+                    directedCheckbox.checked = false;
+                  }}
+                >
+                  Undirected
+                </span>
               )}
             </span>
             <span> | </span>
             <span>
               {directed ? (
-                <span className="text-amber-700 p-0">Directed</span>
+                <span className="text-amber-700 p-0 hover:cursor-pointer">
+                  Directed
+                </span>
               ) : (
-                <span className="p-0">Directed</span>
+                <span
+                  className="p-0 hover:cursor-pointer"
+                  onClick={() => {
+                    updateDirected(true);
+                    let directedCheckbox = document.getElementById(
+                      "directedCheckbox",
+                    ) as HTMLInputElement;
+                    directedCheckbox.checked = true;
+                  }}
+                >
+                  Directed
+                </span>
               )}
             </span>
           </span>
@@ -63,6 +90,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             <input
               onClick={() => updateDirected(!directed)}
               type="checkbox"
+              id="directedCheckbox"
               className="peer invisible"
             />
             <span
@@ -77,15 +105,17 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             ></span>
           </label>
         </div>
+
         <textarea
           name="graphInput"
           id="graphInput"
           onChange={() => processGraphInput()}
           rows={12}
-          className="font-semibold font-jetbrains resize-none border-2 rounded-md
-            p-2 border-single focus:outline-none text-lg border-slate-200
-            focus:border-slate-400"
+          className="font-semibold font-jetbrains resize-none border-2
+            rounded-md p-2 border-single focus:outline-none text-lg
+            border-slate-200 focus:border-slate-400"
         ></textarea>
+
         <div className="flex justify-between">
           <button
             className="bg-amber-500 hover:bg-amber-400 active:bg-amber-300

@@ -55,6 +55,8 @@ const NODE_RADIUS = 18;
 const NODE_DIST = 100;
 const NODE_FRICTION = 0.05;
 
+const CANVAS_FIELD_DIST = 50;
+
 const EDGE_BORDER_WIDTH_HALF = 1;
 
 const ARROW_LENGTH = 10;
@@ -241,7 +243,7 @@ function updateVelocities() {
 
         const dist = euclidDist(uPos, vPos);
 
-        let aMag = 25 / (2 * Math.pow(dist, 2));
+        let aMag = 150 / (2 * Math.pow(dist, 3));
 
         const isEdge =
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
@@ -264,6 +266,27 @@ function updateVelocities() {
         };
       }
     }
+
+    const axSign = canvasWidth / 2 - uPos.x >= 0 ? 1 : -1;
+    const aySign = canvasHeight / 2 - uPos.y >= 0 ? 1 : -1;
+
+    let axB = 0;
+    let ayB = 0;
+
+    if (Math.min(uPos.x, canvasWidth - uPos.x) <= CANVAS_FIELD_DIST) {
+      axB = Math.pow(canvasWidth / 2 - uPos.x, 2) * axSign;
+      axB /= 500_000;
+    }
+
+    if (Math.min(uPos.y, canvasHeight - uPos.y) <= CANVAS_FIELD_DIST) {
+      ayB = Math.pow(canvasHeight / 2 - uPos.y, 2) * aySign;
+      ayB /= 500_000;
+    }
+
+    nodeMap.get(u)!.vel = {
+      x: (nodeMap.get(u)!.vel.x + axB) * (1 - NODE_FRICTION),
+      y: (nodeMap.get(u)!.vel.y + ayB) * (1 - NODE_FRICTION),
+    };
 
     const uVel = nodeMap.get(u)!.vel;
 

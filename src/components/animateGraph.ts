@@ -1,9 +1,40 @@
 import { Graph } from "../types";
+import { Settings } from "../types";
+import { ColorMap } from "../types";
+
+import { buildComponents } from "./graphComponents";
+import { buildSCComponents } from "./graphComponents";
 
 interface Vector2D {
   x: number;
   y: number;
 }
+
+class Node {
+  pos: Vector2D;
+  vel: Vector2D = { x: 0, y: 0 };
+  constructor(x: number, y: number) {
+    this.pos = {
+      x,
+      y,
+    };
+  }
+  inBounds(): boolean {
+    const x = this.pos.x;
+    const y = this.pos.y;
+    const xOk = x >= NODE_RADIUS && x + NODE_RADIUS <= canvasWidth;
+    const yOk = y >= NODE_RADIUS && y + NODE_RADIUS <= canvasHeight;
+    return xOk && yOk;
+  }
+  resetPos(): void {
+    this.pos = {
+      x: clamp(this.pos.x, NODE_RADIUS, canvasWidth - NODE_RADIUS),
+      y: clamp(this.pos.y, NODE_RADIUS, canvasHeight - NODE_RADIUS),
+    };
+  }
+}
+
+// ╾─────────────────────────╼ Math Functions ╾─────────────────────╼
 
 function clamp(val: number, low: number, high: number) {
   return Math.max(low, Math.min(val, high));
@@ -12,6 +43,8 @@ function clamp(val: number, low: number, high: number) {
 function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
+
+// ╾───────────────────────╼ Plotting Functions ╾───────────────────╼
 
 function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
@@ -44,7 +77,6 @@ function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 const FPS = 60;
 
 const STROKE_COLOR = "hsl(0, 0%, 10%)";
-const FILL_COLOR = "hsl(0, 0%, 100%)";
 
 const TEXT_COLOR = "hsl(0, 0%, 10%)";
 const TEXT_Y_OFFSET = 1;
@@ -61,36 +93,32 @@ const EDGE_BORDER_WIDTH_HALF = 1;
 
 const ARROW_LENGTH = 10;
 
+const FILL_COLORS = [
+  "#dedede",
+  "#dd7878",
+  "#7287ed",
+  "#dfae5d",
+  "#70b05b",
+  "#dc8a68",
+  "#30afc5",
+  "#37b2a9",
+  "#ea76cb",
+  "#a879ef",
+];
+
+const FILL_COLORS_LENGTH = FILL_COLORS.length;
+
 let canvasWidth: number;
 let canvasHeight: number;
 
 let mousePos: Vector2D = { x: 0, y: 0 };
 
-let directed = true;
+let oldDirected = false;
+let directed = false;
 
-class Node {
-  pos: Vector2D;
-  vel: Vector2D = { x: 0, y: 0 };
-  constructor(x: number, y: number) {
-    this.pos = {
-      x,
-      y,
-    };
-  }
-  inBounds(): boolean {
-    const x = this.pos.x;
-    const y = this.pos.y;
-    const xOk = x >= NODE_RADIUS && x + NODE_RADIUS <= canvasWidth;
-    const yOk = y >= NODE_RADIUS && y + NODE_RADIUS <= canvasHeight;
-    return xOk && yOk;
-  }
-  resetPos(): void {
-    this.pos = {
-      x: clamp(this.pos.x, NODE_RADIUS, canvasWidth - NODE_RADIUS),
-      y: clamp(this.pos.y, NODE_RADIUS, canvasHeight - NODE_RADIUS),
-    };
-  }
-}
+let settings: Settings = {
+  showComponents: false,
+};
 
 let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
@@ -98,6 +126,11 @@ let nodeMap = new Map<string, Node>();
 let draggedNodes: string[] = [];
 
 let edges: string[] = [];
+
+let adj = new Map<string, string[]>();
+let rev = new Map<string, string[]>();
+
+let colorMap: ColorMap | undefined = undefined;
 
 function updateNodes(graph: Graph): void {
   for (const u of graph.nodes) {
@@ -161,9 +194,30 @@ function updateEdges(graph: Graph): void {
   edges = edges.filter((e) => !deletedEdges.includes(e));
 }
 
+function buildSettings(): void {
+  if (directed) {
+    if (settings.showComponents) {
+      colorMap = buildSCComponents(nodes, adj, rev);
+    } else {
+      colorMap = undefined;
+    }
+  } else {
+    if (settings.showComponents) {
+      colorMap = buildComponents(nodes, adj);
+    } else {
+      colorMap = undefined;
+    }
+  }
+}
+
 export function updateGraph(graph: Graph) {
   updateNodes(graph);
   updateEdges(graph);
+
+  adj = graph.adj;
+  rev = graph.rev;
+
+  buildSettings();
 }
 
 export function resizeGraph(width: number, height: number) {
@@ -175,6 +229,11 @@ export function updateDirected(d: boolean) {
   directed = d;
 }
 
+export function updateSettings(s: Settings) {
+  settings = s;
+  buildSettings();
+}
+
 function resetMisplacedNodes() {
   nodes.map((u) => {
     if (!nodeMap.get(u)!.inBounds()) {
@@ -184,14 +243,21 @@ function resetMisplacedNodes() {
 }
 
 function renderNodes(ctx: CanvasRenderingContext2D) {
-  for (const u of nodes) {
+  for (let i = 0; i < nodes.length; i++) {
+    const u = nodes[i];
+
     const node = nodeMap.get(u);
 
     ctx.lineWidth = 2 * NODE_BORDER_WIDTH_HALF;
     ctx.lineCap = "round";
 
     ctx.strokeStyle = STROKE_COLOR;
-    ctx.fillStyle = FILL_COLOR;
+    ctx.fillStyle =
+      FILL_COLORS[
+        colorMap === undefined
+          ? 0
+          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
+      ];
 
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
@@ -361,6 +427,11 @@ export function animateGraph(
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
       resetMisplacedNodes();
+
+      if (directed !== oldDirected) {
+        buildSettings();
+        oldDirected = directed;
+      }
 
       draggedNodes.map((u) => {
         nodeMap.get(u)!.pos = {

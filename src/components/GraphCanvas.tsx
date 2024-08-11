@@ -1,24 +1,22 @@
 import { Graph } from "../types";
+import { Settings } from "../types";
 import { useRef } from "react";
 import { useEffect } from "react";
 
 import { updateDirected } from "./animateGraph";
+import { updateSettings } from "./animateGraph";
 import { animateGraph } from "./animateGraph";
+
 import { resizeGraph } from "./animateGraph";
 import { updateGraph } from "./animateGraph";
 
 interface Props {
   graph: Graph;
   directed: boolean;
+  settings: Settings;
 }
 
-// const EMPTY_GRAPH: Graph = {
-//   nodes: new Array<string>(),
-//   adj: new Map<string, string[]>(),
-//   edges: new Array<string>(),
-// };
-
-export function GraphCanvas({ graph, directed }: Props) {
+export function GraphCanvas({ graph, directed, settings }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -70,11 +68,15 @@ export function GraphCanvas({ graph, directed }: Props) {
 
   useEffect(() => {
     updateGraph(graph);
-  }, [graph.nodes, graph.edges]);
+  }, [graph]);
 
   useEffect(() => {
     updateDirected(directed);
   }, [directed]);
+
+  useEffect(() => {
+    updateSettings(settings);
+  }, [settings]);
 
   return (
     <div className="flex h-screen">

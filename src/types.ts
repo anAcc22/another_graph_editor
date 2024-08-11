@@ -1,10 +1,17 @@
 export interface Graph {
-  nodes: string[],
+  nodes: string[];
   adj: Map<string, string[]>;
-  edges: string[]
+  rev: Map<string, string[]>;
+  edges: string[];
+}
+
+export interface Settings {
+  showComponents: boolean;
 }
 
 export interface ParsedGraph {
   status: "OK" | "BAD";
   graph?: Graph;
 }
+
+export type ColorMap = Map<string, number> | undefined;

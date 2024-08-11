@@ -26,6 +26,7 @@ export function parseGraphInputParentChild(
 
   let nodes = new Set<string>();
   let adj = new Map<string, string[]>();
+  let rev = new Map<string, string[]>();
   let edges = new Array<string>();
 
   for (let i = 0; i < edgeCnt; i++) {
@@ -51,11 +52,25 @@ export function parseGraphInputParentChild(
     }
   }
 
+  for (const [u, vs] of adj.entries()) {
+    if (!rev.has(u)) {
+      rev.set(u, []);
+    }
+    for (const v of vs) {
+      if (rev.has(v)) {
+        rev.set(v, [...rev.get(v)!, u]);
+      } else {
+        rev.set(v, []);
+      }
+    }
+  }
+
   return {
     status: "OK",
     graph: {
       nodes: Array.from(nodes),
       adj,
+      rev,
       edges,
     },
   };
@@ -69,6 +84,7 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
 
   let nodes = new Set<string>();
   let adj = new Map<string, string[]>();
+  let rev = new Map<string, string[]>();
   let edges = new Array<string>();
 
   for (const e of raw) {
@@ -105,11 +121,25 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
     }
   }
 
+  for (const [u, vs] of adj.entries()) {
+    if (!rev.has(u)) {
+      rev.set(u, []);
+    }
+    for (const v of vs) {
+      if (rev.has(v)) {
+        rev.set(v, [...rev.get(v)!, u]);
+      } else {
+        rev.set(v, [u]);
+      }
+    }
+  }
+
   return {
     status: "OK",
     graph: {
       nodes: Array.from(nodes),
       adj,
+      rev,
       edges,
     },
   };

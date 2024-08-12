@@ -181,24 +181,12 @@ function updateNodes(graph: Graph): void {
   for (const u of deletedNodes) {
     nodeMap.delete(u);
   }
+
+  nodes = graph.nodes;
 }
 
 function updateEdges(graph: Graph): void {
-  for (const e of graph.edges) {
-    if (!edges.includes(e)) {
-      edges.push(e);
-    }
-  }
-
-  let deletedEdges: string[] = [];
-
-  for (const e of edges) {
-    if (!graph.edges.includes(e)) {
-      deletedEdges.push(e);
-    }
-  }
-
-  edges = edges.filter((e) => !deletedEdges.includes(e));
+  edges = graph.edges;
 }
 
 function buildSettings(): void {
@@ -215,7 +203,7 @@ function buildSettings(): void {
     }
   } else {
     if (settings.showComponents) {
-      colorMap = buildComponents(nodes, adj);
+      colorMap = buildComponents(nodes, adj, rev);
     } else {
       colorMap = undefined;
     }
@@ -332,7 +320,7 @@ function updateVelocities() {
 
         const dist = euclidDist(uPos, vPos);
 
-        let aMag = 1500 / (2 * Math.pow(dist, 3));
+        let aMag = 300_000 / (2 * Math.pow(dist, 5));
 
         const isEdge =
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));

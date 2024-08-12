@@ -3,6 +3,7 @@ import { ColorMap } from "../types";
 export function buildComponents(
   nodes: string[],
   adj: Map<string, string[]>,
+  rev: Map<string, string[]>,
 ): ColorMap {
   let colorMap: ColorMap = new Map<string, number>();
   let color = 1;
@@ -10,6 +11,11 @@ export function buildComponents(
   const dfs = (u: string): void => {
     colorMap.set(u, color);
     for (const v of adj.get(u)!) {
+      if (!colorMap.has(v)) {
+        dfs(v);
+      }
+    }
+    for (const v of rev.get(u)!) {
       if (!colorMap.has(v)) {
         dfs(v);
       }

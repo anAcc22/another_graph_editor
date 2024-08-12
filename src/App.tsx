@@ -17,6 +17,7 @@ function App() {
   const [directed, setDirected] = useState<boolean>(false);
   const [settings, setSettings] = useState<Settings>({
     showComponents: false,
+    treeMode: false,
   });
 
   const updateGraph = (graph: Graph) => setGraph(graph);

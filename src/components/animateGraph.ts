@@ -1,9 +1,11 @@
 import { Graph } from "../types";
 import { Settings } from "../types";
-import { ColorMap } from "../types";
+import { ColorMap, LayerMap } from "../types";
 
 import { buildComponents } from "./graphComponents";
 import { buildSCComponents } from "./graphComponents";
+
+import { buildTreeLayers } from "./graphTreeLayers";
 
 interface Vector2D {
   x: number;
@@ -118,6 +120,7 @@ let directed = false;
 
 let settings: Settings = {
   showComponents: false,
+  treeMode: false,
 };
 
 let nodes: string[] = [];
@@ -131,6 +134,7 @@ let adj = new Map<string, string[]>();
 let rev = new Map<string, string[]>();
 
 let colorMap: ColorMap | undefined = undefined;
+let layerMap: LayerMap | undefined = undefined;
 
 function updateNodes(graph: Graph): void {
   for (const u of graph.nodes) {
@@ -201,11 +205,21 @@ function buildSettings(): void {
     } else {
       colorMap = undefined;
     }
+    if (settings.treeMode) {
+      layerMap = buildTreeLayers(nodes, adj, rev);
+    } else {
+      layerMap = undefined;
+    }
   } else {
     if (settings.showComponents) {
       colorMap = buildComponents(nodes, adj);
     } else {
       colorMap = undefined;
+    }
+    if (settings.treeMode) {
+      layerMap = buildTreeLayers(nodes, adj, rev);
+    } else {
+      layerMap = undefined;
     }
   }
 }
@@ -315,7 +329,7 @@ function updateVelocities() {
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
 
         if (isEdge) {
-          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.5) / 100_000;
+          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.3) / 100_000;
           if (dist >= NODE_DIST) {
             aMag *= -1;
           }
@@ -353,6 +367,31 @@ function updateVelocities() {
       x: (nodeMap.get(u)!.vel.x + axB) * (1 - NODE_FRICTION),
       y: (nodeMap.get(u)!.vel.y + ayB) * (1 - NODE_FRICTION),
     };
+
+    if (settings.treeMode) {
+      const depth = layerMap!.get(u)![0];
+      const maxDepth = layerMap!.get(u)![1];
+
+      let layerHeight = (NODE_DIST * 4) / 5;
+
+      if (maxDepth * layerHeight >= canvasHeight - 2 * CANVAS_FIELD_DIST) {
+        layerHeight = (canvasHeight - 2 * CANVAS_FIELD_DIST) / maxDepth;
+      }
+
+      const yTarget = CANVAS_FIELD_DIST + (depth - 0.5) * layerHeight;
+      const y = nodeMap.get(u)!.pos.y;
+
+      let ay = Math.pow(Math.abs(y - yTarget), 1.45) / 100;
+
+      if (y > yTarget) {
+        ay *= -1;
+      }
+
+      nodeMap.get(u)!.vel = {
+        x: nodeMap.get(u)!.vel.x,
+        y: (nodeMap.get(u)!.vel.y + ay) * (1 - NODE_FRICTION),
+      };
+    }
 
     const uVel = nodeMap.get(u)!.vel;
 

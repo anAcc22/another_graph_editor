@@ -18,6 +18,7 @@ function App() {
   const [settings, setSettings] = useState<Settings>({
     showComponents: false,
     treeMode: false,
+    lockMode: false,
   });
 
   const updateGraph = (graph: Graph) => setGraph(graph);

@@ -8,6 +8,7 @@ export interface Graph {
 export interface Settings {
   showComponents: boolean;
   treeMode: boolean;
+  lockMode: boolean;
 }
 
 export interface ParsedGraph {

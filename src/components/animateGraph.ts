@@ -121,6 +121,7 @@ let directed = false;
 let settings: Settings = {
   showComponents: false,
   treeMode: false,
+  lockMode: false,
 };
 
 let nodes: string[] = [];
@@ -482,7 +483,9 @@ export function animateGraph(
       renderEdges(ctx);
       renderNodes(ctx);
 
-      updateVelocities();
+      if (!settings.lockMode) {
+        updateVelocities();
+      }
     }, 1000 / FPS);
   };
   animate();

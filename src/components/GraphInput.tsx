@@ -82,10 +82,10 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
                     setInputFormat("edges");
-                    let directedCheckbox = document.getElementById(
+                    let checkbox = document.getElementById(
                       "inputFormatCheckbox",
                     ) as HTMLInputElement;
-                    directedCheckbox.checked = false;
+                    checkbox.checked = false;
                   }}
                 >
                   Edges
@@ -103,10 +103,10 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
                     setInputFormat("parentChild");
-                    let directedCheckbox = document.getElementById(
+                    let checkbox = document.getElementById(
                       "inputFormatCheckbox",
                     ) as HTMLInputElement;
-                    directedCheckbox.checked = true;
+                    checkbox.checked = true;
                   }}
                 >
                   Parent-Child
@@ -150,10 +150,10 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
                     updateDirected(false);
-                    let directedCheckbox = document.getElementById(
+                    let checkbox = document.getElementById(
                       "directedCheckbox",
                     ) as HTMLInputElement;
-                    directedCheckbox.checked = false;
+                    checkbox.checked = false;
                   }}
                 >
                   Undirected
@@ -171,10 +171,10 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
                     updateDirected(true);
-                    let directedCheckbox = document.getElementById(
+                    let checkbox = document.getElementById(
                       "directedCheckbox",
                     ) as HTMLInputElement;
-                    directedCheckbox.checked = true;
+                    checkbox.checked = true;
                   }}
                 >
                   Directed

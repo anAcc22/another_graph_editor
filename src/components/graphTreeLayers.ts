@@ -1,11 +1,12 @@
-import { Layer, LayerMap } from "../types";
+import { Layer, LayerMap, BackedgeMap } from "../types";
 
 export function buildTreeLayers(
   nodes: string[],
   adj: Map<string, string[]>,
   rev: Map<string, string[]>,
-): LayerMap {
+): [LayerMap, BackedgeMap] {
   let layerMap: LayerMap = new Map<string, Layer>();
+  let backedgeMap: BackedgeMap = new Map<string, boolean>();
   let seen = new Set<string>();
   let maxDepth = 0;
 
@@ -28,13 +29,27 @@ export function buildTreeLayers(
     seen.add(u);
     layerMap.set(u, [depth, maxDepth]);
     for (const v of adj.get(u)!) {
+      const e1 = [u, v].join(" ");
+      const e2 = [v, u].join(" ");
       if (!seen.has(v)) {
         buildLayers(v, depth + 1);
+        backedgeMap.set(e1, false);
+        backedgeMap.set(e2, false);
+      } else {
+        backedgeMap.set(e1, true);
+        backedgeMap.set(e2, true);
       }
     }
     for (const v of rev.get(u)!) {
+      const e1 = [u, v].join(" ");
+      const e2 = [v, u].join(" ");
       if (!seen.has(v)) {
         buildLayers(v, depth + 1);
+        backedgeMap.set(e1, false);
+        backedgeMap.set(e2, false);
+      } else {
+        backedgeMap.set(e1, true);
+        backedgeMap.set(e2, true);
       }
     }
   };
@@ -49,5 +64,5 @@ export function buildTreeLayers(
     }
   }
 
-  return layerMap;
+  return [layerMap, backedgeMap];
 }

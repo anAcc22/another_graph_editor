@@ -1,6 +1,6 @@
 import { Graph } from "../types";
 import { Settings } from "../types";
-import { ColorMap, LayerMap } from "../types";
+import { ColorMap, LayerMap, BackedgeMap } from "../types";
 
 import { buildComponents } from "./graphComponents";
 import { buildSCComponents } from "./graphComponents";
@@ -137,6 +137,8 @@ let rev = new Map<string, string[]>();
 let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
 
+let backedgeMap: BackedgeMap | undefined = undefined;
+
 function updateNodes(graph: Graph): void {
   for (const u of graph.nodes) {
     if (!nodes.includes(u)) {
@@ -207,7 +209,7 @@ function buildSettings(): void {
       colorMap = undefined;
     }
     if (settings.treeMode) {
-      layerMap = buildTreeLayers(nodes, adj, rev);
+      [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
     } else {
       layerMap = undefined;
     }
@@ -218,7 +220,7 @@ function buildSettings(): void {
       colorMap = undefined;
     }
     if (settings.treeMode) {
-      layerMap = buildTreeLayers(nodes, adj, rev);
+      [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
     } else {
       layerMap = undefined;
     }
@@ -300,6 +302,10 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
     const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
 
+    if (settings.treeMode && backedgeMap!.get(e)) {
+      ctx.setLineDash([2, 10]);
+    }
+
     ctx.strokeStyle = STROKE_COLOR;
     ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
 
@@ -307,6 +313,8 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     ctx.moveTo(pt1.x, pt1.y);
     ctx.lineTo(pt2.x, pt2.y);
     ctx.stroke();
+
+    ctx.setLineDash([]);
 
     if (directed) {
       drawArrow(ctx, pt1, pt2);

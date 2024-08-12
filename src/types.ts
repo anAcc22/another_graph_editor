@@ -21,3 +21,5 @@ export type ColorMap = Map<string, number> | undefined;
 export type Layer = [number, number];
 
 export type LayerMap = Map<string, Layer>;
+
+export type BackedgeMap = Map<string, boolean>

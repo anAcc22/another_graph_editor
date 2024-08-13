@@ -6,6 +6,7 @@ export interface Graph {
 }
 
 export interface Settings {
+  darkMode: boolean;
   showComponents: boolean;
   showBridges: boolean;
   treeMode: boolean;

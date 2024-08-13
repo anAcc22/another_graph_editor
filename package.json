@@ -27,6 +27,7 @@
     "postcss": "^8.4.41",
     "prettier-plugin-classnames": "^0.7.1",
     "tailwindcss": "^3.4.7",
+    "tailwindcss-themer": "^4.0.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   }

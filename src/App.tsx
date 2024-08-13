@@ -16,6 +16,7 @@ function App() {
   });
   const [directed, setDirected] = useState<boolean>(false);
   const [settings, setSettings] = useState<Settings>({
+    darkMode: true,
     showComponents: false,
     showBridges: false,
     treeMode: false,
@@ -28,17 +29,23 @@ function App() {
 
   return (
     <>
-      <GraphInput
-        updateGraph={updateGraph}
-        directed={directed}
-        updateDirected={updateDirected}
-      />
-      <GraphCanvas graph={graph} directed={directed} settings={settings} />
-      <GraphSettings
-        directed={directed}
-        settings={settings}
-        updateSettings={updateSettings}
-      />
+      <div
+        className={
+          settings.darkMode ? "dark bg-ovr text-text" : "light bg-ovr text-text"
+        }
+      >
+        <GraphInput
+          updateGraph={updateGraph}
+          directed={directed}
+          updateDirected={updateDirected}
+        />
+        <GraphCanvas graph={graph} directed={directed} settings={settings} />
+        <GraphSettings
+          directed={directed}
+          settings={settings}
+          updateSettings={updateSettings}
+        />
+      </div>
     </>
   );
 }

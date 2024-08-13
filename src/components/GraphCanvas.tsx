@@ -83,8 +83,8 @@ export function GraphCanvas({ graph, directed, settings }: Props) {
       <canvas
         ref={ref}
         className="active:cursor-pointer m-auto sm:w-3/4 sm:h-3/4 lg:w-1/3
-          xl:w-1/2 h-2/3 border-2 hover:border-slate-300 rounded-lg bg-slate-50
-          shadowborder-slate-100"
+          xl:w-1/2 h-2/3 border-2 border-border hover:border-border-hover
+          rounded-lg bg-block shadow shadow-shadow"
       ></canvas>
     </div>
   );

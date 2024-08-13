@@ -59,10 +59,11 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
   return (
     <>
       <div
-        className="font-jetbrains flex flex-col border-2 rounded-lg bg-slate-50
-          shadow-sm border-slate-100 sm:ml-1/8 sm:mt-1/8 sm:mr-1/8 lg:m-0
-          lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4 lg:left-1/24
-          xl:left-5/200 xl:w-1/5 p-3 space-y-3"
+        className="font-jetbrains flex flex-col border-2 rounded-lg bg-block
+          shadow-shadow shadow border-border sm:ml-1/8 sm:mt-1/8 sm:mr-1/8
+          lg:m-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4
+          hover:border-border-hover lg:left-1/24 xl:left-5/200 xl:w-1/5 p-3
+          space-y-3"
       >
         <h3 className="font-bold text-lg">Graph Data</h3>
 
@@ -70,7 +71,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           <span>
             <span>
               {inputFormat === "edges" ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
+                <span className="text-selected p-0 hover:cursor-pointer">
                   Edges
                 </span>
               ) : (
@@ -91,7 +92,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             <span> | </span>
             <span>
               {inputFormat === "parentChild" ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
+                <span className="text-selected p-0 hover:cursor-pointer">
                   Parent-Child
                 </span>
               ) : (
@@ -123,11 +124,11 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             />
             <span
               className="absolute top-0 left-0 w-9 h-5 cursor-pointer
-                rounded-full bg-slate-300 border-none transition-all duration-75
-                hover:bg-slate-400 peer-checked:bg-slate-600"
+                rounded-full bg-toggle-uncheck border-none transition-all
+                duration-75 hover:bg-toggle-hover peer-checked:bg-toggle-check"
             ></span>
             <span
-              className="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-50
+              className="absolute top-0.5 left-0.5 w-4 h-4 bg-toggle-circle
                 rounded-full transition-all duration-75 cursor-pointer
                 peer-checked:translate-x-4"
             ></span>
@@ -138,7 +139,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           <span>
             <span>
               {!directed ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
+                <span className="text-selected p-0 hover:cursor-pointer">
                   Undirected
                 </span>
               ) : (
@@ -159,7 +160,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             <span> | </span>
             <span>
               {directed ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
+                <span className="text-selected p-0 hover:cursor-pointer">
                   Directed
                 </span>
               ) : (
@@ -187,11 +188,11 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             />
             <span
               className="absolute top-0 left-0 w-9 h-5 cursor-pointer
-                rounded-full bg-slate-300 border-none transition-all duration-75
-                hover:bg-slate-400 peer-checked:bg-slate-600"
+                rounded-full bg-toggle-uncheck border-none transition-all
+                duration-75 hover:bg-toggle-hover peer-checked:bg-toggle-check"
             ></span>
             <span
-              className="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-50
+              className="absolute top-0.5 left-0.5 w-4 h-4 bg-toggle-circle
                 rounded-full transition-all duration-75 cursor-pointer
                 peer-checked:translate-x-4"
             ></span>
@@ -206,7 +207,7 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
             rows={8}
             className="font-semibold font-jetbrains resize-none border-2
               rounded-md p-2 border-single focus:outline-none text-lg
-              border-slate-200 focus:border-slate-400"
+              border-border focus:border-border-active bg-ovr"
           ></textarea>
         ) : (
           <></>
@@ -222,9 +223,9 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               id="graphInputParent"
               rows={1}
               onChange={() => processGraphInput()}
-              className="font-semibold font-jetbrains resize-none border-2
-                rounded-md p-2 border-single focus:outline-none text-lg
-                border-slate-200 focus:border-slate-400"
+              className="bg-ovr font-semibold font-jetbrains resize-none
+                border-2 rounded-md p-2 border-single focus:outline-none text-lg
+                border-border focus:border-border-active"
             ></textarea>
             <h4 className="text-base decoration-solid underline">
               Child Array
@@ -235,9 +236,9 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               rows={1}
               defaultValue={"1 2 3 4 5 6 7 8 9"}
               onChange={() => processGraphInput()}
-              className="font-semibold font-jetbrains resize-none border-2
-                rounded-md p-2 border-single focus:outline-none text-lg
-                border-slate-200 focus:border-slate-400"
+              className="bg-ovr font-semibold font-jetbrains resize-none
+                border-2 rounded-md p-2 border-single focus:outline-none text-lg
+                border-border focus:border-border-active"
             ></textarea>
           </>
         ) : (
@@ -246,8 +247,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
 
         <div className="flex justify-between">
           <button
-            className="bg-amber-500 hover:bg-amber-400 active:bg-amber-300
-              inline rounded-md px-2 py-1"
+            className="bg-clear-normal hover:bg-clear-hover
+              active:bg-clear-active inline rounded-md px-2 py-1"
             onClick={() => {
               if (inputFormat === "edges") {
                 (
@@ -269,14 +270,14 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           </button>
           {inputStatus ? (
             <span
-              className="font-jetbrains bg-emerald-500 rounded-md text-right
-                px-2 py-1 inline"
+              className="font-jetbrains bg-format-ok rounded-md text-right px-2
+                py-1 inline"
             >
               Format: OK
             </span>
           ) : (
             <span
-              className="font-jetbrains bg-rose-500 rounded-md text-right px-2
+              className="font-jetbrains bg-format-bad rounded-md text-right px-2
                 py-1 inline"
             >
               Format: BAD

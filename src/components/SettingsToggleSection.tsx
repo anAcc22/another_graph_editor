@@ -26,7 +26,7 @@ export function SettingsToggleSection({
         <span>
           <span>
             {!settings[settingsName] ? (
-              <span className="text-amber-700 p-0 hover:cursor-pointer">
+              <span className="text-selected p-0 hover:cursor-pointer">
                 {leftLabel}
               </span>
             ) : (
@@ -50,7 +50,7 @@ export function SettingsToggleSection({
           <span> | </span>
           <span>
             {settings[settingsName] ? (
-              <span className="text-amber-700 p-0 hover:cursor-pointer">
+              <span className="text-selected p-0 hover:cursor-pointer">
                 {rightLabel}
               </span>
             ) : (
@@ -87,11 +87,11 @@ export function SettingsToggleSection({
           />
           <span
             className="absolute top-0 left-0 w-9 h-5 cursor-pointer rounded-full
-              bg-slate-300 border-none transition-all duration-75
-              hover:bg-slate-400 peer-checked:bg-slate-600"
+              bg-toggle-uncheck border-none transition-all duration-75
+              hover:bg-toggle-hover peer-checked:bg-toggle-check"
           ></span>
           <span
-            className="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-50
+            className="absolute top-0.5 left-0.5 w-4 h-4 bg-toggle-circle
               rounded-full transition-all duration-75 cursor-pointer
               peer-checked:translate-x-4"
           ></span>

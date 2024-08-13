@@ -51,8 +51,8 @@ function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 
   ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
 
-  ctx.strokeStyle = STROKE_COLOR;
-  ctx.fillStyle = STROKE_COLOR;
+  ctx.strokeStyle = strokeColor;
+  ctx.fillStyle = strokeColor;
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -83,8 +83,8 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 
   ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
 
-  ctx.strokeStyle = STROKE_COLOR;
-  ctx.fillStyle = STROKE_COLOR;
+  ctx.strokeStyle = strokeColor;
+  ctx.fillStyle = strokeColor;
 
   ctx.beginPath();
 
@@ -101,8 +101,8 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
 
-  ctx.strokeStyle = STROKE_COLOR;
-  ctx.fillStyle = STROKE_COLOR;
+  ctx.strokeStyle = strokeColor;
+  ctx.fillStyle = strokeColor;
 
   ctx.beginPath();
 
@@ -141,9 +141,12 @@ function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
 
 const FPS = 60;
 
-const STROKE_COLOR = "hsl(0, 0%, 10%)";
+const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
+const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 
-const TEXT_COLOR = "hsl(0, 0%, 10%)";
+const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
+const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
+
 const TEXT_Y_OFFSET = 1;
 
 const NODE_BORDER_WIDTH_HALF = 1;
@@ -159,7 +162,7 @@ const EDGE_BORDER_WIDTH_HALF = 1;
 const ARROW_WIDTH = 10;
 const BRIDGE_WIDTH = 3;
 
-const FILL_COLORS = [
+const FILL_COLORS_LIGHT = [
   "#dedede",
   "#dd7878",
   "#7287ed",
@@ -172,7 +175,25 @@ const FILL_COLORS = [
   "#a879ef",
 ];
 
-const FILL_COLORS_LENGTH = FILL_COLORS.length;
+const FILL_COLORS_DARK = [
+  "#232323",
+  "#7d3838",
+  "#42479d",
+  "#7f5e0d",
+  "#40603b",
+  "#8c3a28",
+  "#104f85",
+  "#176249",
+  "#7a366b",
+  "#58398f",
+];
+
+const FILL_COLORS_LENGTH = 10;
+
+let strokeColor = STROKE_COLOR_DARK;
+let textColor = TEXT_COLOR_DARK;
+
+let fillColors = FILL_COLORS_DARK;
 
 let canvasWidth: number;
 let canvasHeight: number;
@@ -183,6 +204,7 @@ let oldDirected = false;
 let directed = false;
 
 let settings: Settings = {
+  darkMode: true,
   showComponents: false,
   showBridges: false,
   treeMode: false,
@@ -347,6 +369,16 @@ function updateVelocities() {
 }
 
 function buildSettings(): void {
+  if (settings.darkMode) {
+    strokeColor = STROKE_COLOR_DARK;
+    textColor = TEXT_COLOR_DARK;
+    fillColors = FILL_COLORS_DARK;
+  } else {
+    strokeColor = STROKE_COLOR_LIGHT;
+    textColor = TEXT_COLOR_LIGHT;
+    fillColors = FILL_COLORS_LIGHT;
+  }
+
   if (directed) {
     if (settings.showComponents) {
       colorMap = buildSCComponents(nodes, adj, rev);
@@ -419,9 +451,9 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.lineWidth = 2 * NODE_BORDER_WIDTH_HALF;
     ctx.lineCap = "round";
 
-    ctx.strokeStyle = STROKE_COLOR;
+    ctx.strokeStyle = strokeColor;
     ctx.fillStyle =
-      FILL_COLORS[
+      fillColors[
         colorMap === undefined
           ? 0
           : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
@@ -437,7 +469,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.textAlign = "center";
 
     ctx.font = "bold 16px JB";
-    ctx.fillStyle = TEXT_COLOR;
+    ctx.fillStyle = textColor;
     ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
   }
 }
@@ -451,7 +483,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
       ctx.setLineDash([2, 10]);
     }
 
-    ctx.strokeStyle = STROKE_COLOR;
+    ctx.strokeStyle = strokeColor;
 
     if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
       drawBridge(ctx, pt1, pt2);

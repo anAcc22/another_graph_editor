@@ -8,6 +8,8 @@ export function buildBridges(
   let depth = new Map<string, number>();
   let memo = new Map<string, number>();
 
+  let seen = new Set<string>();
+
   let coc = new Map<string, string[]>();
 
   for (const u of nodes) {
@@ -35,6 +37,8 @@ export function buildBridges(
   let bridgeMap: BridgeMap = new Map<string, boolean>();
 
   const solve = (u: string, pu: string): void => {
+    seen.add(u);
+
     for (const v of coc.get(u)!) {
       if (v !== pu) {
         if (depth.get(v)! === 0) {
@@ -55,8 +59,12 @@ export function buildBridges(
     }
   };
 
-  depth.set(nodes[0], 1);
-  solve(nodes[0], "");
+  for (const u of nodes) {
+    if (!seen.has(u)) {
+      depth.set(u, 1);
+      solve(u, "");
+    }
+  }
 
   for (const [u, vs] of coc.entries()) {
     for (const v of vs) {

@@ -61,14 +61,53 @@ function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 
   ctx.moveTo(mx, my);
   ctx.lineTo(
-    mx - ARROW_LENGTH * Math.cos(theta - Math.PI / 6),
-    my - ARROW_LENGTH * Math.sin(theta - Math.PI / 6),
+    mx - ARROW_WIDTH * Math.cos(theta - Math.PI / 6),
+    my - ARROW_WIDTH * Math.sin(theta - Math.PI / 6),
   );
   ctx.lineTo(
-    mx - ARROW_LENGTH * Math.cos(theta + Math.PI / 6),
-    my - ARROW_LENGTH * Math.sin(theta + Math.PI / 6),
+    mx - ARROW_WIDTH * Math.cos(theta + Math.PI / 6),
+    my - ARROW_WIDTH * Math.sin(theta + Math.PI / 6),
   );
   ctx.lineTo(mx, my);
+
+  ctx.fill();
+  ctx.stroke();
+}
+
+function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+  let px = u.y - v.y;
+  let py = v.x - u.x;
+
+  px *= BRIDGE_WIDTH / Math.hypot(px, py);
+  py *= BRIDGE_WIDTH / Math.hypot(px, py);
+
+  ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+
+  ctx.strokeStyle = STROKE_COLOR;
+  ctx.fillStyle = STROKE_COLOR;
+
+  ctx.beginPath();
+
+  ctx.moveTo(u.x + px, u.y + py);
+  ctx.lineTo(v.x + px, v.y + py);
+
+  ctx.moveTo(u.x - px, u.y - py);
+  ctx.lineTo(v.x - px, v.y - py);
+
+  ctx.fill();
+  ctx.stroke();
+}
+
+function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+  ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+
+  ctx.strokeStyle = STROKE_COLOR;
+  ctx.fillStyle = STROKE_COLOR;
+
+  ctx.beginPath();
+
+  ctx.moveTo(u.x, u.y);
+  ctx.lineTo(v.x, v.y);
 
   ctx.fill();
   ctx.stroke();
@@ -91,7 +130,8 @@ const CANVAS_FIELD_DIST = 50;
 
 const EDGE_BORDER_WIDTH_HALF = 1;
 
-const ARROW_LENGTH = 10;
+const ARROW_WIDTH = 10;
+const BRIDGE_WIDTH = 3;
 
 const FILL_COLORS = [
   "#dedede",
@@ -301,15 +341,10 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     ctx.strokeStyle = STROKE_COLOR;
 
     if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
-      ctx.lineWidth = 4 * EDGE_BORDER_WIDTH_HALF;
+      drawBridge(ctx, pt1, pt2);
     } else {
-      ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+      drawLine(ctx, pt1, pt2);
     }
-
-    ctx.beginPath();
-    ctx.moveTo(pt1.x, pt1.y);
-    ctx.lineTo(pt2.x, pt2.y);
-    ctx.stroke();
 
     ctx.setLineDash([]);
 

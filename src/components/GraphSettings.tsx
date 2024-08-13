@@ -1,4 +1,5 @@
 import { Settings } from "../types";
+import { SettingsToggleSection } from "./SettingsToggleSection";
 
 interface Props {
   settings: Settings;
@@ -16,233 +17,35 @@ export function GraphSettings({ settings, updateSettings }: Props) {
       >
         <h3 className="font-bold text-lg">Settings</h3>
 
-        <h4 className="font-normal">Components</h4>
-        <div className="flex font-light text-sm justify-between">
-          <span>
-            <span>
-              {!settings.showComponents ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
-                  Hide
-                </span>
-              ) : (
-                <span
-                  className="p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    updateSettings({
-                      ...settings,
-                      showComponents: false,
-                    });
-                    let checkbox = document.getElementById(
-                      "inputSettingsComponents",
-                    ) as HTMLInputElement;
-                    checkbox.checked = false;
-                  }}
-                >
-                  Hide
-                </span>
-              )}
-            </span>
-            <span> | </span>
-            <span>
-              {settings.showComponents ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
-                  Show
-                </span>
-              ) : (
-                <span
-                  className="p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    updateSettings({
-                      ...settings,
-                      showComponents: true,
-                    });
-                    let checkbox = document.getElementById(
-                      "inputSettingsComponents",
-                    ) as HTMLInputElement;
-                    checkbox.checked = true;
-                  }}
-                >
-                  Show
-                </span>
-              )}
-            </span>
-          </span>
-          <label className="relative inline w-9">
-            <input
-              onClick={() =>
-                updateSettings({
-                  ...settings,
-                  showComponents: !settings.showComponents,
-                })
-              }
-              type="checkbox"
-              id="inputSettingsComponents"
-              className="peer invisible"
-            />
-            <span
-              className="absolute top-0 left-0 w-9 h-5 cursor-pointer
-                rounded-full bg-slate-300 border-none transition-all duration-75
-                hover:bg-slate-400 peer-checked:bg-slate-600"
-            ></span>
-            <span
-              className="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-50
-                rounded-full transition-all duration-75 cursor-pointer
-                peer-checked:translate-x-4"
-            ></span>
-          </label>
-        </div>
+        <SettingsToggleSection
+          title={"Components"}
+          leftLabel={"Hide"}
+          rightLabel={"Show"}
+          toggleID={"settingsComponents"}
+          settingsName={"showComponents"}
+          settings={settings}
+          updateSettings={updateSettings}
+        />
 
-        <h4 className="font-normal">Tree Mode</h4>
-        <div className="flex font-light text-sm justify-between">
-          <span>
-            <span>
-              {!settings.treeMode ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
-                  Off
-                </span>
-              ) : (
-                <span
-                  className="p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    updateSettings({
-                      ...settings,
-                      treeMode: false,
-                    });
-                    let checkbox = document.getElementById(
-                      "inputSettingsTreeMode",
-                    ) as HTMLInputElement;
-                    checkbox.checked = false;
-                  }}
-                >
-                  Off
-                </span>
-              )}
-            </span>
-            <span> | </span>
-            <span>
-              {settings.treeMode ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
-                  On
-                </span>
-              ) : (
-                <span
-                  className="p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    updateSettings({
-                      ...settings,
-                      treeMode: true,
-                    });
-                    let checkbox = document.getElementById(
-                      "inputSettingsTreeMode",
-                    ) as HTMLInputElement;
-                    checkbox.checked = true;
-                  }}
-                >
-                  On
-                </span>
-              )}
-            </span>
-          </span>
-          <label className="relative inline w-9">
-            <input
-              onClick={() =>
-                updateSettings({
-                  ...settings,
-                  treeMode: !settings.treeMode,
-                })
-              }
-              type="checkbox"
-              id="inputSettingsTreeMode"
-              className="peer invisible"
-            />
-            <span
-              className="absolute top-0 left-0 w-9 h-5 cursor-pointer
-                rounded-full bg-slate-300 border-none transition-all duration-75
-                hover:bg-slate-400 peer-checked:bg-slate-600"
-            ></span>
-            <span
-              className="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-50
-                rounded-full transition-all duration-75 cursor-pointer
-                peer-checked:translate-x-4"
-            ></span>
-          </label>
-        </div>
+        <SettingsToggleSection
+          title={"Tree Mode"}
+          leftLabel={"Off"}
+          rightLabel={"On"}
+          toggleID={"settingsTreeMode"}
+          settingsName={"treeMode"}
+          settings={settings}
+          updateSettings={updateSettings}
+        />
 
-        <h4 className="font-normal">Lock Mode</h4>
-        <div className="flex font-light text-sm justify-between">
-          <span>
-            <span>
-              {!settings.lockMode ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
-                  Off
-                </span>
-              ) : (
-                <span
-                  className="p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    updateSettings({
-                      ...settings,
-                      lockMode: false,
-                    });
-                    let checkbox = document.getElementById(
-                      "inputSettingsLockMode",
-                    ) as HTMLInputElement;
-                    checkbox.checked = false;
-                  }}
-                >
-                  Off
-                </span>
-              )}
-            </span>
-            <span> | </span>
-            <span>
-              {settings.lockMode ? (
-                <span className="text-amber-700 p-0 hover:cursor-pointer">
-                  On
-                </span>
-              ) : (
-                <span
-                  className="p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    updateSettings({
-                      ...settings,
-                      lockMode: true,
-                    });
-                    let directedCheckbox = document.getElementById(
-                      "inputSettingsLockMode",
-                    ) as HTMLInputElement;
-                    directedCheckbox.checked = true;
-                  }}
-                >
-                  On
-                </span>
-              )}
-            </span>
-          </span>
-          <label className="relative inline w-9">
-            <input
-              onClick={() =>
-                updateSettings({
-                  ...settings,
-                  lockMode: !settings.lockMode,
-                })
-              }
-              type="checkbox"
-              id="inputSettingsLockMode"
-              className="peer invisible"
-            />
-            <span
-              className="absolute top-0 left-0 w-9 h-5 cursor-pointer
-                rounded-full bg-slate-300 border-none transition-all duration-75
-                hover:bg-slate-400 peer-checked:bg-slate-600"
-            ></span>
-            <span
-              className="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-50
-                rounded-full transition-all duration-75 cursor-pointer
-                peer-checked:translate-x-4"
-            ></span>
-          </label>
-        </div>
+        <SettingsToggleSection
+          title={"Lock Mode"}
+          leftLabel={"Off"}
+          rightLabel={"On"}
+          toggleID={"settingsLockMode"}
+          settingsName={"lockMode"}
+          settings={settings}
+          updateSettings={updateSettings}
+        />
       </div>
     </>
   );

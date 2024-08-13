@@ -2,11 +2,12 @@ import { Settings } from "../types";
 import { SettingsToggleSection } from "./SettingsToggleSection";
 
 interface Props {
+  directed: boolean;
   settings: Settings;
   updateSettings: (settings: Settings) => void;
 }
 
-export function GraphSettings({ settings, updateSettings }: Props) {
+export function GraphSettings({ directed, settings, updateSettings }: Props) {
   return (
     <>
       <div
@@ -27,6 +28,21 @@ export function GraphSettings({ settings, updateSettings }: Props) {
           updateSettings={updateSettings}
         />
 
+        {!directed ? (
+          <SettingsToggleSection
+            title={"Bridges and Cut Vertices"}
+            leftLabel={"Hide"}
+            rightLabel={"Show"}
+            toggleID={"settingsBridges"}
+            settingsName={"showBridges"}
+            settings={settings}
+            updateSettings={updateSettings}
+          />
+        ) : (
+          <></>
+        )}
+
+        {!directed ? (
         <SettingsToggleSection
           title={"Tree Mode"}
           leftLabel={"Off"}
@@ -36,6 +52,9 @@ export function GraphSettings({ settings, updateSettings }: Props) {
           settings={settings}
           updateSettings={updateSettings}
         />
+        ) : (
+          <></>
+        )}
 
         <SettingsToggleSection
           title={"Lock Mode"}

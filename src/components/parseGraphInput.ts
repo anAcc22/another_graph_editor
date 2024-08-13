@@ -17,6 +17,7 @@ export function parseGraphInputParentChild(
     .trim()
     .split(/\s+/)
     .filter((u) => u.length);
+
   const c = child
     .trim()
     .split(/\s+/)
@@ -36,7 +37,7 @@ export function parseGraphInputParentChild(
     } else {
       if (!nodes.includes(p[i])) {
         nodes.push(p[i]);
-        adj.set(p[i], []);
+        adj.set(p[i], [c[i]]);
       } else {
         adj.set(p[i], [...adj.get(p[i])!, c[i]]);
       }
@@ -60,7 +61,7 @@ export function parseGraphInputParentChild(
       if (rev.has(v)) {
         rev.set(v, [...rev.get(v)!, u]);
       } else {
-        rev.set(v, []);
+        rev.set(v, [u]);
       }
     }
   }

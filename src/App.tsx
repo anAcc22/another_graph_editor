@@ -17,6 +17,7 @@ function App() {
   const [directed, setDirected] = useState<boolean>(false);
   const [settings, setSettings] = useState<Settings>({
     showComponents: false,
+    showBridges: false,
     treeMode: false,
     lockMode: false,
   });
@@ -33,7 +34,11 @@ function App() {
         updateDirected={updateDirected}
       />
       <GraphCanvas graph={graph} directed={directed} settings={settings} />
-      <GraphSettings settings={settings} updateSettings={updateSettings} />
+      <GraphSettings
+        directed={directed}
+        settings={settings}
+        updateSettings={updateSettings}
+      />
     </>
   );
 }

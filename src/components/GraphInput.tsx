@@ -10,12 +10,12 @@ interface Props {
   updateDirected: (directed: boolean) => void;
 }
 
-const EMPTY_GRAPH: Graph = {
-  nodes: new Array<string>(),
-  adj: new Map<string, string[]>(),
-  rev: new Map<string, string[]>(),
-  edges: new Array<string>(),
-};
+// const EMPTY_GRAPH: Graph = {
+//   nodes: new Array<string>(),
+//   adj: new Map<string, string[]>(),
+//   rev: new Map<string, string[]>(),
+//   edges: new Array<string>(),
+// };
 
 type InputFormat = "edges" | "parentChild";
 
@@ -55,10 +55,6 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
       window.removeEventListener("resize", processGraphInput);
     };
   }, []);
-
-  useEffect(() => {
-    updateGraph(EMPTY_GRAPH);
-  }, [inputFormat]);
 
   return (
     <>

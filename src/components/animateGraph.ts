@@ -1,11 +1,13 @@
 import { Graph } from "../types";
 import { Settings } from "../types";
-import { ColorMap, LayerMap, BackedgeMap } from "../types";
+import { ColorMap, LayerMap, BackedgeMap, BridgeMap } from "../types";
 
 import { buildComponents } from "./graphComponents";
 import { buildSCComponents } from "./graphComponents";
 
 import { buildTreeLayers } from "./graphTreeLayers";
+
+import { buildBridges } from "./graphBridges";
 
 interface Vector2D {
   x: number;
@@ -36,8 +38,6 @@ class Node {
   }
 }
 
-// ╾─────────────────────────╼ Math Functions ╾─────────────────────╼
-
 function clamp(val: number, low: number, high: number) {
   return Math.max(low, Math.min(val, high));
 }
@@ -45,8 +45,6 @@ function clamp(val: number, low: number, high: number) {
 function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
-
-// ╾───────────────────────╼ Plotting Functions ╾───────────────────╼
 
 function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
@@ -120,6 +118,7 @@ let directed = false;
 
 let settings: Settings = {
   showComponents: false,
+  showBridges: false,
   treeMode: false,
   lockMode: false,
 };
@@ -138,6 +137,7 @@ let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
 
 let backedgeMap: BackedgeMap | undefined = undefined;
+let bridgeMap: BridgeMap | undefined = undefined;
 
 function updateNodes(graph: Graph): void {
   for (const u of graph.nodes) {
@@ -196,11 +196,9 @@ function buildSettings(): void {
     } else {
       colorMap = undefined;
     }
-    if (settings.treeMode) {
-      [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
-    } else {
-      layerMap = undefined;
-    }
+    layerMap = undefined;
+    backedgeMap = undefined;
+    bridgeMap = undefined;
   } else {
     if (settings.showComponents) {
       colorMap = buildComponents(nodes, adj, rev);
@@ -211,6 +209,12 @@ function buildSettings(): void {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
     } else {
       layerMap = undefined;
+      backedgeMap = undefined;
+    }
+    if (settings.showBridges) {
+      bridgeMap = buildBridges(nodes, adj, rev);
+    } else {
+      bridgeMap = undefined;
     }
   }
 }
@@ -290,12 +294,17 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
     const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
 
-    if (settings.treeMode && backedgeMap!.get(e)) {
+    if (settings.treeMode && backedgeMap !== undefined && backedgeMap.get(e)) {
       ctx.setLineDash([2, 10]);
     }
 
     ctx.strokeStyle = STROKE_COLOR;
-    ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+
+    if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
+      ctx.lineWidth = 4 * EDGE_BORDER_WIDTH_HALF;
+    } else {
+      ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+    }
 
     ctx.beginPath();
     ctx.moveTo(pt1.x, pt1.y);
@@ -365,9 +374,9 @@ function updateVelocities() {
       y: (nodeMap.get(u)!.vel.y + ayB) * (1 - NODE_FRICTION),
     };
 
-    if (settings.treeMode) {
-      const depth = layerMap!.get(u)![0];
-      const maxDepth = layerMap!.get(u)![1];
+    if (settings.treeMode && layerMap !== undefined) {
+      const depth = layerMap.get(u)![0];
+      const maxDepth = layerMap.get(u)![1];
 
       let layerHeight = (NODE_DIST * 4) / 5;
 

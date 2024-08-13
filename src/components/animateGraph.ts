@@ -1,6 +1,6 @@
 import { Graph } from "../types";
 import { Settings } from "../types";
-import { ColorMap, LayerMap, BackedgeMap, BridgeMap } from "../types";
+import { ColorMap, CutMap, LayerMap, BackedgeMap, BridgeMap } from "../types";
 
 import { buildComponents } from "./graphComponents";
 import { buildSCComponents } from "./graphComponents";
@@ -113,6 +113,32 @@ function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.stroke();
 }
 
+function drawCircle(ctx: CanvasRenderingContext2D, u: Vector2D) {
+  ctx.beginPath();
+
+  ctx.arc(u.x, u.y, NODE_RADIUS - NODE_BORDER_WIDTH_HALF, 0, 2 * Math.PI);
+
+  ctx.fill();
+  ctx.stroke();
+}
+
+function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
+  ctx.beginPath();
+
+  const length = NODE_RADIUS - NODE_BORDER_WIDTH_HALF;
+
+  let theta = Math.PI / 6;
+
+  for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
+    const x = u.x + length * Math.cos(theta);
+    const y = u.y + length * Math.sin(theta);
+    ctx.lineTo(x, y);
+  }
+
+  ctx.fill();
+  ctx.stroke();
+}
+
 const FPS = 60;
 
 const STROKE_COLOR = "hsl(0, 0%, 10%)";
@@ -140,8 +166,8 @@ const FILL_COLORS = [
   "#dfae5d",
   "#70b05b",
   "#dc8a68",
-  "#30afc5",
-  "#37b2a9",
+  "#309fc5",
+  "#37c2b9",
   "#ea76cb",
   "#a879ef",
 ];
@@ -177,6 +203,8 @@ let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
 
 let backedgeMap: BackedgeMap | undefined = undefined;
+
+let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
 function updateNodes(graph: Graph): void {
@@ -227,131 +255,6 @@ function updateNodes(graph: Graph): void {
 
 function updateEdges(graph: Graph): void {
   edges = graph.edges;
-}
-
-function buildSettings(): void {
-  if (directed) {
-    if (settings.showComponents) {
-      colorMap = buildSCComponents(nodes, adj, rev);
-    } else {
-      colorMap = undefined;
-    }
-    layerMap = undefined;
-    backedgeMap = undefined;
-    bridgeMap = undefined;
-  } else {
-    if (settings.showComponents) {
-      colorMap = buildComponents(nodes, adj, rev);
-    } else {
-      colorMap = undefined;
-    }
-    if (settings.treeMode) {
-      [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
-    } else {
-      layerMap = undefined;
-      backedgeMap = undefined;
-    }
-    if (settings.showBridges) {
-      bridgeMap = buildBridges(nodes, adj, rev);
-    } else {
-      bridgeMap = undefined;
-    }
-  }
-}
-
-export function updateGraph(graph: Graph) {
-  updateNodes(graph);
-  updateEdges(graph);
-
-  adj = graph.adj;
-  rev = graph.rev;
-
-  buildSettings();
-}
-
-export function resizeGraph(width: number, height: number) {
-  canvasWidth = width;
-  canvasHeight = height;
-}
-
-export function updateDirected(d: boolean) {
-  directed = d;
-}
-
-export function updateSettings(s: Settings) {
-  settings = s;
-  buildSettings();
-}
-
-function resetMisplacedNodes() {
-  nodes.map((u) => {
-    if (!nodeMap.get(u)!.inBounds()) {
-      nodeMap.get(u)!.resetPos();
-    }
-  });
-}
-
-function renderNodes(ctx: CanvasRenderingContext2D) {
-  for (let i = 0; i < nodes.length; i++) {
-    const u = nodes[i];
-
-    const node = nodeMap.get(u);
-
-    ctx.lineWidth = 2 * NODE_BORDER_WIDTH_HALF;
-    ctx.lineCap = "round";
-
-    ctx.strokeStyle = STROKE_COLOR;
-    ctx.fillStyle =
-      FILL_COLORS[
-        colorMap === undefined
-          ? 0
-          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
-      ];
-
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-
-    ctx.beginPath();
-    ctx.arc(
-      node!.pos.x,
-      node!.pos.y,
-      NODE_RADIUS - NODE_BORDER_WIDTH_HALF,
-      0,
-      2 * Math.PI,
-    );
-
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.font = "bold 16px JB";
-    ctx.fillStyle = TEXT_COLOR;
-    ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
-  }
-}
-
-function renderEdges(ctx: CanvasRenderingContext2D) {
-  for (const e of edges) {
-    const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
-    const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
-
-    if (settings.treeMode && backedgeMap !== undefined && backedgeMap.get(e)) {
-      ctx.setLineDash([2, 10]);
-    }
-
-    ctx.strokeStyle = STROKE_COLOR;
-
-    if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
-      drawBridge(ctx, pt1, pt2);
-    } else {
-      drawLine(ctx, pt1, pt2);
-    }
-
-    ctx.setLineDash([]);
-
-    if (directed) {
-      drawArrow(ctx, pt1, pt2);
-    }
-  }
 }
 
 function updateVelocities() {
@@ -440,6 +343,127 @@ function updateVelocities() {
       x: uPos.x + uVel.x,
       y: uPos.y + uVel.y,
     };
+  }
+}
+
+function buildSettings(): void {
+  if (directed) {
+    if (settings.showComponents) {
+      colorMap = buildSCComponents(nodes, adj, rev);
+    } else {
+      colorMap = undefined;
+    }
+    layerMap = undefined;
+    backedgeMap = undefined;
+    cutMap = undefined;
+    bridgeMap = undefined;
+  } else {
+    if (settings.showComponents) {
+      colorMap = buildComponents(nodes, adj, rev);
+    } else {
+      colorMap = undefined;
+    }
+    if (settings.treeMode) {
+      [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
+    } else {
+      layerMap = undefined;
+      backedgeMap = undefined;
+    }
+    if (settings.showBridges) {
+      [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
+    } else {
+      cutMap = undefined;
+      bridgeMap = undefined;
+    }
+  }
+}
+
+export function updateGraph(graph: Graph) {
+  updateNodes(graph);
+  updateEdges(graph);
+
+  adj = graph.adj;
+  rev = graph.rev;
+
+  buildSettings();
+}
+
+export function resizeGraph(width: number, height: number) {
+  canvasWidth = width;
+  canvasHeight = height;
+}
+
+export function updateDirected(d: boolean) {
+  directed = d;
+}
+
+export function updateSettings(s: Settings) {
+  settings = s;
+  buildSettings();
+}
+
+function resetMisplacedNodes() {
+  nodes.map((u) => {
+    if (!nodeMap.get(u)!.inBounds()) {
+      nodeMap.get(u)!.resetPos();
+    }
+  });
+}
+
+function renderNodes(ctx: CanvasRenderingContext2D) {
+  for (let i = 0; i < nodes.length; i++) {
+    const u = nodes[i];
+
+    const node = nodeMap.get(u)!;
+
+    ctx.lineWidth = 2 * NODE_BORDER_WIDTH_HALF;
+    ctx.lineCap = "round";
+
+    ctx.strokeStyle = STROKE_COLOR;
+    ctx.fillStyle =
+      FILL_COLORS[
+        colorMap === undefined
+          ? 0
+          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
+      ];
+
+    if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
+      drawHexagon(ctx, node.pos);
+    } else {
+      drawCircle(ctx, node.pos);
+    }
+
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+
+    ctx.font = "bold 16px JB";
+    ctx.fillStyle = TEXT_COLOR;
+    ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
+  }
+}
+
+function renderEdges(ctx: CanvasRenderingContext2D) {
+  for (const e of edges) {
+    const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
+    const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
+
+    if (settings.treeMode && backedgeMap !== undefined && backedgeMap.get(e)) {
+      ctx.setLineDash([2, 10]);
+    }
+
+    ctx.strokeStyle = STROKE_COLOR;
+
+    if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
+      drawBridge(ctx, pt1, pt2);
+    } else {
+      drawLine(ctx, pt1, pt2);
+    }
+
+    ctx.setLineDash([]);
+
+    if (directed) {
+      drawArrow(ctx, pt1, pt2);
+    }
   }
 }
 

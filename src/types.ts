@@ -17,11 +17,13 @@ export interface ParsedGraph {
   graph?: Graph;
 }
 
-export type ColorMap = Map<string, number> | undefined;
+export type ColorMap = Map<string, number>;
+
+export type CutMap = Map<string, boolean>;
 
 export type Layer = [number, number];
 
 export type LayerMap = Map<string, Layer>;
 
-export type BackedgeMap = Map<string, boolean>
-export type BridgeMap = Map<string, boolean>
+export type BackedgeMap = Map<string, boolean>;
+export type BridgeMap = Map<string, boolean>;

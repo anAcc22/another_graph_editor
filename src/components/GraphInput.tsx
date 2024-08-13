@@ -48,6 +48,14 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
     }
   };
 
+  const handleTextAreaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if (e.key === "Escape") {
+      e.currentTarget.blur();
+    }
+  };
+
   useEffect(() => {
     processGraphInput();
     window.addEventListener("resize", processGraphInput);
@@ -203,7 +211,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           <textarea
             name="graphInputEdges"
             id="graphInputEdges"
-            onChange={() => processGraphInput()}
+            onChange={processGraphInput}
+            onKeyDown={handleTextAreaKeyDown}
             rows={8}
             className="font-semibold font-jetbrains resize-none border-2
               rounded-md p-2 border-single focus:outline-none text-lg
@@ -222,7 +231,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               name="graphInputParent"
               id="graphInputParent"
               rows={1}
-              onChange={() => processGraphInput()}
+              onChange={processGraphInput}
+              onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
                 border-2 rounded-md p-2 border-single focus:outline-none text-lg
                 border-border focus:border-border-active"
@@ -235,7 +245,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               id="graphInputChild"
               rows={1}
               defaultValue={"1 2 3 4 5 6 7 8 9"}
-              onChange={() => processGraphInput()}
+              onChange={processGraphInput}
+              onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
                 border-2 rounded-md p-2 border-single focus:outline-none text-lg
                 border-border focus:border-border-active"

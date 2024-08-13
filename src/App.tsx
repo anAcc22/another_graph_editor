@@ -6,6 +6,7 @@ import { Settings } from "./types";
 import { Graph } from "./types";
 
 import { useState } from "react";
+import { useEffect } from "react";
 
 function App() {
   const [graph, setGraph] = useState<Graph>({
@@ -22,6 +23,40 @@ function App() {
     treeMode: false,
     lockMode: false,
   });
+
+  useEffect(() => {
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        setSettings(
+          e.matches
+            ? { ...settings, darkMode: true }
+            : { ...settings, darkMode: false },
+        );
+      });
+
+    setSettings(
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? { ...settings, darkMode: true }
+        : { ...settings, darkMode: false },
+    );
+
+    if (localStorage.getItem("darkMode") !== null) {
+      let darkMode = localStorage.getItem("darkMode") === "true";
+
+      if (darkMode) {
+        setSettings({ ...settings, darkMode: true });
+      } else {
+        setSettings({ ...settings, darkMode: false });
+      }
+    }
+
+    return () => {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .removeEventListener("change", () => {});
+    };
+  }, []);
 
   const updateGraph = (graph: Graph) => setGraph(graph);
   const updateDirected = (directed: boolean) => setDirected(directed);

@@ -84,6 +84,7 @@ export function SettingsToggleSection({
             checked={settings[settingsName]}
             id={toggleID}
             className="peer invisible"
+            onChange={() => {}}
           />
           <span
             className="absolute top-0 left-0 w-9 h-5 cursor-pointer rounded-full

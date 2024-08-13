@@ -26,7 +26,10 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           toggleID={"settingsTheme"}
           settingsName={"darkMode"}
           settings={settings}
-          updateSettings={updateSettings}
+          updateSettings={(newSettings) => {
+            updateSettings(newSettings);
+            localStorage.setItem("darkMode", newSettings.darkMode.toString());
+          }}
         />
 
         <SettingsToggleSection

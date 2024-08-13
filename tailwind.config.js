@@ -24,8 +24,10 @@ export default {
             colors: {
               ovr: "hsl(0, 0%, 98%)",
               text: "hsl(0, 0%, 18%)",
+              slider: "hsl(0, 0%, 68%)",
               block: "hsl(50, 5%, 96%)",
               border: "hsl(50, 5%, 90%)",
+              "slider-thumb": "hsl(30, 30%, 50%)",
               "border-active": "hsl(50, 40%, 60%)",
               "border-hover": "hsl(50, 5%, 80%)",
               "toggle-circle": "hsl(0, 0%, 98%)",
@@ -48,8 +50,10 @@ export default {
             colors: {
               ovr: "hsl(0, 0%, 14%)",
               text: "hsl(0, 0%, 88%)",
+              slider: "hsl(0, 0%, 38%)",
               block: "hsl(50, 5%, 16%)",
               border: "hsl(50, 5%, 30%)",
+              "slider-thumb": "hsl(30, 30%, 50%)",
               "border-active": "hsl(50, 40%, 30%)",
               "border-hover": "hsl(50, 5%, 40%)",
               "toggle-circle": "hsl(0, 0%, 25%)",

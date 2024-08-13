@@ -7,6 +7,8 @@ export interface Graph {
 
 export interface Settings {
   darkMode: boolean;
+  nodeRadius: number;
+  nodeBorderWidthHalf: number;
   showComponents: boolean;
   showBridges: boolean;
   treeMode: boolean;

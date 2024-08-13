@@ -32,6 +32,56 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           }}
         />
 
+        <h4 className="font-normal pt-2">Node Radius</h4>
+        <input
+          type="range"
+          min={0}
+          max={15}
+          step={1}
+          value={settings.nodeRadius - 16}
+          className="range appearance-none outline-none bg-slider h-1
+            rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newRadius = 16 + Number.parseInt(e.target.value);
+            updateSettings({
+              ...settings,
+              nodeRadius: newRadius,
+            });
+            localStorage.setItem("nodeRadius", newRadius.toString());
+          }}
+        />
+
+        <h4 className="font-normal pt-1">Line Thickness</h4>
+        <input
+          type="range"
+          min={0}
+          max={1.5}
+          step={0.1}
+          value={settings.nodeBorderWidthHalf - 1}
+          className="range appearance-none outline-none bg-slider h-1
+            rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newBorderWidthHalf = 1 + Number.parseFloat(e.target.value);
+            updateSettings({
+              ...settings,
+              nodeBorderWidthHalf: newBorderWidthHalf,
+            });
+            localStorage.setItem(
+              "nodeBorderWidthHalf",
+              newBorderWidthHalf.toString(),
+            );
+          }}
+        />
+        <div className="pb-2"></div>
+
         <SettingsToggleSection
           title={"Components"}
           leftLabel={"Hide"}

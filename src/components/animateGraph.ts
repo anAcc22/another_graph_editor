@@ -26,14 +26,14 @@ class Node {
   inBounds(): boolean {
     const x = this.pos.x;
     const y = this.pos.y;
-    const xOk = x >= NODE_RADIUS && x + NODE_RADIUS <= canvasWidth;
-    const yOk = y >= NODE_RADIUS && y + NODE_RADIUS <= canvasHeight;
+    const xOk = x >= nodeRadius && x + nodeRadius <= canvasWidth;
+    const yOk = y >= nodeRadius && y + nodeRadius <= canvasHeight;
     return xOk && yOk;
   }
   resetPos(): void {
     this.pos = {
-      x: clamp(this.pos.x, NODE_RADIUS, canvasWidth - NODE_RADIUS),
-      y: clamp(this.pos.y, NODE_RADIUS, canvasHeight - NODE_RADIUS),
+      x: clamp(this.pos.x, nodeRadius, canvasWidth - nodeRadius),
+      y: clamp(this.pos.y, nodeRadius, canvasHeight - nodeRadius),
     };
   }
 }
@@ -49,7 +49,7 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
 function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
 
-  ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
   ctx.strokeStyle = strokeColor;
   ctx.fillStyle = strokeColor;
@@ -61,12 +61,12 @@ function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 
   ctx.moveTo(mx, my);
   ctx.lineTo(
-    mx - ARROW_WIDTH * Math.cos(theta - Math.PI / 6),
-    my - ARROW_WIDTH * Math.sin(theta - Math.PI / 6),
+    mx - (nodeRadius / 2) * Math.cos(theta - Math.PI / 6),
+    my - (nodeRadius / 2) * Math.sin(theta - Math.PI / 6),
   );
   ctx.lineTo(
-    mx - ARROW_WIDTH * Math.cos(theta + Math.PI / 6),
-    my - ARROW_WIDTH * Math.sin(theta + Math.PI / 6),
+    mx - (nodeRadius / 2) * Math.cos(theta + Math.PI / 6),
+    my - (nodeRadius / 2) * Math.sin(theta + Math.PI / 6),
   );
   ctx.lineTo(mx, my);
 
@@ -78,10 +78,10 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= BRIDGE_WIDTH / Math.hypot(px, py);
-  py *= BRIDGE_WIDTH / Math.hypot(px, py);
+  px *= nodeRadius / 4 / Math.hypot(px, py);
+  py *= nodeRadius / 4 / Math.hypot(px, py);
 
-  ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
   ctx.strokeStyle = strokeColor;
   ctx.fillStyle = strokeColor;
@@ -99,7 +99,7 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 }
 
 function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
-  ctx.lineWidth = 2 * EDGE_BORDER_WIDTH_HALF;
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
   ctx.strokeStyle = strokeColor;
   ctx.fillStyle = strokeColor;
@@ -116,7 +116,7 @@ function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 function drawCircle(ctx: CanvasRenderingContext2D, u: Vector2D) {
   ctx.beginPath();
 
-  ctx.arc(u.x, u.y, NODE_RADIUS - NODE_BORDER_WIDTH_HALF, 0, 2 * Math.PI);
+  ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
 
   ctx.fill();
   ctx.stroke();
@@ -125,7 +125,7 @@ function drawCircle(ctx: CanvasRenderingContext2D, u: Vector2D) {
 function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
   ctx.beginPath();
 
-  const length = NODE_RADIUS - NODE_BORDER_WIDTH_HALF;
+  const length = nodeRadius - nodeBorderWidthHalf;
 
   let theta = Math.PI / 6;
 
@@ -149,18 +149,10 @@ const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
 
 const TEXT_Y_OFFSET = 1;
 
-const NODE_BORDER_WIDTH_HALF = 1;
-const NODE_RADIUS = 18;
-
 const NODE_DIST = 100;
 const NODE_FRICTION = 0.05;
 
 const CANVAS_FIELD_DIST = 50;
-
-const EDGE_BORDER_WIDTH_HALF = 1;
-
-const ARROW_WIDTH = 10;
-const BRIDGE_WIDTH = 3;
 
 const FILL_COLORS_LIGHT = [
   "#dedede",
@@ -190,6 +182,9 @@ const FILL_COLORS_DARK = [
 
 const FILL_COLORS_LENGTH = 10;
 
+let nodeRadius = 16;
+let nodeBorderWidthHalf = 1;
+
 let strokeColor = STROKE_COLOR_DARK;
 let textColor = TEXT_COLOR_DARK;
 
@@ -205,6 +200,8 @@ let directed = false;
 
 let settings: Settings = {
   darkMode: true,
+  nodeRadius: 15,
+  nodeBorderWidthHalf: 15,
   showComponents: false,
   showBridges: false,
   treeMode: false,
@@ -238,14 +235,14 @@ function updateNodes(graph: Graph): void {
       let xFailCnt = 0;
       let yFailCnt = 0;
 
-      while (x <= NODE_RADIUS || x >= canvasWidth - NODE_RADIUS) {
+      while (x <= nodeRadius || x >= canvasWidth - nodeRadius) {
         x = Math.round(Math.random() * canvasWidth);
         xFailCnt++;
         if (xFailCnt === 10) {
           break;
         }
       }
-      while (y <= NODE_RADIUS || y >= canvasHeight - NODE_RADIUS) {
+      while (y <= nodeRadius || y >= canvasHeight - nodeRadius) {
         y = Math.round(Math.random() * canvasHeight);
         yFailCnt++;
         if (yFailCnt === 10) {
@@ -379,6 +376,9 @@ function buildSettings(): void {
     fillColors = FILL_COLORS_LIGHT;
   }
 
+  nodeRadius = settings.nodeRadius;
+  nodeBorderWidthHalf = settings.nodeBorderWidthHalf;
+
   if (directed) {
     if (settings.showComponents) {
       colorMap = buildSCComponents(nodes, adj, rev);
@@ -448,7 +448,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 
     const node = nodeMap.get(u)!;
 
-    ctx.lineWidth = 2 * NODE_BORDER_WIDTH_HALF;
+    ctx.lineWidth = 2 * nodeBorderWidthHalf;
     ctx.lineCap = "round";
 
     ctx.strokeStyle = strokeColor;
@@ -468,7 +468,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
 
-    ctx.font = "bold 16px JB";
+    ctx.font = `bold ${nodeRadius}px JB`;
     ctx.fillStyle = textColor;
     ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
   }
@@ -512,7 +512,7 @@ export function animateGraph(
     };
 
     nodes.map((u) => {
-      if (euclidDist(nodeMap.get(u)!.pos, mousePos) <= NODE_RADIUS) {
+      if (euclidDist(nodeMap.get(u)!.pos, mousePos) <= nodeRadius) {
         draggedNodes.push(u);
       }
     });
@@ -532,7 +532,7 @@ export function animateGraph(
     if (draggedNodes.length === 0) {
       let hasNode = false;
       nodes.map((u) => {
-        if (euclidDist(nodeMap.get(u)!.pos, mousePos) <= NODE_RADIUS) {
+        if (euclidDist(nodeMap.get(u)!.pos, mousePos) <= nodeRadius) {
           hasNode = true;
         }
       });
@@ -571,8 +571,8 @@ export function animateGraph(
 
       draggedNodes.map((u) => {
         nodeMap.get(u)!.pos = {
-          x: clamp(mousePos.x, NODE_RADIUS, canvasWidth - NODE_RADIUS),
-          y: clamp(mousePos.y, NODE_RADIUS, canvasHeight - NODE_RADIUS),
+          x: clamp(mousePos.x, nodeRadius, canvasWidth - nodeRadius),
+          y: clamp(mousePos.y, nodeRadius, canvasHeight - nodeRadius),
         };
       });
 

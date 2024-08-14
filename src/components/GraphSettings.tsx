@@ -19,6 +19,34 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
       >
         <h3 className="font-bold text-lg">Settings</h3>
 
+        <h4 className="font-semibold">Label Offset</h4>
+        <input
+          type="range"
+          min={-2}
+          max={2}
+          step={1}
+          value={settings.labelOffset}
+          className="range appearance-none outline-none bg-slider h-1
+            rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            updateSettings({
+              ...settings,
+              labelOffset: Number.parseInt(e.target.value),
+            });
+          }}
+        />
+        <div className="flex justify-between">
+          <div className="w-0">-2</div>
+          <div className="w-0">-1</div>
+          <div className="w-0">0</div>
+          <div className="w-0">1</div>
+          <div>2</div>
+        </div>
+
         <SettingsToggleSection
           title={"Theme"}
           leftLabel={"Light"}
@@ -32,7 +60,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           }}
         />
 
-        <h4 className="font-normal pt-2">Node Radius</h4>
+        <h4 className="font-semibold">Node Radius</h4>
         <input
           type="range"
           min={0}
@@ -55,7 +83,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           }}
         />
 
-        <h4 className="font-normal pt-1">Line Thickness</h4>
+        <h4 className="font-semibold">Line Thickness</h4>
         <input
           type="range"
           min={0}
@@ -80,7 +108,6 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             );
           }}
         />
-        <div className="pb-2"></div>
 
         <SettingsToggleSection
           title={"Components"}

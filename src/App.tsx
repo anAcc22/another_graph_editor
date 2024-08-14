@@ -15,6 +15,7 @@ function App() {
   });
   const [directed, setDirected] = useState<boolean>(false);
   const [settings, setSettings] = useState<Settings>({
+    labelOffset: 0,
     darkMode:
       localStorage.getItem("darkMode") !== null
         ? localStorage.getItem("darkMode") === "true"

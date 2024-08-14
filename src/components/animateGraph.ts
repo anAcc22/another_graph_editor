@@ -38,6 +38,10 @@ class Node {
   }
 }
 
+function isInteger(val: string) {
+  return parseInt(val, 10).toString() === val;
+}
+
 function clamp(val: number, low: number, high: number) {
   return Math.max(low, Math.min(val, high));
 }
@@ -199,6 +203,7 @@ let oldDirected = false;
 let directed = false;
 
 let settings: Settings = {
+  labelOffset: 0,
   darkMode: true,
   nodeRadius: 15,
   nodeBorderWidthHalf: 15,
@@ -210,6 +215,8 @@ let settings: Settings = {
 
 let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
+
+let labelOffset = 0;
 
 let draggedNodes: string[] = [];
 
@@ -379,6 +386,8 @@ function buildSettings(): void {
   nodeRadius = settings.nodeRadius;
   nodeBorderWidthHalf = settings.nodeBorderWidthHalf;
 
+  labelOffset = settings.labelOffset;
+
   if (directed) {
     if (settings.showComponents) {
       colorMap = buildSCComponents(nodes, adj, rev);
@@ -470,7 +479,11 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 
     ctx.font = `bold ${nodeRadius}px JB`;
     ctx.fillStyle = textColor;
-    ctx.fillText(u, node!.pos.x, node!.pos.y + TEXT_Y_OFFSET);
+    ctx.fillText(
+      isInteger(u) ? (parseInt(u, 10) + labelOffset).toString() : u,
+      node!.pos.x,
+      node!.pos.y + TEXT_Y_OFFSET,
+    );
   }
 }
 

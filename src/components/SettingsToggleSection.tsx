@@ -21,7 +21,7 @@ export function SettingsToggleSection({
 }: Props) {
   return (
     <>
-      <h4 className="font-normal">{title}</h4>
+      <h4 className="font-semibold">{title}</h4>
       <div className="flex font-light text-sm justify-between">
         <span>
           <span>

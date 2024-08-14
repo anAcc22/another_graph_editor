@@ -6,6 +6,7 @@ export interface Graph {
 }
 
 export interface Settings {
+  labelOffset: number;
   darkMode: boolean;
   nodeRadius: number;
   nodeBorderWidthHalf: number;

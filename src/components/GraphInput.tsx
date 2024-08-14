@@ -37,6 +37,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           .value,
         (document.getElementById("graphInputChild") as HTMLTextAreaElement)
           .value,
+        (document.getElementById("graphInputEdgeLabels") as HTMLTextAreaElement)
+          .value,
       );
     }
 
@@ -245,6 +247,19 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               id="graphInputChild"
               rows={1}
               defaultValue={"1 2 3 4 5 6 7 8 9"}
+              onChange={processGraphInput}
+              onKeyDown={handleTextAreaKeyDown}
+              className="bg-ovr font-semibold font-jetbrains resize-none
+                border-2 rounded-md p-2 border-single focus:outline-none text-lg
+                border-border focus:border-border-active"
+            ></textarea>
+            <h4 className="text-base decoration-solid underline">
+              Edge Labels
+            </h4>
+            <textarea
+              name="graphInputEdgeLabels"
+              id="graphInputEdgeLabels"
+              rows={1}
               onChange={processGraphInput}
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none

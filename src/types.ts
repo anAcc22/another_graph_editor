@@ -3,6 +3,7 @@ export interface Graph {
   adj: Map<string, string[]>;
   rev: Map<string, string[]>;
   edges: string[];
+  edgeLabels: Map<string, string>;
 }
 
 export interface Settings {

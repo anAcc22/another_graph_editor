@@ -12,6 +12,7 @@ function App() {
     adj: new Map<string, string[]>(),
     rev: new Map<string, string[]>(),
     edges: new Array<string>(),
+    edgeLabels: new Map<string, string>(),
   });
   const [directed, setDirected] = useState<boolean>(false);
   const [settings, setSettings] = useState<Settings>({
@@ -43,8 +44,8 @@ function App() {
       <div
         className={
           settings.darkMode
-            ? "dark bg-ovr text-text absolute w-full"
-            : "light bg-ovr text-text absolute w-full"
+            ? "dark bg-ovr text-text absolute w-full overflow-scroll"
+            : "light bg-ovr text-text absolute w-full overflow-scroll"
         }
       >
         <GraphInput

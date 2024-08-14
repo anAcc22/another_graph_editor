@@ -12,6 +12,7 @@ import { ParsedGraph } from "../types";
 export function parseGraphInputParentChild(
   parent: string,
   child: string,
+  labels: string,
 ): ParsedGraph {
   const p = parent
     .trim()
@@ -23,12 +24,18 @@ export function parseGraphInputParentChild(
     .split(/\s+/)
     .filter((u) => u.length);
 
+  const l = labels
+    .trim()
+    .split(/\s+/)
+    .filter((u) => u.length);
+
   const edgeCnt = Math.min(p.length, c.length);
 
   let nodes = new Array<string>();
   let adj = new Map<string, string[]>();
   let rev = new Map<string, string[]>();
   let edges = new Array<string>();
+  let edgeLabels = new Map<string, string>();
 
   for (let i = 0; i < edgeCnt; i++) {
     if (p[i] === c[i] && !nodes.includes(p[i])) {
@@ -49,6 +56,10 @@ export function parseGraphInputParentChild(
 
       if (!edges.includes([p[i], c[i]].join(" "))) {
         edges.push([p[i], c[i]].join(" "));
+      }
+
+      if (i < l.length) {
+        edgeLabels.set([p[i], c[i]].join(" "), l[i]);
       }
     }
   }
@@ -73,6 +84,7 @@ export function parseGraphInputParentChild(
       adj,
       rev,
       edges,
+      edgeLabels,
     },
   };
 }
@@ -87,6 +99,7 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
   let adj = new Map<string, string[]>();
   let rev = new Map<string, string[]>();
   let edges = new Array<string>();
+  let edgeLabels = new Map<string, string>();
 
   for (const e of raw) {
     if (e.length == 1) {
@@ -94,7 +107,7 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
         nodes.push(e[0]);
         adj.set(e[0], []);
       }
-    } else if (e.length == 2) {
+    } else if (e.length <= 3) {
       if (e[0] === e[1] && !nodes.includes(e[0])) {
         nodes.push(e[0]);
         adj.set(e[0], []);
@@ -113,6 +126,10 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
 
         if (!edges.includes([e[0], e[1]].join(" "))) {
           edges.push([e[0], e[1]].join(" "));
+        }
+
+        if (e.length === 3) {
+          edgeLabels.set([e[0], e[1]].join(" "), e[2]);
         }
       }
     } else {
@@ -142,6 +159,7 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
       adj,
       rev,
       edges,
+      edgeLabels,
     },
   };
 }

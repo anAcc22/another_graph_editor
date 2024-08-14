@@ -53,10 +53,10 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
 function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
 
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
+  ctx.lineWidth = 1.5 * nodeBorderWidthHalf;
 
-  ctx.strokeStyle = strokeColor;
-  ctx.fillStyle = strokeColor;
+  ctx.strokeStyle = edgeColor;
+  ctx.fillStyle = edgeColor;
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -87,8 +87,7 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
-  ctx.strokeStyle = strokeColor;
-  ctx.fillStyle = strokeColor;
+  ctx.strokeStyle = edgeColor;
 
   ctx.beginPath();
 
@@ -98,11 +97,24 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.moveTo(u.x - px, u.y - py);
   ctx.lineTo(v.x - px, v.y - py);
 
-  ctx.fill();
   ctx.stroke();
 }
 
-function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+function drawEdgeLabel(
+  ctx: CanvasRenderingContext2D,
+  u: Vector2D,
+  v: Vector2D,
+  label: string,
+) {
+  let px = u.y - v.y;
+  let py = v.x - u.x;
+
+  px *= (2 * nodeRadius) / 3 / Math.hypot(px, py);
+  py *= (2 * nodeRadius) / 3 / Math.hypot(px, py);
+
+  const mx = (u.x + v.x) / 2;
+  const my = (u.y + v.y) / 2;
+
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
   ctx.strokeStyle = strokeColor;
@@ -110,10 +122,29 @@ function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
 
   ctx.beginPath();
 
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+
+  ctx.font = `${nodeRadius - 2}px JB`;
+  ctx.fillStyle = edgeLabelColor;
+
+  if (py <= 0) {
+    ctx.fillText(label, mx + px, my + py);
+  } else {
+    ctx.fillText(label, mx - px, my - py);
+  }
+}
+
+function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
+
+  ctx.strokeStyle = edgeColor;
+
+  ctx.beginPath();
+
   ctx.moveTo(u.x, u.y);
   ctx.lineTo(v.x, v.y);
 
-  ctx.fill();
   ctx.stroke();
 }
 
@@ -147,9 +178,13 @@ const FPS = 60;
 
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
+const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
+const EDGE_LABEL_LIGHT = "hsl(30, 50%, 40%)";
 
 const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
+const EDGE_COLOR_DARK = "hsl(0, 0%, 90%)";
+const EDGE_LABEL_DARK = "hsl(30, 80%, 70%)";
 
 const TEXT_Y_OFFSET = 1;
 
@@ -189,10 +224,13 @@ const FILL_COLORS_LENGTH = 10;
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
 
-let strokeColor = STROKE_COLOR_DARK;
-let textColor = TEXT_COLOR_DARK;
+let strokeColor = STROKE_COLOR_LIGHT;
+let textColor = TEXT_COLOR_LIGHT;
 
-let fillColors = FILL_COLORS_DARK;
+let edgeColor = EDGE_COLOR_LIGHT;
+let edgeLabelColor = EDGE_LABEL_LIGHT;
+
+let fillColors = FILL_COLORS_LIGHT;
 
 let canvasWidth: number;
 let canvasHeight: number;
@@ -221,6 +259,8 @@ let labelOffset = 0;
 let draggedNodes: string[] = [];
 
 let edges: string[] = [];
+
+let edgeLabels = new Map<string, string>();
 
 let adj = new Map<string, string[]>();
 let rev = new Map<string, string[]>();
@@ -281,6 +321,7 @@ function updateNodes(graph: Graph): void {
 
 function updateEdges(graph: Graph): void {
   edges = graph.edges;
+  edgeLabels = graph.edgeLabels;
 }
 
 function updateVelocities() {
@@ -293,7 +334,7 @@ function updateVelocities() {
 
         const dist = euclidDist(uPos, vPos);
 
-        let aMag = 300_000 / (2 * Math.pow(dist, 5));
+        let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 
         const isEdge =
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
@@ -377,10 +418,14 @@ function buildSettings(): void {
     strokeColor = STROKE_COLOR_DARK;
     textColor = TEXT_COLOR_DARK;
     fillColors = FILL_COLORS_DARK;
+    edgeColor = EDGE_COLOR_DARK;
+    edgeLabelColor = EDGE_LABEL_DARK;
   } else {
     strokeColor = STROKE_COLOR_LIGHT;
     textColor = TEXT_COLOR_LIGHT;
     fillColors = FILL_COLORS_LIGHT;
+    edgeColor = EDGE_COLOR_LIGHT;
+    edgeLabelColor = EDGE_LABEL_LIGHT;
   }
 
   nodeRadius = settings.nodeRadius;
@@ -477,7 +522,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
 
-    ctx.font = `bold ${nodeRadius}px JB`;
+    ctx.font = `${nodeRadius}px JB`;
     ctx.fillStyle = textColor;
     ctx.fillText(
       isInteger(u) ? (parseInt(u, 10) + labelOffset).toString() : u,
@@ -508,6 +553,10 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     if (directed) {
       drawArrow(ctx, pt1, pt2);
+    }
+
+    if (edgeLabels.has(e)) {
+      drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!);
     }
   }
 }

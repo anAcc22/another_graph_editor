@@ -4,6 +4,7 @@ export interface Graph {
   rev: Map<string, string[]>;
   edges: string[];
   edgeLabels: Map<string, string>;
+  nodeLabels: Map<string, string>;
 }
 
 export interface Settings {

@@ -82,8 +82,8 @@ function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= nodeRadius / 4 / Math.hypot(px, py);
-  py *= nodeRadius / 4 / Math.hypot(px, py);
+  px *= nodeRadius / 5 / Math.hypot(px, py);
+  py *= nodeRadius / 5 / Math.hypot(px, py);
 
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
@@ -117,9 +117,6 @@ function drawEdgeLabel(
 
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
-  ctx.strokeStyle = strokeColor;
-  ctx.fillStyle = strokeColor;
-
   ctx.beginPath();
 
   ctx.textBaseline = "middle";
@@ -135,6 +132,48 @@ function drawEdgeLabel(
   }
 }
 
+function drawOctagon(
+  ctx: CanvasRenderingContext2D,
+  u: Vector2D,
+  label: string,
+) {
+  const length = 16 + (3 * (nodeRadius - 16)) / 2;
+
+  let x = u.x;
+  let y = u.y;
+
+  if (Math.abs(u.y - nodeRadius - 2 * length) <= 5) {
+    y += nodeRadius + length;
+  } else {
+    y -= nodeRadius + length;
+  }
+
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
+
+  ctx.strokeStyle = nodeLabelOutlineColor;
+  ctx.fillStyle = fillColors[0];
+
+  ctx.beginPath();
+
+  let theta = 0;
+
+  for (let i = 0; i < 9; i++, theta += Math.PI / 4) {
+    const nx = x + (length - nodeBorderWidthHalf) * Math.cos(theta);
+    const ny = y + (length - nodeBorderWidthHalf) * Math.sin(theta);
+    ctx.lineTo(nx, ny);
+  }
+
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+
+  ctx.font = `${nodeRadius - 2}px JB`;
+  ctx.fillStyle = nodeLabelColor;
+  ctx.fillText(label, x, y);
+}
+
 function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
@@ -145,6 +184,7 @@ function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.moveTo(u.x, u.y);
   ctx.lineTo(v.x, v.y);
 
+  ctx.fill();
   ctx.stroke();
 }
 
@@ -180,11 +220,15 @@ const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_LABEL_LIGHT = "hsl(30, 50%, 40%)";
+const NODE_LABEL_LIGHT = "hsl(10, 50%, 40%)";
+const NODE_LABEL_OUTLINE_LIGHT = "hsl(10, 10%, 70%)";
 
 const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_COLOR_DARK = "hsl(0, 0%, 90%)";
-const EDGE_LABEL_DARK = "hsl(30, 80%, 70%)";
+const EDGE_LABEL_DARK = "hsl(30, 70%, 60%)";
+const NODE_LABEL_DARK = "hsl(10, 70%, 60%)";
+const NODE_LABEL_OUTLINE_DARK = "hsl(10, 10%, 30%)";
 
 const TEXT_Y_OFFSET = 1;
 
@@ -224,6 +268,9 @@ const FILL_COLORS_LENGTH = 10;
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
 
+let nodeLabelColor = NODE_LABEL_LIGHT;
+let nodeLabelOutlineColor = NODE_LABEL_OUTLINE_LIGHT;
+
 let strokeColor = STROKE_COLOR_LIGHT;
 let textColor = TEXT_COLOR_LIGHT;
 
@@ -253,6 +300,8 @@ let settings: Settings = {
 
 let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
+
+let nodeLabels = new Map<string, string>();
 
 let labelOffset = 0;
 
@@ -321,7 +370,6 @@ function updateNodes(graph: Graph): void {
 
 function updateEdges(graph: Graph): void {
   edges = graph.edges;
-  edgeLabels = graph.edgeLabels;
 }
 
 function updateVelocities() {
@@ -392,7 +440,7 @@ function updateVelocities() {
       const yTarget = CANVAS_FIELD_DIST + (depth - 0.5) * layerHeight;
       const y = nodeMap.get(u)!.pos.y;
 
-      let ay = Math.pow(Math.abs(y - yTarget), 1.45) / 100;
+      let ay = Math.pow(Math.abs(y - yTarget), 1.65) / 100;
 
       if (y > yTarget) {
         ay *= -1;
@@ -419,12 +467,16 @@ function buildSettings(): void {
     textColor = TEXT_COLOR_DARK;
     fillColors = FILL_COLORS_DARK;
     edgeColor = EDGE_COLOR_DARK;
+    nodeLabelColor = NODE_LABEL_DARK;
+    nodeLabelOutlineColor = NODE_LABEL_OUTLINE_DARK;
     edgeLabelColor = EDGE_LABEL_DARK;
   } else {
     strokeColor = STROKE_COLOR_LIGHT;
     textColor = TEXT_COLOR_LIGHT;
     fillColors = FILL_COLORS_LIGHT;
     edgeColor = EDGE_COLOR_LIGHT;
+    nodeLabelColor = NODE_LABEL_LIGHT;
+    nodeLabelOutlineColor = NODE_LABEL_OUTLINE_LIGHT;
     edgeLabelColor = EDGE_LABEL_LIGHT;
   }
 
@@ -470,6 +522,9 @@ export function updateGraph(graph: Graph) {
 
   adj = graph.adj;
   rev = graph.rev;
+
+  nodeLabels = graph.nodeLabels;
+  edgeLabels = graph.edgeLabels;
 
   buildSettings();
 }
@@ -529,6 +584,10 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
       node!.pos.x,
       node!.pos.y + TEXT_Y_OFFSET,
     );
+
+    if (nodeLabels.has(nodes[i])) {
+      drawOctagon(ctx, node.pos, nodeLabels.get(nodes[i])!);
+    }
   }
 }
 

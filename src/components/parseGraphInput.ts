@@ -13,6 +13,7 @@ export function parseGraphInputParentChild(
   parent: string,
   child: string,
   labels: string,
+  nodeLabels: string,
 ): ParsedGraph {
   const p = parent
     .trim()
@@ -25,6 +26,11 @@ export function parseGraphInputParentChild(
     .filter((u) => u.length);
 
   const l = labels
+    .trim()
+    .split(/\s+/)
+    .filter((u) => u.length);
+
+  const nl = nodeLabels
     .trim()
     .split(/\s+/)
     .filter((u) => u.length);
@@ -77,6 +83,18 @@ export function parseGraphInputParentChild(
     }
   }
 
+  const sortedNodes = [...nodes].sort();
+
+  const len = Math.min(sortedNodes.length, nl.length);
+
+  let mp = new Map<string, string>();
+
+  for (let i = 0; i < len; i++) {
+    if (nl[i] !== "_") {
+      mp.set(sortedNodes[i], nl[i]);
+    }
+  }
+
   return {
     status: "OK",
     graph: {
@@ -85,11 +103,15 @@ export function parseGraphInputParentChild(
       rev,
       edges,
       edgeLabels,
+      nodeLabels: mp,
     },
   };
 }
 
-export function parseGraphInputEdges(input: string): ParsedGraph {
+export function parseGraphInputEdges(
+  input: string,
+  nodeLabels: string,
+): ParsedGraph {
   const raw = input
     .split("\n")
     .map((s) => s.trim().split(/\s+/))
@@ -152,6 +174,23 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
     }
   }
 
+  const sortedNodes = [...nodes].sort();
+
+  const nl = nodeLabels
+    .trim()
+    .split(/\s+/)
+    .filter((u) => u.length);
+
+  const len = Math.min(sortedNodes.length, nl.length);
+
+  let mp = new Map<string, string>();
+
+  for (let i = 0; i < len; i++) {
+    if (nl[i] !== "_") {
+      mp.set(sortedNodes[i], nl[i]);
+    }
+  }
+
   return {
     status: "OK",
     graph: {
@@ -160,6 +199,7 @@ export function parseGraphInputEdges(input: string): ParsedGraph {
       rev,
       edges,
       edgeLabels,
+      nodeLabels: mp,
     },
   };
 }

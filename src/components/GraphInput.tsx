@@ -5,21 +5,20 @@ import { ParsedGraph } from "../types";
 import { Graph } from "../types";
 
 interface Props {
+  graph: Graph;
   updateGraph: (graph: Graph) => void;
   directed: boolean;
   updateDirected: (directed: boolean) => void;
 }
 
-// const EMPTY_GRAPH: Graph = {
-//   nodes: new Array<string>(),
-//   adj: new Map<string, string[]>(),
-//   rev: new Map<string, string[]>(),
-//   edges: new Array<string>(),
-// };
-
 type InputFormat = "edges" | "parentChild";
 
-export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
+export function GraphInput({
+  graph,
+  updateGraph,
+  directed,
+  updateDirected,
+}: Props) {
   const [inputStatus, setInputStatus] = useState<boolean>(true);
   const [inputFormat, setInputFormat] = useState<InputFormat>("edges");
 
@@ -30,6 +29,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
       parsedGraph = parseGraphInputEdges(
         (document.getElementById("graphInputEdges") as HTMLTextAreaElement)
           .value,
+        (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
+          .value,
       );
     } else {
       parsedGraph = parseGraphInputParentChild(
@@ -38,6 +39,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
         (document.getElementById("graphInputChild") as HTMLTextAreaElement)
           .value,
         (document.getElementById("graphInputEdgeLabels") as HTMLTextAreaElement)
+          .value,
+        (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
           .value,
       );
     }
@@ -48,6 +51,34 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
       setInputStatus(true);
       updateGraph(parsedGraph.graph!);
     }
+  };
+
+  const processNodeLabels = () => {
+    const currentNodes = (
+      document.getElementById("graphInputCurrentNodes") as HTMLTextAreaElement
+    ).value
+      .trim()
+      .split(/\s+/)
+      .filter((u) => u.length);
+
+    const nodeLabels = (
+      document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement
+    ).value
+      .trim()
+      .split(/\s+/)
+      .filter((u) => u.length);
+
+    const len = Math.min(currentNodes.length, nodeLabels.length);
+
+    let mp = new Map<string, string>();
+
+    for (let i = 0; i < len; i++) {
+      if (nodeLabels[i] !== "_") {
+        mp.set(currentNodes[i], nodeLabels[i]);
+      }
+    }
+
+    updateGraph({ ...graph, nodeLabels: mp });
   };
 
   const handleTextAreaKeyDown = (
@@ -76,6 +107,37 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           space-y-3"
       >
         <h3 className="font-bold text-lg">Graph Data</h3>
+
+        <br />
+
+        <h4 className="text-base decoration-solid underline">Current Nodes</h4>
+        <textarea
+          rows={1}
+          name="graphInputCurrentNodes"
+          id="graphInputCurrentNodes"
+          onChange={processNodeLabels}
+          value={[...graph.nodes].sort().join(" ")}
+          readOnly
+          className="bg-ovr font-semibold font-jetbrains resize-none border-2
+            rounded-md px-2 py-1 border-single focus:outline-none text-lg
+            text-current-nodes border-border"
+        ></textarea>
+
+        <h4 className="text-base decoration-solid underline">Node Labels</h4>
+        <textarea
+          name="graphInputNodeLabels"
+          id="graphInputNodeLabels"
+          rows={1}
+          onChange={processNodeLabels}
+          onKeyDown={handleTextAreaKeyDown}
+          placeholder="TIP: '_' -> empty label"
+          className="bg-ovr font-semibold font-jetbrains resize-none border-2
+            rounded-md px-2 py-1 border-single focus:outline-none text-lg
+            border-border focus:border-border-active placeholder-placeholder
+            placeholder:italic"
+        ></textarea>
+
+        <br />
 
         <div className="flex font-light text-sm justify-between">
           <span>
@@ -209,15 +271,17 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
           </label>
         </div>
 
+        <br />
+
         {inputFormat === "edges" ? (
           <textarea
             name="graphInputEdges"
             id="graphInputEdges"
             onChange={processGraphInput}
             onKeyDown={handleTextAreaKeyDown}
-            rows={8}
+            rows={10}
             className="font-semibold font-jetbrains resize-none border-2
-              rounded-md p-2 border-single focus:outline-none text-lg
+              rounded-md px-2 py-1 border-single focus:outline-none text-lg
               border-border focus:border-border-active bg-ovr"
           ></textarea>
         ) : (
@@ -236,8 +300,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               onChange={processGraphInput}
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md p-2 border-single focus:outline-none text-lg
-                border-border focus:border-border-active"
+                border-2 rounded-md px-2 py-1 border-single focus:outline-none
+                text-lg border-border focus:border-border-active"
             ></textarea>
             <h4 className="text-base decoration-solid underline">
               Child Array
@@ -250,8 +314,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               onChange={processGraphInput}
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md p-2 border-single focus:outline-none text-lg
-                border-border focus:border-border-active"
+                border-2 rounded-md px-2 py-1 border-single focus:outline-none
+                text-lg border-border focus:border-border-active"
             ></textarea>
             <h4 className="text-base decoration-solid underline">
               Edge Labels
@@ -263,8 +327,8 @@ export function GraphInput({ updateGraph, directed, updateDirected }: Props) {
               onChange={processGraphInput}
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md p-2 border-single focus:outline-none text-lg
-                border-border focus:border-border-active"
+                border-2 rounded-md px-2 py-1 border-single focus:outline-none
+                text-lg border-border focus:border-border-active"
             ></textarea>
           </>
         ) : (

@@ -19,6 +19,8 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
       >
         <h3 className="font-bold text-lg">Settings</h3>
 
+        <br />
+
         <h4 className="font-semibold">Label Offset</h4>
         <input
           type="range"
@@ -26,8 +28,8 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           max={2}
           step={1}
           value={settings.labelOffset}
-          className="range appearance-none outline-none bg-slider h-1
-            rounded-full cursor-ew-resize
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-slider-thumb
@@ -39,13 +41,15 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             });
           }}
         />
-        <div className="flex justify-between">
+        <div className="flex justify-between w-5/6 self-center">
           <div className="w-0">-2</div>
           <div className="w-0">-1</div>
           <div className="w-0">0</div>
           <div className="w-0">1</div>
           <div>2</div>
         </div>
+
+        <br />
 
         <SettingsToggleSection
           title={"Theme"}
@@ -60,6 +64,8 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           }}
         />
 
+        <br />
+
         <h4 className="font-semibold">Node Radius</h4>
         <input
           type="range"
@@ -67,8 +73,8 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           max={15}
           step={1}
           value={settings.nodeRadius - 16}
-          className="range appearance-none outline-none bg-slider h-1
-            rounded-full cursor-ew-resize
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-slider-thumb
@@ -90,8 +96,8 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           max={1.5}
           step={0.1}
           value={settings.nodeBorderWidthHalf - 1}
-          className="range appearance-none outline-none bg-slider h-1
-            rounded-full cursor-ew-resize
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-slider-thumb
@@ -108,6 +114,8 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             );
           }}
         />
+
+        <br />
 
         <SettingsToggleSection
           title={"Components"}

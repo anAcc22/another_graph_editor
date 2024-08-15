@@ -1,5 +1,21 @@
-@import '@fontsource-variable/jetbrains-mono';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: Jetbrains Mono;
+    font-weight: 700;
+    src: url(/JetBrainsMono-Bold.ttf);
+  }
+  @font-face {
+    font-family: Jetbrains Mono;
+    font-weight: 600;
+    src: url(/JetBrainsMono-SemiBold.ttf);
+  }
+  @font-face {
+    font-family: Jetbrains Mono;
+    font-weight: 400;
+    src: url(/JetBrainsMono-Regular.ttf);
+  }
+}

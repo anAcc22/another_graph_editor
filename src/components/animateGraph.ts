@@ -388,7 +388,7 @@ function updateVelocities() {
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
 
         if (isEdge) {
-          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.3) / 100_000;
+          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.5) / 100_000;
           if (dist >= NODE_DIST) {
             aMag *= -1;
           }
@@ -400,8 +400,8 @@ function updateVelocities() {
         const uVel = nodeMap.get(u)!.vel;
 
         nodeMap.get(u)!.vel = {
-          x: (uVel.x - aMag * ax) * (1 - NODE_FRICTION),
-          y: (uVel.y - aMag * ay) * (1 - NODE_FRICTION),
+          x: clamp((uVel.x - aMag * ax) * (1 - NODE_FRICTION), -100, 100),
+          y: clamp((uVel.y - aMag * ay) * (1 - NODE_FRICTION), -100, 100),
         };
       }
     }
@@ -423,8 +423,8 @@ function updateVelocities() {
     }
 
     nodeMap.get(u)!.vel = {
-      x: (nodeMap.get(u)!.vel.x + axB) * (1 - NODE_FRICTION),
-      y: (nodeMap.get(u)!.vel.y + ayB) * (1 - NODE_FRICTION),
+      x: clamp((nodeMap.get(u)!.vel.x + axB) * (1 - NODE_FRICTION), -100, 100),
+      y: clamp((nodeMap.get(u)!.vel.y + ayB) * (1 - NODE_FRICTION), -100, 100),
     };
 
     if (settings.treeMode && layerMap !== undefined) {
@@ -448,7 +448,7 @@ function updateVelocities() {
 
       nodeMap.get(u)!.vel = {
         x: nodeMap.get(u)!.vel.x,
-        y: (nodeMap.get(u)!.vel.y + ay) * (1 - NODE_FRICTION),
+        y: clamp((nodeMap.get(u)!.vel.y + ay) * (1 - NODE_FRICTION), -100, 100),
       };
     }
 

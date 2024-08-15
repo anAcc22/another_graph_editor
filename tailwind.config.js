@@ -2,14 +2,26 @@
 export default {
   content: ["index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      sm: "0px",
+
+      md: "768px",
+
+      lg: "1024px",
+
+      xl: "1280px",
+    },
     extend: {
       spacing: {
         "1/5": "20.0%",
         "1/6": "16.7%",
         "1/8": "12.5%",
+        "7/8": "87.5%",
         "1/10": "10.0%",
+        "1/16": "6.25%",
         "1/24": "4.17%",
         "5/200": "2.5%",
+        100: "25rem",
         200: "50rem",
       },
       fontFamily: {

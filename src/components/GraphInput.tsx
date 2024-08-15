@@ -101,7 +101,7 @@ export function GraphInput({
     <>
       <div
         className="font-jetbrains flex flex-col border-2 rounded-lg bg-block
-          shadow-shadow shadow border-border sm:ml-1/8 sm:mt-1/8 sm:mr-1/8
+          shadow-shadow shadow border-border sm:ml-1/16 sm:mt-1/8 sm:mr-1/16
           lg:m-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4
           hover:border-border-hover lg:left-1/24 xl:left-5/200 xl:w-1/5 p-3
           space-y-3"
@@ -120,7 +120,7 @@ export function GraphInput({
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
             rounded-md px-2 py-1 border-single focus:outline-none text-lg
-            text-current-nodes border-border"
+            text-current-nodes border-border w-auto"
         ></textarea>
 
         <h4 className="text-base decoration-solid underline">Node Labels</h4>
@@ -134,7 +134,7 @@ export function GraphInput({
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
             rounded-md px-2 py-1 border-single focus:outline-none text-lg
             border-border focus:border-border-active placeholder-placeholder
-            placeholder:italic"
+            placeholder:italic w-auto"
         ></textarea>
 
         <br />
@@ -282,7 +282,7 @@ export function GraphInput({
             rows={10}
             className="font-semibold font-jetbrains resize-none border-2
               rounded-md px-2 py-1 border-single focus:outline-none text-lg
-              border-border focus:border-border-active bg-ovr"
+              border-border focus:border-border-active bg-ovr w-auto"
           ></textarea>
         ) : (
           <></>
@@ -301,7 +301,7 @@ export function GraphInput({
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
                 border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active"
+                text-lg border-border focus:border-border-active w-auto"
             ></textarea>
             <h4 className="text-base decoration-solid underline">
               Child Array
@@ -315,7 +315,7 @@ export function GraphInput({
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
                 border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active"
+                text-lg border-border focus:border-border-active w-auto"
             ></textarea>
             <h4 className="text-base decoration-solid underline">
               Edge Labels
@@ -328,7 +328,7 @@ export function GraphInput({
               onKeyDown={handleTextAreaKeyDown}
               className="bg-ovr font-semibold font-jetbrains resize-none
                 border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active"
+                text-lg border-border focus:border-border-active w-auto"
             ></textarea>
           </>
         ) : (

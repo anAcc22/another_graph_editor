@@ -12,7 +12,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
     <>
       <div
         className="font-jetbrains flex flex-col border-2 rounded-lg bg-block
-          shadow-shadow shadow border-border sm:ml-1/8 sm:mb-1/8 sm:mr-1/8
+          shadow-shadow shadow border-border sm:ml-1/16 sm:mb-1/8 sm:mr-1/16
           lg:m-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4
           hover:border-border-hover lg:right-1/24 xl:right-5/200 xl:w-1/5 p-3
           space-y-3"

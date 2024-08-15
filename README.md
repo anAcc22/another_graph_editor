@@ -6,7 +6,7 @@ designed with competitive programming in mind.
 Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 
 <p align="center">
-    <img src="screenshots/main.png" />
+    <img src="screenshots/main.png?" />
 </p>
 
 <p align="center">
@@ -31,7 +31,7 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 - Show/hide components
 
 <p align="center">
-    <img src="screenshots/parentChild.png" />
+    <img src="screenshots/parentChild.png?" />
 </p>
 
 <p align="center">
@@ -81,7 +81,7 @@ the root; therefore, if you require some arbitrary node `u` as the root,
 enter `u` at the top of your input data.
 
 <p align="center">
-    <img src="screenshots/twoRoot.png" />
+    <img src="screenshots/twoRoot.png?" />
 </p>
 
 <p align="center">
@@ -92,7 +92,7 @@ What happens if the graph isn't a tree? Well, the **DFS Tree** would be
 displayed instead, where *back edges* are displayed as dotted lines.
 
 <p align="center">
-    <img src="screenshots/dfsTree.png" />
+    <img src="screenshots/dfsTree.png?" />
 </p>
 
 <p align="center">

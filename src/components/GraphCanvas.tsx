@@ -20,7 +20,10 @@ export function GraphCanvas({ graph, directed, settings }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    let font = new FontFace("JB", "url(/fonts/JetBrainsMono-Bold.ttf)");
+    let font = new FontFace(
+      "JB",
+      "url(/another_graph_editor/JetBrainsMono-Bold.ttf)",
+    );
 
     font.load();
     document.fonts.add(font);

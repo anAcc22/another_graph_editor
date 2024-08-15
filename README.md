@@ -5,6 +5,14 @@ designed with competitive programming in mind.
 
 Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 
+<p align="center">
+    <img src="screenshots/main.png" />
+</p>
+
+<p align="center">
+<em>A Three-Component Graph</em>
+</p>
+
 ## Features
 
 - Common input formats:
@@ -21,6 +29,14 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 - Normal/tree mode
 - Show/hide bridges and cut vertices
 - Show/hide components
+
+<p align="center">
+    <img src="screenshots/parentChild.png" />
+</p>
+
+<p align="center">
+<em>A Demonstration of the Parent-Child Input Format</em>
+</p>
 
 > [!NOTE]
 > *Tree Mode* and *Bridges* are only available for undirected graphs.
@@ -64,8 +80,24 @@ In this mode, the *first* node that appears in the input data becomes
 the root; therefore, if you require some arbitrary node `u` as the root,
 enter `u` at the top of your input data.
 
+<p align="center">
+    <img src="screenshots/twoRoot.png" />
+</p>
+
+<p align="center">
+<em>Making Node 2 the Root Instead of Node 1</em>
+</p>
+
 What happens if the graph isn't a tree? Well, the **DFS Tree** would be
 displayed instead, where *back edges* are displayed as dotted lines.
+
+<p align="center">
+    <img src="screenshots/dfsTree.png" />
+</p>
+
+<p align="center">
+<em>A DFS Tree With an Offset of -1</em>
+</p>
 
 ## Credits
 

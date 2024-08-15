@@ -81,7 +81,7 @@ export function SettingsToggleSection({
               })
             }
             type="checkbox"
-            checked={settings[settingsName]}
+            checked={settings[settingsName] as boolean}
             id={toggleID}
             className="peer invisible"
             onChange={() => {}}

@@ -137,7 +137,7 @@ function drawOctagon(
   u: Vector2D,
   label: string,
 ) {
-  const length = 16 + (3 * (nodeRadius - 16)) / 2;
+  const length = 14 + (3 * (nodeRadius - 16)) / 2;
 
   let x = u.x;
   let y = u.y;

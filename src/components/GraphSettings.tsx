@@ -30,6 +30,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           value={settings.labelOffset}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-slider-thumb
@@ -75,6 +76,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           value={settings.nodeRadius - 16}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-slider-thumb
@@ -98,6 +100,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           value={settings.nodeBorderWidthHalf - 1}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-slider-thumb

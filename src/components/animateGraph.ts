@@ -624,7 +624,7 @@ export function animateGraph(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
 ) {
-  canvas.addEventListener("mousedown", (event) => {
+  canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();
 
     mousePos = {
@@ -642,7 +642,7 @@ export function animateGraph(
     }
   });
 
-  canvas.addEventListener("mousemove", (event) => {
+  canvas.addEventListener("pointermove", (event) => {
     event.preventDefault();
 
     mousePos = {
@@ -665,13 +665,13 @@ export function animateGraph(
     }
   });
 
-  canvas.addEventListener("mouseup", (event) => {
+  canvas.addEventListener("pointerup", (event) => {
     event.preventDefault();
     draggedNodes = [];
     canvas.style.cursor = "default";
   });
 
-  canvas.addEventListener("mouseleave", (event) => {
+  canvas.addEventListener("pointerleave", (event) => {
     event.preventDefault();
     draggedNodes = [];
     canvas.style.cursor = "default";

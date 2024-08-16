@@ -81,21 +81,30 @@ Error generating stack: `+o.message+`
           space-y-3`,children:[g.jsx("h3",{className:"font-bold text-lg",children:"Settings"}),g.jsx("br",{}),g.jsx("h4",{className:"font-semibold",children:"Label Offset"}),g.jsx("input",{type:"range",min:-2,max:2,step:1,value:t.labelOffset,className:`range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
-            [&::-moz-range-thumb]:bg-slider-thumb
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
             [&::-moz-range-thumb]:rounded-full`,onChange:r=>{n({...t,labelOffset:Number.parseInt(r.target.value)})}}),g.jsxs("div",{className:"flex justify-between w-5/6 self-center",children:[g.jsx("div",{className:"w-0",children:"-2"}),g.jsx("div",{className:"w-0",children:"-1"}),g.jsx("div",{className:"w-0",children:"0"}),g.jsx("div",{className:"w-0",children:"1"}),g.jsx("div",{children:"2"})]}),g.jsx("br",{}),g.jsx(In,{title:"Theme",leftLabel:"Light",rightLabel:"Dark",toggleID:"settingsTheme",settingsName:"darkMode",settings:t,updateSettings:r=>{n(r),localStorage.setItem("darkMode",r.darkMode.toString())}}),g.jsx("br",{}),g.jsx("h4",{className:"font-semibold",children:"Node Radius"}),g.jsx("input",{type:"range",min:0,max:15,step:1,value:t.nodeRadius-16,className:`range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
-            [&::-moz-range-thumb]:bg-slider-thumb
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
             [&::-moz-range-thumb]:rounded-full`,onChange:r=>{const l=16+Number.parseInt(r.target.value);n({...t,nodeRadius:l}),localStorage.setItem("nodeRadius",l.toString())}}),g.jsx("h4",{className:"font-semibold",children:"Line Thickness"}),g.jsx("input",{type:"range",min:0,max:1.5,step:.1,value:t.nodeBorderWidthHalf-1,className:`range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
             [&::-webkit-slider-thumb]:bg-slider-thumb
             [&::-webkit-slider-thumb]:rounded-full
-            [&::-moz-range-thumb]:bg-slider-thumb
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
             [&::-moz-range-thumb]:rounded-full`,onChange:r=>{const l=1+Number.parseFloat(r.target.value);n({...t,nodeBorderWidthHalf:l}),localStorage.setItem("nodeBorderWidthHalf",l.toString())}}),g.jsx("br",{}),g.jsx(In,{title:"Components",leftLabel:"Hide",rightLabel:"Show",toggleID:"settingsComponents",settingsName:"showComponents",settings:t,updateSettings:n}),e?g.jsx(g.Fragment,{}):g.jsx(In,{title:"Bridges and Cut Vertices",leftLabel:"Hide",rightLabel:"Show",toggleID:"settingsBridges",settingsName:"showBridges",settings:t,updateSettings:n}),e?g.jsx(g.Fragment,{}):g.jsx(In,{title:"Tree Mode",leftLabel:"Off",rightLabel:"On",toggleID:"settingsTreeMode",settingsName:"treeMode",settings:t,updateSettings:n}),g.jsx(In,{title:"Lock Mode",leftLabel:"Off",rightLabel:"On",toggleID:"settingsLockMode",settingsName:"lockMode",settings:t,updateSettings:n})]})})}function oh(){const[e,t]=he.useState({nodes:new Array,adj:new Map,rev:new Map,edges:new Array,edgeLabels:new Map,nodeLabels:new Map}),[n,r]=he.useState(!1),[l,o]=he.useState({labelOffset:0,darkMode:localStorage.getItem("darkMode")!==null?localStorage.getItem("darkMode")==="true":!1,nodeRadius:localStorage.getItem("nodeRadius")!==null?Number.parseInt(localStorage.getItem("nodeRadius")):16,nodeBorderWidthHalf:localStorage.getItem("nodeBorderWidthHalf")!==null?Number.parseFloat(localStorage.getItem("nodeBorderWidthHalf")):1,showComponents:!1,showBridges:!1,treeMode:!1,lockMode:!1}),i=c=>t(c),u=c=>r(c),s=c=>o(c);return g.jsx(g.Fragment,{children:g.jsxs("div",{className:l.darkMode?"dark bg-ovr text-text absolute w-full min-h-200 overflow-scroll":"light bg-ovr text-text absolute w-full min-h-200 overflow-scroll",children:[g.jsxs("a",{className:`flex sm:top-2 lg:top-4 sm:right-2 lg:right-4 absolute
             border-2 border-border rounded-lg px-2 py-1 justify-between
             items-center hover:border-border-hover`,href:"https://github.com/anAcc22/another_graph_editor",children:[l.darkMode?g.jsx("img",{width:18,src:"github-mark/github-mark-white.svg",alt:"Github Logo"}):g.jsx("img",{width:18,src:"github-mark/github-mark.svg",alt:"Github Logo"}),g.jsx("div",{className:"ml-2",children:"Github"})]}),g.jsx(xp,{graph:e,updateGraph:i,directed:n,updateDirected:u}),g.jsx(rh,{graph:e,directed:n,settings:l}),g.jsx(lh,{directed:n,settings:l,updateSettings:s})]})})}yo.createRoot(document.getElementById("root")).render(g.jsx(sf.StrictMode,{children:g.jsx(oh,{})}));

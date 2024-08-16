@@ -49,6 +49,32 @@ function App() {
             : "light bg-ovr text-text absolute w-full min-h-200 overflow-scroll"
         }
       >
+        <div
+          className="flex top-4 right-4 absolute border-2 border-border
+            rounded-lg px-2 py-1 justify-between items-center"
+        >
+          {settings.darkMode ? (
+            <img
+              width={18}
+              src="github-mark/github-mark-white.svg"
+              alt="Github Logo"
+            />
+          ) : (
+            <img
+              width={18}
+              src="github-mark/github-mark.svg"
+              alt="Github Logo"
+            />
+          )}
+
+          <a
+            className="font-jetbrains ml-2 text-text hover:text-hover
+              active:text-active"
+            href="https://github.com/anAcc22/another_graph_editor"
+          >
+            Github
+          </a>
+        </div>
         <GraphInput
           graph={graph}
           updateGraph={updateGraph}

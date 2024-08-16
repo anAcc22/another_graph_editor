@@ -1,6 +1,7 @@
 import { Graph } from "../types";
 import { Settings } from "../types";
 import { useRef } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 
 import { updateDirected } from "./animateGraph";
@@ -18,6 +19,8 @@ interface Props {
 
 export function GraphCanvas({ graph, directed, settings }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
+
+  const [image, setImage] = useState<string>();
 
   useEffect(() => {
     let font = new FontFace(
@@ -61,7 +64,7 @@ export function GraphCanvas({ graph, directed, settings }: Props) {
     };
 
     resizeCanvas();
-    animateGraph(canvas, ctx);
+    animateGraph(canvas, ctx, setImage);
 
     window.addEventListener("resize", resizeCanvas);
     return () => {
@@ -83,14 +86,27 @@ export function GraphCanvas({ graph, directed, settings }: Props) {
 
   return (
     <div className="flex h-screen">
-      <canvas
-        ref={ref}
-        className="active:cursor-pointer m-auto sm:w-7/8 sm:h-3/4 lg:w-1/3
-          xl:w-1/2 lg:h-2/3 lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2
-          lg:-translate-y-1/2 lg:absolute border-2 border-border
-          hover:border-border-hover rounded-lg bg-block shadow shadow-shadow
-          touch-none"
-      ></canvas>
+      <div
+        className="flex flex-col sm:w-7/8 sm:h-3/4 lg:w-1/3 xl:w-1/2 lg:h-2/3
+          lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2
+          lg:absolute"
+      >
+        <canvas
+          ref={ref}
+          className="active:cursor-pointer h-full border-2 border-border
+            hover:border-border-hover rounded-lg bg-block shadow shadow-shadow
+            touch-none"
+        ></canvas>
+        <a
+          download="graph.png"
+          href={image}
+          className="w-36 mt-2 text-center border-2 border-border rounded-lg
+            px-2 py-1 justify-between items-center hover:border-border-hover
+            hover:cursor-pointer ml-auto"
+        >
+          Download (PNG)
+        </a>
+      </div>
     </div>
   );
 }

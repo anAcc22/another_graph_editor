@@ -265,6 +265,8 @@ const FILL_COLORS_DARK = [
 
 const FILL_COLORS_LENGTH = 10;
 
+let currentTime = 0;
+
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
 
@@ -623,6 +625,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 export function animateGraph(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
+  setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) {
   canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();
@@ -699,6 +702,13 @@ export function animateGraph(
 
       renderEdges(ctx);
       renderNodes(ctx);
+
+      if (currentTime % 30 === 0) {
+        setImage(canvas.toDataURL("image/png"));
+        currentTime = 1;
+      } else {
+        currentTime++;
+      }
 
       if (!settings.lockMode) {
         updateVelocities();

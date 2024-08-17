@@ -88,7 +88,7 @@ export function GraphCanvas({ graph, directed, settings }: Props) {
     <div className="flex h-screen">
       <div
         className="flex flex-col sm:w-7/8 sm:h-3/4 lg:w-1/3 xl:w-1/2 lg:h-2/3
-          lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2
+          m-auto lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2
           lg:absolute"
       >
         <canvas

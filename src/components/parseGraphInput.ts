@@ -32,6 +32,7 @@ function parseLeetcodeStyle(s: string): LeetcodeParsed {
 }
 
 export function parseGraphInputParentChild(
+  roots: string,
   parent: string,
   child: string,
   labels: string,
@@ -64,6 +65,16 @@ export function parseGraphInputParentChild(
   let rev = new Map<string, string[]>();
   let edges = new Array<string>();
   let edgeLabels = new Map<string, string>();
+
+  roots
+    .trim()
+    .split(/\s+/)
+    .map((u) => {
+      if (u.length && !nodes.includes(u)) {
+        nodes.push(u);
+        adj.set(u, []);
+      }
+    });
 
   for (let i = 0; i < edgeCnt; i++) {
     if (p[i] === c[i] && !nodes.includes(p[i])) {
@@ -131,6 +142,7 @@ export function parseGraphInputParentChild(
 }
 
 export function parseGraphInputEdges(
+  roots: string,
   input: string,
   nodeLabels: string,
 ): ParsedGraph {
@@ -162,6 +174,16 @@ export function parseGraphInputEdges(
   let rev = new Map<string, string[]>();
   let edges = new Array<string>();
   let edgeLabels = new Map<string, string>();
+
+  roots
+    .trim()
+    .split(/\s+/)
+    .map((u) => {
+      if (u.length && !nodes.includes(u)) {
+        nodes.push(u);
+        adj.set(u, []);
+      }
+    });
 
   for (const e of raw) {
     if (e.length == 1) {

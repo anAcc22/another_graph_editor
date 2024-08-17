@@ -27,6 +27,8 @@ export function GraphInput({
 
     if (inputFormat === "edges") {
       parsedGraph = parseGraphInputEdges(
+        (document.getElementById("graphInputRoots") as HTMLTextAreaElement)
+          .value,
         (document.getElementById("graphInputEdges") as HTMLTextAreaElement)
           .value,
         (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
@@ -34,6 +36,8 @@ export function GraphInput({
       );
     } else {
       parsedGraph = parseGraphInputParentChild(
+        (document.getElementById("graphInputRoots") as HTMLTextAreaElement)
+          .value,
         (document.getElementById("graphInputParent") as HTMLTextAreaElement)
           .value,
         (document.getElementById("graphInputChild") as HTMLTextAreaElement)
@@ -97,6 +101,11 @@ export function GraphInput({
     };
   }, []);
 
+  useEffect(() => {
+    (document.getElementById("graphInputRoots") as HTMLTextAreaElement).value =
+      "";
+  }, [inputFormat]);
+
   return (
     <>
       <div
@@ -110,7 +119,7 @@ export function GraphInput({
 
         <br />
 
-        <h4 className="text-base decoration-solid underline">Current Nodes</h4>
+        <h4 className="text-base font-semibold">Current Nodes</h4>
         <textarea
           wrap="off"
           rows={1}
@@ -124,7 +133,7 @@ export function GraphInput({
             text-current-nodes border-border w-auto"
         ></textarea>
 
-        <h4 className="text-base decoration-solid underline">Node Labels</h4>
+        <h4 className="text-base font-semibold">Node Labels</h4>
         <textarea
           wrap="off"
           name="graphInputNodeLabels"
@@ -275,27 +284,47 @@ export function GraphInput({
 
         <br />
 
+        {!directed ? (
+          <>
+            <h4 className="text-base font-semibold">Roots</h4>
+            <textarea
+              wrap="off"
+              name="graphInputRoots"
+              id="graphInputRoots"
+              rows={1}
+              onChange={processGraphInput}
+              onKeyDown={handleTextAreaKeyDown}
+              className="bg-ovr font-semibold font-jetbrains resize-none
+                border-2 rounded-md px-2 py-1 border-single focus:outline-none
+                text-lg border-border focus:border-border-active w-auto"
+            ></textarea>
+          </>
+        ) : (
+          <></>
+        )}
+
         {inputFormat === "edges" ? (
-          <textarea
-            wrap="off"
-            name="graphInputEdges"
-            id="graphInputEdges"
-            onChange={processGraphInput}
-            onKeyDown={handleTextAreaKeyDown}
-            rows={10}
-            className="font-semibold font-jetbrains resize-none border-2
-              rounded-md px-2 py-1 border-single focus:outline-none text-lg
-              border-border focus:border-border-active bg-ovr w-auto"
-          ></textarea>
+          <>
+            <h4 className="text-base font-semibold">Edges</h4>
+            <textarea
+              wrap="off"
+              name="graphInputEdges"
+              id="graphInputEdges"
+              onChange={processGraphInput}
+              onKeyDown={handleTextAreaKeyDown}
+              rows={8}
+              className="font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active bg-ovr w-auto"
+            ></textarea>
+          </>
         ) : (
           <></>
         )}
 
         {inputFormat === "parentChild" ? (
           <>
-            <h4 className="text-base decoration-solid underline">
-              Parent Array
-            </h4>
+            <h4 className="text-base font-semibold">Parent Array</h4>
             <textarea
               wrap="off"
               name="graphInputParent"
@@ -307,9 +336,7 @@ export function GraphInput({
                 border-2 rounded-md px-2 py-1 border-single focus:outline-none
                 text-lg border-border focus:border-border-active w-auto"
             ></textarea>
-            <h4 className="text-base decoration-solid underline">
-              Child Array
-            </h4>
+            <h4 className="text-base font-semibold">Child Array</h4>
             <textarea
               wrap="off"
               name="graphInputChild"
@@ -322,9 +349,7 @@ export function GraphInput({
                 border-2 rounded-md px-2 py-1 border-single focus:outline-none
                 text-lg border-border focus:border-border-active w-auto"
             ></textarea>
-            <h4 className="text-base decoration-solid underline">
-              Edge Labels
-            </h4>
+            <h4 className="text-base font-semibold">Edge Labels</h4>
             <textarea
               wrap="off"
               name="graphInputEdgeLabels"

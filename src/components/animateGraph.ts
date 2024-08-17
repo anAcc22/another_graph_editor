@@ -684,7 +684,7 @@ export function animateGraph(
     setTimeout(() => {
       requestAnimationFrame(animate);
 
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      ctx.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
 
       resetMisplacedNodes();
 

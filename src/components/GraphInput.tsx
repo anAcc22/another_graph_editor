@@ -112,6 +112,7 @@ export function GraphInput({
 
         <h4 className="text-base decoration-solid underline">Current Nodes</h4>
         <textarea
+          wrap="off"
           rows={1}
           name="graphInputCurrentNodes"
           id="graphInputCurrentNodes"
@@ -125,6 +126,7 @@ export function GraphInput({
 
         <h4 className="text-base decoration-solid underline">Node Labels</h4>
         <textarea
+          wrap="off"
           name="graphInputNodeLabels"
           id="graphInputNodeLabels"
           rows={1}
@@ -275,6 +277,7 @@ export function GraphInput({
 
         {inputFormat === "edges" ? (
           <textarea
+            wrap="off"
             name="graphInputEdges"
             id="graphInputEdges"
             onChange={processGraphInput}
@@ -294,6 +297,7 @@ export function GraphInput({
               Parent Array
             </h4>
             <textarea
+              wrap="off"
               name="graphInputParent"
               id="graphInputParent"
               rows={1}
@@ -307,6 +311,7 @@ export function GraphInput({
               Child Array
             </h4>
             <textarea
+              wrap="off"
               name="graphInputChild"
               id="graphInputChild"
               rows={1}
@@ -321,6 +326,7 @@ export function GraphInput({
               Edge Labels
             </h4>
             <textarea
+              wrap="off"
               name="graphInputEdgeLabels"
               id="graphInputEdgeLabels"
               rows={1}

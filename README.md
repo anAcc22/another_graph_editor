@@ -18,6 +18,8 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 - Common input formats:
   - A list of edges `u v [w]`, denoting an edge from node `u` to node `v`, where
   `w` is an optional edge label.
+  - Leetcode-style adjacency list strings such as `[[2,4],[1,3],[2,1],[4,3]]`;
+  ensure that you do *not* put any spaces inside the string.
   - A parent and child array, where `p[i]` and `c[i]` denote an edge from
   node `p[i]` to `c[i]`.
   - Assuming a nonzero number of nodes, you may also label each node. This

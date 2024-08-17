@@ -9,6 +9,28 @@ import { ParsedGraph } from "../types";
 //   return true;
 // }
 
+interface LeetcodeParsed {
+  status: "ok" | "bad";
+  edges: Array<string[]>;
+}
+function parseLeetcodeStyle(s: string): LeetcodeParsed {
+  if (s.length >= 4 && s[0] === "[" && s[1] === "[") {
+    if (s[s.length - 1] === "]" && s[s.length - 2] === "]") {
+      return {
+        status: "ok",
+        edges: s
+          .substring(2, s.length - 2)
+          .split("],[")
+          .map((t) => t.split(",")),
+      };
+    }
+  }
+  return {
+    status: "bad",
+    edges: [],
+  };
+}
+
 export function parseGraphInputParentChild(
   parent: string,
   child: string,
@@ -112,10 +134,28 @@ export function parseGraphInputEdges(
   input: string,
   nodeLabels: string,
 ): ParsedGraph {
+  const leetcodes = new Array<string[]>();
+
   const raw = input
     .split("\n")
-    .map((s) => s.trim().split(/\s+/))
+    .map((s) => {
+      const sTrimmed = s.trim().split(/\s+/);
+      const leet = parseLeetcodeStyle(sTrimmed[0]);
+      if (sTrimmed.length == 1 && leet.status === "ok") {
+        for (const l of leet.edges) {
+          leetcodes.push(l);
+        }
+        return [""];
+      }
+      return sTrimmed;
+    })
     .filter((nodes) => nodes[0].length);
+
+  for (const s of leetcodes) {
+    if (s[0].length) {
+      raw.push(s);
+    }
+  }
 
   let nodes = new Array<string>();
   let adj = new Map<string, string[]>();

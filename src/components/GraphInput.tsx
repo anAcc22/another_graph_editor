@@ -25,10 +25,17 @@ export function GraphInput({
   const processGraphInput = () => {
     let parsedGraph: ParsedGraph;
 
+    let roots = "";
+
+    if (!directed) {
+      roots = (
+        document.getElementById("graphInputRoots") as HTMLTextAreaElement
+      ).value;
+    }
+
     if (inputFormat === "edges") {
       parsedGraph = parseGraphInputEdges(
-        (document.getElementById("graphInputRoots") as HTMLTextAreaElement)
-          .value,
+        roots,
         (document.getElementById("graphInputEdges") as HTMLTextAreaElement)
           .value,
         (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
@@ -36,8 +43,7 @@ export function GraphInput({
       );
     } else {
       parsedGraph = parseGraphInputParentChild(
-        (document.getElementById("graphInputRoots") as HTMLTextAreaElement)
-          .value,
+        roots,
         (document.getElementById("graphInputParent") as HTMLTextAreaElement)
           .value,
         (document.getElementById("graphInputChild") as HTMLTextAreaElement)
@@ -102,8 +108,11 @@ export function GraphInput({
   }, []);
 
   useEffect(() => {
-    (document.getElementById("graphInputRoots") as HTMLTextAreaElement).value =
-      "";
+    if (!directed) {
+      (
+        document.getElementById("graphInputRoots") as HTMLTextAreaElement
+      ).value = "";
+    }
   }, [inputFormat]);
 
   return (

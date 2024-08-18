@@ -28,9 +28,18 @@ export function GraphInput({
     let roots = "";
 
     if (!directed) {
-      roots = (
-        document.getElementById("graphInputRoots") as HTMLTextAreaElement
-      ).value;
+      roots =
+        inputFormat === "edges"
+          ? (
+              document.getElementById(
+                "graphInputRootsEdges",
+              ) as HTMLTextAreaElement
+            ).value
+          : (
+              document.getElementById(
+                "graphInputRootsParChild",
+              ) as HTMLTextAreaElement
+            ).value;
     }
 
     if (inputFormat === "edges") {
@@ -108,11 +117,7 @@ export function GraphInput({
   }, []);
 
   useEffect(() => {
-    if (!directed) {
-      (
-        document.getElementById("graphInputRoots") as HTMLTextAreaElement
-      ).value = "";
-    }
+    processGraphInput();
   }, [inputFormat]);
 
   return (
@@ -293,87 +298,148 @@ export function GraphInput({
 
         <br />
 
-        {!directed ? (
-          <>
-            <h4 className="text-base font-semibold">Roots</h4>
-            <textarea
-              wrap="off"
-              name="graphInputRoots"
-              id="graphInputRoots"
-              rows={1}
-              onChange={processGraphInput}
-              onKeyDown={handleTextAreaKeyDown}
-              className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active w-auto"
-            ></textarea>
-          </>
-        ) : (
-          <></>
-        )}
-
-        {inputFormat === "edges" ? (
-          <>
-            <h4 className="text-base font-semibold">Edges</h4>
-            <textarea
-              wrap="off"
-              name="graphInputEdges"
-              id="graphInputEdges"
-              onChange={processGraphInput}
-              onKeyDown={handleTextAreaKeyDown}
-              rows={8}
-              className="font-semibold font-jetbrains resize-none border-2
+        <h4
+          className={
+            !directed && inputFormat === "edges"
+              ? "text-base font-semibold"
+              : "hidden"
+          }
+        >
+          Roots
+        </h4>
+        <textarea
+          wrap="off"
+          name="graphInputRootsEdges"
+          id="graphInputRootsEdges"
+          rows={1}
+          onChange={processGraphInput}
+          onKeyDown={handleTextAreaKeyDown}
+          className={
+            !directed && inputFormat === "edges"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
-                border-border focus:border-border-active bg-ovr w-auto"
-            ></textarea>
-          </>
-        ) : (
-          <></>
-        )}
+                border-border focus:border-border-active w-auto`
+              : "hidden"
+          }
+        ></textarea>
 
-        {inputFormat === "parentChild" ? (
-          <>
-            <h4 className="text-base font-semibold">Parent Array</h4>
-            <textarea
-              wrap="off"
-              name="graphInputParent"
-              id="graphInputParent"
-              rows={1}
-              onChange={processGraphInput}
-              onKeyDown={handleTextAreaKeyDown}
-              className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active w-auto"
-            ></textarea>
-            <h4 className="text-base font-semibold">Child Array</h4>
-            <textarea
-              wrap="off"
-              name="graphInputChild"
-              id="graphInputChild"
-              rows={1}
-              defaultValue={"1 2 3 4 5 6 7 8 9"}
-              onChange={processGraphInput}
-              onKeyDown={handleTextAreaKeyDown}
-              className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active w-auto"
-            ></textarea>
-            <h4 className="text-base font-semibold">Edge Labels</h4>
-            <textarea
-              wrap="off"
-              name="graphInputEdgeLabels"
-              id="graphInputEdgeLabels"
-              rows={1}
-              onChange={processGraphInput}
-              onKeyDown={handleTextAreaKeyDown}
-              className="bg-ovr font-semibold font-jetbrains resize-none
-                border-2 rounded-md px-2 py-1 border-single focus:outline-none
-                text-lg border-border focus:border-border-active w-auto"
-            ></textarea>
-          </>
-        ) : (
-          <></>
-        )}
+        <h4
+          className={
+            !directed && inputFormat === "parentChild"
+              ? "text-base font-semibold"
+              : "hidden"
+          }
+        >
+          Roots
+        </h4>
+        <textarea
+          wrap="off"
+          name="graphInputRootsParChild"
+          id="graphInputRootsParChild"
+          rows={1}
+          onChange={processGraphInput}
+          onKeyDown={handleTextAreaKeyDown}
+          className={
+            !directed && inputFormat === "parentChild"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active w-auto`
+              : "hidden"
+          }
+        ></textarea>
+
+        <h4
+          className={
+            inputFormat === "edges" ? "text-base font-semibold" : "hidden"
+          }
+        >
+          Edges
+        </h4>
+        <textarea
+          wrap="off"
+          name="graphInputEdges"
+          id="graphInputEdges"
+          onChange={processGraphInput}
+          onKeyDown={handleTextAreaKeyDown}
+          rows={8}
+          className={
+            inputFormat === "edges"
+              ? `font-semibold font-jetbrains resize-none border-2 rounded-md
+                px-2 py-1 border-single focus:outline-none text-lg border-border
+                focus:border-border-active bg-ovr w-auto`
+              : "hidden"
+          }
+        ></textarea>
+
+        <h4
+          className={
+            inputFormat === "parentChild" ? "text-base font-semibold" : "hidden"
+          }
+        >
+          Parent Array
+        </h4>
+        <textarea
+          wrap="off"
+          name="graphInputParent"
+          id="graphInputParent"
+          rows={1}
+          onChange={processGraphInput}
+          onKeyDown={handleTextAreaKeyDown}
+          className={
+            inputFormat === "parentChild"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active w-auto`
+              : "hidden"
+          }
+        ></textarea>
+
+        <h4
+          className={
+            inputFormat === "parentChild" ? "text-base font-semibold" : "hidden"
+          }
+        >
+          Child Array
+        </h4>
+        <textarea
+          wrap="off"
+          name="graphInputChild"
+          id="graphInputChild"
+          rows={1}
+          defaultValue={"1 2 3 4 5 6 7 8 9"}
+          onChange={processGraphInput}
+          onKeyDown={handleTextAreaKeyDown}
+          className={
+            inputFormat === "parentChild"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active w-auto`
+              : "hidden"
+          }
+        ></textarea>
+
+        <h4
+          className={
+            inputFormat === "parentChild" ? "text-base font-semibold" : "hidden"
+          }
+        >
+          Edge Labels
+        </h4>
+        <textarea
+          wrap="off"
+          name="graphInputEdgeLabels"
+          id="graphInputEdgeLabels"
+          rows={1}
+          onChange={processGraphInput}
+          onKeyDown={handleTextAreaKeyDown}
+          className={
+            inputFormat === "parentChild"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active w-auto`
+              : "hidden"
+          }
+        ></textarea>
 
         <div className="flex justify-between">
           <button

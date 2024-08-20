@@ -2,12 +2,12 @@ import { GraphInput } from "./components/GraphInput";
 import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
-import { Settings } from "./types";
+import { InputFormat, Settings } from "./types";
 import { Graph } from "./types";
 
 import { useState } from "react";
 function App() {
-  const [graph, setGraph] = useState<Graph>({
+  const [graphEdges, setGraphEdges] = useState<Graph>({
     nodes: new Array<string>(),
     adj: new Map<string, string[]>(),
     rev: new Map<string, string[]>(),
@@ -15,7 +15,19 @@ function App() {
     edgeLabels: new Map<string, string>(),
     nodeLabels: new Map<string, string>(),
   });
+
+  const [graphParChild, setGraphParChild] = useState<Graph>({
+    nodes: new Array<string>(),
+    adj: new Map<string, string[]>(),
+    rev: new Map<string, string[]>(),
+    edges: new Array<string>(),
+    edgeLabels: new Map<string, string>(),
+    nodeLabels: new Map<string, string>(),
+  });
+
+  const [inputFormat, setInputFormat] = useState<InputFormat>("edges");
   const [directed, setDirected] = useState<boolean>(false);
+
   const [settings, setSettings] = useState<Settings>({
     labelOffset: 0,
     darkMode:
@@ -35,10 +47,6 @@ function App() {
     treeMode: false,
     lockMode: false,
   });
-
-  const updateGraph = (graph: Graph) => setGraph(graph);
-  const updateDirected = (directed: boolean) => setDirected(directed);
-  const updateSettings = (settings: Settings) => setSettings(settings);
 
   return (
     <>
@@ -70,17 +78,38 @@ function App() {
           )}
           <div className="ml-2">Github</div>
         </a>
+
         <GraphInput
-          graph={graph}
-          updateGraph={updateGraph}
+          graphEdges={graphEdges}
+          setGraphEdges={setGraphEdges}
+          graphParChild={graphParChild}
+          setGraphParChild={setGraphParChild}
+          inputFormat={inputFormat}
+          setInputFormat={setInputFormat}
           directed={directed}
-          updateDirected={updateDirected}
+          setDirected={setDirected}
         />
-        <GraphCanvas graph={graph} directed={directed} settings={settings} />
+
+        <GraphCanvas
+          graph={graphEdges}
+          inputFormatToRender={"edges"}
+          inputFormat={inputFormat}
+          directed={directed}
+          settings={settings}
+        />
+
+        <GraphCanvas
+          graph={graphParChild}
+          inputFormatToRender={"parentChild"}
+          inputFormat={inputFormat}
+          directed={directed}
+          settings={settings}
+        />
+
         <GraphSettings
           directed={directed}
           settings={settings}
-          updateSettings={updateSettings}
+          setSettings={setSettings}
         />
       </div>
     </>

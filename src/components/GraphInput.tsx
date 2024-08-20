@@ -1,26 +1,31 @@
 import { parseGraphInputEdges } from "./parseGraphInput";
 import { parseGraphInputParentChild } from "./parseGraphInput";
 import { useEffect, useState } from "react";
-import { ParsedGraph } from "../types";
+import { InputFormat, ParsedGraph } from "../types";
 import { Graph } from "../types";
 
 interface Props {
-  graph: Graph;
-  updateGraph: (graph: Graph) => void;
+  graphEdges: Graph;
+  setGraphEdges: React.Dispatch<React.SetStateAction<Graph>>;
+  graphParChild: Graph;
+  setGraphParChild: React.Dispatch<React.SetStateAction<Graph>>;
+  inputFormat: InputFormat;
+  setInputFormat: React.Dispatch<React.SetStateAction<InputFormat>>;
   directed: boolean;
-  updateDirected: (directed: boolean) => void;
+  setDirected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type InputFormat = "edges" | "parentChild";
-
 export function GraphInput({
-  graph,
-  updateGraph,
+  graphEdges,
+  setGraphEdges,
+  graphParChild,
+  setGraphParChild,
+  inputFormat,
+  setInputFormat,
   directed,
-  updateDirected,
+  setDirected,
 }: Props) {
   const [inputStatus, setInputStatus] = useState<boolean>(true);
-  const [inputFormat, setInputFormat] = useState<InputFormat>("edges");
 
   const processGraphInput = () => {
     let parsedGraph: ParsedGraph;
@@ -50,6 +55,12 @@ export function GraphInput({
         (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
           .value,
       );
+      if (parsedGraph.status === "BAD") {
+        setInputStatus(false);
+      } else {
+        setInputStatus(true);
+        setGraphEdges(parsedGraph.graph!);
+      }
     } else {
       parsedGraph = parseGraphInputParentChild(
         roots,
@@ -62,13 +73,12 @@ export function GraphInput({
         (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
           .value,
       );
-    }
-
-    if (parsedGraph.status === "BAD") {
-      setInputStatus(false);
-    } else {
-      setInputStatus(true);
-      updateGraph(parsedGraph.graph!);
+      if (parsedGraph.status === "BAD") {
+        setInputStatus(false);
+      } else {
+        setInputStatus(true);
+        setGraphParChild(parsedGraph.graph!);
+      }
     }
   };
 
@@ -97,7 +107,11 @@ export function GraphInput({
       }
     }
 
-    updateGraph({ ...graph, nodeLabels: mp });
+    if (inputFormat === "edges") {
+      setGraphEdges({ ...graphEdges, nodeLabels: mp });
+    } else {
+      setGraphParChild({ ...graphParChild, nodeLabels: mp });
+    }
   };
 
   const handleTextAreaKeyDown = (
@@ -140,7 +154,11 @@ export function GraphInput({
           name="graphInputCurrentNodes"
           id="graphInputCurrentNodes"
           onChange={processNodeLabels}
-          value={[...graph.nodes].sort().join(" ")}
+          value={
+            inputFormat === "edges"
+              ? [...graphEdges.nodes].sort().join(" ")
+              : [...graphParChild.nodes].sort().join(" ")
+          }
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
             rounded-md px-2 py-1 border-single focus:outline-none text-lg
@@ -243,7 +261,7 @@ export function GraphInput({
                 <span
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
-                    updateDirected(false);
+                    setDirected(false);
                     let checkbox = document.getElementById(
                       "directedCheckbox",
                     ) as HTMLInputElement;
@@ -264,7 +282,7 @@ export function GraphInput({
                 <span
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
-                    updateDirected(true);
+                    setDirected(true);
                     let checkbox = document.getElementById(
                       "directedCheckbox",
                     ) as HTMLInputElement;
@@ -278,7 +296,7 @@ export function GraphInput({
           </span>
           <label className="relative inline w-9">
             <input
-              onClick={() => updateDirected(!directed)}
+              onClick={() => setDirected(!directed)}
               type="checkbox"
               id="directedCheckbox"
               className="peer invisible"

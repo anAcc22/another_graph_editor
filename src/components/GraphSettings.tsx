@@ -4,10 +4,10 @@ import { SettingsToggleSection } from "./SettingsToggleSection";
 interface Props {
   directed: boolean;
   settings: Settings;
-  updateSettings: (settings: Settings) => void;
+  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 }
 
-export function GraphSettings({ directed, settings, updateSettings }: Props) {
+export function GraphSettings({ directed, settings, setSettings }: Props) {
   return (
     <>
       <div
@@ -39,7 +39,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
             [&::-moz-range-thumb]:rounded-full"
           onChange={(e) => {
-            updateSettings({
+            setSettings({
               ...settings,
               labelOffset: Number.parseInt(e.target.value),
             });
@@ -63,7 +63,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           settingsName={"darkMode"}
           settings={settings}
           updateSettings={(newSettings) => {
-            updateSettings(newSettings);
+            setSettings(newSettings);
             localStorage.setItem("darkMode", newSettings.darkMode.toString());
           }}
         />
@@ -89,7 +89,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             [&::-moz-range-thumb]:rounded-full"
           onChange={(e) => {
             const newRadius = 16 + Number.parseInt(e.target.value);
-            updateSettings({
+            setSettings({
               ...settings,
               nodeRadius: newRadius,
             });
@@ -116,7 +116,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             [&::-moz-range-thumb]:rounded-full"
           onChange={(e) => {
             const newBorderWidthHalf = 1 + Number.parseFloat(e.target.value);
-            updateSettings({
+            setSettings({
               ...settings,
               nodeBorderWidthHalf: newBorderWidthHalf,
             });
@@ -136,7 +136,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           toggleID={"settingsComponents"}
           settingsName={"showComponents"}
           settings={settings}
-          updateSettings={updateSettings}
+          updateSettings={setSettings}
         />
 
         {!directed ? (
@@ -147,7 +147,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             toggleID={"settingsBridges"}
             settingsName={"showBridges"}
             settings={settings}
-            updateSettings={updateSettings}
+            updateSettings={setSettings}
           />
         ) : (
           <></>
@@ -161,7 +161,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
             toggleID={"settingsTreeMode"}
             settingsName={"treeMode"}
             settings={settings}
-            updateSettings={updateSettings}
+            updateSettings={setSettings}
           />
         ) : (
           <></>
@@ -174,7 +174,7 @@ export function GraphSettings({ directed, settings, updateSettings }: Props) {
           toggleID={"settingsLockMode"}
           settingsName={"lockMode"}
           settings={settings}
-          updateSettings={updateSettings}
+          updateSettings={setSettings}
         />
       </div>
     </>

@@ -518,7 +518,7 @@ function buildSettings(): void {
   }
 }
 
-export function updateGraph(graph: Graph) {
+export function updateGraphParChild(graph: Graph) {
   updateNodes(graph);
   updateEdges(graph);
 
@@ -531,16 +531,16 @@ export function updateGraph(graph: Graph) {
   buildSettings();
 }
 
-export function resizeGraph(width: number, height: number) {
+export function resizeGraphParChild(width: number, height: number) {
   canvasWidth = width;
   canvasHeight = height;
 }
 
-export function updateDirected(d: boolean) {
+export function updateDirectedParChild(d: boolean) {
   directed = d;
 }
 
-export function updateSettings(s: Settings) {
+export function updateSettingsParChild(s: Settings) {
   settings = s;
   buildSettings();
 }
@@ -622,7 +622,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
   }
 }
 
-export function animateGraph(
+export function animateGraphParChild(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   setImage: React.Dispatch<React.SetStateAction<string | undefined>>,

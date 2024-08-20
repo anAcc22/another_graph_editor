@@ -23,6 +23,8 @@ export interface ParsedGraph {
   graph?: Graph;
 }
 
+export type InputFormat = "edges" | "parentChild";
+
 export type ColorMap = Map<string, number>;
 
 export type CutMap = Map<string, boolean>;

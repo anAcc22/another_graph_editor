@@ -141,7 +141,7 @@ export function GraphInput({
           shadow-shadow shadow border-border sm:ml-1/16 sm:mt-1/8 sm:mr-1/16
           lg:m-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4
           hover:border-border-hover lg:left-1/24 xl:left-5/200 xl:w-1/5 p-3
-          space-y-3"
+          space-y-3 z-10"
       >
         <h3 className="font-bold text-lg">Graph Data</h3>
 

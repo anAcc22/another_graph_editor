@@ -90,21 +90,23 @@ function App() {
           setDirected={setDirected}
         />
 
-        <GraphCanvas
-          graph={graphEdges}
-          inputFormatToRender={"edges"}
-          inputFormat={inputFormat}
-          directed={directed}
-          settings={settings}
-        />
+        <div className="relative">
+          <GraphCanvas
+            graph={graphEdges}
+            inputFormatToRender={"edges"}
+            inputFormat={inputFormat}
+            directed={directed}
+            settings={settings}
+          />
 
-        <GraphCanvas
-          graph={graphParChild}
-          inputFormatToRender={"parentChild"}
-          inputFormat={inputFormat}
-          directed={directed}
-          settings={settings}
-        />
+          <GraphCanvas
+            graph={graphParChild}
+            inputFormatToRender={"parentChild"}
+            inputFormat={inputFormat}
+            directed={directed}
+            settings={settings}
+          />
+        </div>
 
         <GraphSettings
           directed={directed}

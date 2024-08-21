@@ -162,7 +162,7 @@ export function GraphInput({
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
             rounded-md px-2 py-1 border-single focus:outline-none text-lg
-            text-current-nodes border-border w-auto"
+            text-current-nodes border-border w-auto no-scrollbar"
         ></textarea>
 
         <h4 className="text-base font-semibold">Node Labels</h4>
@@ -177,7 +177,7 @@ export function GraphInput({
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
             rounded-md px-2 py-1 border-single focus:outline-none text-lg
             border-border focus:border-border-active placeholder-placeholder
-            placeholder:italic w-auto overflow-hidden"
+            placeholder:italic w-auto no-scrollbar"
         ></textarea>
 
         <br />
@@ -336,7 +336,7 @@ export function GraphInput({
             !directed && inputFormat === "edges"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
-                border-border focus:border-border-active w-auto overflow-hidden`
+                border-border focus:border-border-active w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>
@@ -361,7 +361,7 @@ export function GraphInput({
             !directed && inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
-                border-border focus:border-border-active w-auto overflow-hidden`
+                border-border focus:border-border-active w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>
@@ -384,7 +384,7 @@ export function GraphInput({
             inputFormat === "edges"
               ? `font-semibold font-jetbrains resize-none border-2 rounded-md
                 px-2 py-1 border-single focus:outline-none text-lg border-border
-                focus:border-border-active bg-ovr w-auto overflow-hidden`
+                focus:border-border-active bg-ovr w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>
@@ -407,7 +407,7 @@ export function GraphInput({
             inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
-                border-border focus:border-border-active w-auto overflow-hidden`
+                border-border focus:border-border-active w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>
@@ -431,7 +431,7 @@ export function GraphInput({
             inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
-                border-border focus:border-border-active w-auto overflow-hidden`
+                border-border focus:border-border-active w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>
@@ -454,7 +454,7 @@ export function GraphInput({
             inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
-                border-border focus:border-border-active w-auto overflow-hidden`
+                border-border focus:border-border-active w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>

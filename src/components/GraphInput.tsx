@@ -162,7 +162,7 @@ export function GraphInput({
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
             rounded-md px-2 py-1 border-single focus:outline-none text-lg
-            text-current-nodes border-border w-auto overflow-hidden"
+            text-current-nodes border-border w-auto"
         ></textarea>
 
         <h4 className="text-base font-semibold">Node Labels</h4>

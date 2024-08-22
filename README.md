@@ -10,7 +10,7 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 </p>
 
 <p align="center">
-<em>A Three-Component Graph</em>
+<em>A Multi-Component Graph</em>
 </p>
 
 ## Features

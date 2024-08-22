@@ -140,9 +140,9 @@ export function GraphCanvas({
         <a
           download="graph.png"
           href={image}
-          className="w-36 mt-2 text-center border-2 border-border rounded-lg
-            px-2 py-1 justify-between items-center hover:border-border-hover
-            hover:cursor-pointer ml-auto"
+          className="font-jetbrains text-sm w-36 mt-2 text-center border-2
+            border-border rounded-lg px-2 py-1 justify-between items-center
+            hover:border-border-hover hover:cursor-pointer ml-auto"
         >
           Download (PNG)
         </a>

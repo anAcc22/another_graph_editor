@@ -120,7 +120,7 @@ displayed instead, where *back edges* are displayed as dotted lines.
 </p>
 
 <p align="center">
-<em>A DFS Tree With an Offset of -1</em>
+<em>A DFS Tree With Bridges and Cut Vertices Shown</em>
 </p>
 
 ## Credits

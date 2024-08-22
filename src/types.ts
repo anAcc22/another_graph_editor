@@ -12,6 +12,7 @@ export interface Settings {
   darkMode: boolean;
   nodeRadius: number;
   nodeBorderWidthHalf: number;
+  edgeLength: number;
   showComponents: boolean;
   showBridges: boolean;
   treeMode: boolean;

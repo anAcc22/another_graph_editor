@@ -127,6 +127,33 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           }}
         />
 
+        <h4 className="font-semibold">Edge Length</h4>
+        <input
+          type="range"
+          min={0}
+          max={75}
+          step={5}
+          value={settings.edgeLength - 10}
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newEdgeLength = 10 + Number.parseInt(e.target.value);
+            setSettings({
+              ...settings,
+              edgeLength: newEdgeLength,
+            });
+            localStorage.setItem("edgeLength", newEdgeLength.toString());
+          }}
+        />
+
         <br />
 
         <SettingsToggleSection

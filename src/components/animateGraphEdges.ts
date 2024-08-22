@@ -232,7 +232,6 @@ const NODE_LABEL_OUTLINE_DARK = "hsl(10, 10%, 30%)";
 
 const TEXT_Y_OFFSET = 1;
 
-const NODE_DIST = 100;
 const NODE_FRICTION = 0.05;
 
 const CANVAS_FIELD_DIST = 50;
@@ -294,6 +293,7 @@ let settings: Settings = {
   darkMode: true,
   nodeRadius: 15,
   nodeBorderWidthHalf: 15,
+  edgeLength: 10,
   showComponents: false,
   showBridges: false,
   treeMode: false,
@@ -302,6 +302,8 @@ let settings: Settings = {
 
 let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
+
+let nodeDist: number = 40;
 
 let nodeLabels = new Map<string, string>();
 
@@ -390,8 +392,8 @@ function updateVelocities() {
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
 
         if (isEdge) {
-          aMag = Math.pow(Math.abs(dist - NODE_DIST), 1.5) / 100_000;
-          if (dist >= NODE_DIST) {
+          aMag = Math.pow(Math.abs(dist - nodeDist), 1.5) / 100_000;
+          if (dist >= nodeDist) {
             aMag *= -1;
           }
         }
@@ -433,7 +435,7 @@ function updateVelocities() {
       const depth = layerMap.get(u)![0];
       const maxDepth = layerMap.get(u)![1];
 
-      let layerHeight = (NODE_DIST * 4) / 5;
+      let layerHeight = (nodeDist * 4) / 5;
 
       if (maxDepth * layerHeight >= canvasHeight - 2 * CANVAS_FIELD_DIST) {
         layerHeight = (canvasHeight - 2 * CANVAS_FIELD_DIST) / maxDepth;
@@ -484,6 +486,7 @@ function buildSettings(): void {
 
   nodeRadius = settings.nodeRadius;
   nodeBorderWidthHalf = settings.nodeBorderWidthHalf;
+  nodeDist = settings.edgeLength + 2 * nodeRadius;
 
   labelOffset = settings.labelOffset;
 

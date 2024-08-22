@@ -19,7 +19,7 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
   - A list of edges `u v [w]`, denoting an edge from node `u` to node `v`, where
   `w` is an optional edge label.
   - Leetcode-style adjacency list strings such as `[[2,4],[1,3],[2,1],[4,3]]`;
-  ensure that you do *not* put any spaces inside the string.
+  ensure that you do **not** put any spaces inside the string.
   - A parent and child array, where `p[i]` and `c[i]` denote an edge from
   node `p[i]` to `c[i]`.
   - Assuming a nonzero number of nodes, you may also label each node. This
@@ -40,6 +40,14 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 <em>A Demonstration of the Parent-Child Input Format</em>
 </p>
 
+<p align="center">
+    <img src="screenshots/leetcode.png?" />
+</p>
+
+<p align="center">
+<em>Leetcode-Style Adjacency Lists Work as Well Under Edges</em>
+</p>
+
 > [!NOTE]
 > *Tree Mode* and *Bridges* are only available for undirected graphs.
 
@@ -48,8 +56,9 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 
 ## Configuration
 
-In addition to the light/dark themes, there are two sliders available
-for adjusting the *node radius* and *line thickness* at discrete intervals.
+In addition to the light/dark themes, there are three sliders available
+for adjusting the *node radius*, *line thickness*, and *edge length* at discrete
+intervals. Your configuration will be preserved across refreshes.
 
 > [!NOTE]
 > As the node radius changes, the font size is scaled accordingly to maintain readability.
@@ -78,16 +87,29 @@ Adjust the input format to your liking and type away!
 
 ### Tree Mode
 
-In this mode, the *first* node that appears in the input data becomes
-the root; therefore, if you require some arbitrary node `u` as the root,
-enter `u` at the top of your input data.
+In this mode, the *first* node that appears in the input data becomes the root.
 
 <p align="center">
-    <img src="screenshots/twoRoot.png?" />
+    <img src="screenshots/twoRootBefore.png?" />
 </p>
 
 <p align="center">
-<em>Making Node 2 the Root Instead of Node 1</em>
+<em>Node 1 is the Original Root</em>
+</p>
+
+To set some arbitrary root, say node 2, as the root, under the *Roots*
+section, type `2`, and it'll become the root of the tree. In scenarios where
+you have multiple trees, simply type a comma-separated list of all the roots.
+A caveat is that if you type two nodes that belong to the same tree under
+*Roots*, the one that comes first takes precedence, i.e., if you type
+`2 1`, then node 2 is the root, but if you type `1 2`, then node 1 is the root.
+
+<p align="center">
+    <img src="screenshots/twoRootAfter.png?" />
+</p>
+
+<p align="center">
+<em>Node 2 is the New Root</em>
 </p>
 
 What happens if the graph isn't a tree? Well, the **DFS Tree** would be

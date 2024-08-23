@@ -38,34 +38,30 @@ class Node {
   }
 }
 
-function generateRandomCoords() {
-  randomCoords = [];
+function generateRandomCoords(): Vector2D {
+  let x = (Math.random() * canvasWidth) / 2 + canvasWidth / 4;
+  let y = (Math.random() * canvasHeight) / 2 + canvasHeight / 4;
 
-  for (let i = 0; i < RANDOM_COORDS_CNT; i++) {
-    let x = (Math.random() * canvasWidth) / 2 + canvasWidth / 4;
-    let y = (Math.random() * canvasHeight) / 2 + canvasHeight / 4;
+  let xFailCnt = 0;
+  let yFailCnt = 0;
 
-    let xFailCnt = 0;
-    let yFailCnt = 0;
-
-    while (x <= nodeRadius || x >= canvasWidth - nodeRadius) {
-      x = (Math.random() * canvasWidth) / 2 + canvasWidth / 4;
-      xFailCnt++;
-      if (xFailCnt === 10) {
-        break;
-      }
+  while (x <= nodeRadius || x >= canvasWidth - nodeRadius) {
+    x = (Math.random() * canvasWidth) / 2 + canvasWidth / 4;
+    xFailCnt++;
+    if (xFailCnt === 10) {
+      break;
     }
-
-    while (y <= nodeRadius || y >= canvasHeight - nodeRadius) {
-      y = (Math.random() * canvasHeight) / 2 + canvasHeight / 4;
-      yFailCnt++;
-      if (yFailCnt === 10) {
-        break;
-      }
-    }
-
-    randomCoords.push({ x, y });
   }
+
+  while (y <= nodeRadius || y >= canvasHeight - nodeRadius) {
+    y = (Math.random() * canvasHeight) / 2 + canvasHeight / 4;
+    yFailCnt++;
+    if (yFailCnt === 10) {
+      break;
+    }
+  }
+
+  return { x, y };
 }
 
 function isInteger(val: string) {
@@ -245,7 +241,6 @@ function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
 }
 
 const FPS = 60;
-const RANDOM_COORDS_CNT = 200;
 
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
@@ -297,8 +292,6 @@ const FILL_COLORS_LENGTH = 10;
 
 let currentTime = 0;
 
-let randomCoords: Vector2D[] = [];
-
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
 
@@ -333,6 +326,8 @@ let settings: Settings = {
   lockMode: false,
 };
 
+let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
+
 let nodes: string[] = [];
 let nodeMap = new Map<string, Node>();
 
@@ -360,19 +355,6 @@ let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
 function updateNodes(graph: Graph): void {
-  for (let i = 0; i < graph.nodes.length; i++) {
-    const u = graph.nodes[i];
-
-    if (!nodes.includes(u)) {
-      const x = randomCoords[i % RANDOM_COORDS_CNT].x;
-      const y = randomCoords[i % RANDOM_COORDS_CNT].y;
-
-      nodes.push(u);
-
-      nodeMap.set(u, new Node(x, y));
-    }
-  }
-
   let deletedNodes: string[] = [];
 
   for (const u of nodes) {
@@ -384,7 +366,25 @@ function updateNodes(graph: Graph): void {
   nodes = nodes.filter((u) => !deletedNodes.includes(u));
 
   for (const u of deletedNodes) {
+    lastDeletedNodePos = nodeMap.get(u)!.pos;
     nodeMap.delete(u);
+  }
+
+  for (let i = 0; i < graph.nodes.length; i++) {
+    const u = graph.nodes[i];
+
+    if (!nodes.includes(u)) {
+      let coords = generateRandomCoords();
+
+      if (lastDeletedNodePos.x !== -1) {
+        coords = lastDeletedNodePos;
+        lastDeletedNodePos = { x: -1, y: -1 };
+      }
+
+      nodes.push(u);
+
+      nodeMap.set(u, new Node(coords.x, coords.y));
+    }
   }
 
   nodes = graph.nodes;
@@ -555,7 +555,6 @@ export function updateGraphParChild(graph: Graph) {
 export function resizeGraphParChild(width: number, height: number) {
   canvasWidth = width;
   canvasHeight = height;
-  generateRandomCoords();
 }
 
 export function updateDirectedParChild(d: boolean) {

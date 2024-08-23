@@ -124,14 +124,6 @@ export function GraphInput({
 
   useEffect(() => {
     processGraphInput();
-    window.addEventListener("resize", processGraphInput);
-    return () => {
-      window.removeEventListener("resize", processGraphInput);
-    };
-  }, []);
-
-  useEffect(() => {
-    processGraphInput();
   }, [inputFormat]);
 
   return (

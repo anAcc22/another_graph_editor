@@ -6,6 +6,7 @@ import { InputFormat, Settings } from "./types";
 import { Graph } from "./types";
 
 import { useState } from "react";
+
 function App() {
   const [graphEdges, setGraphEdges] = useState<Graph>({
     nodes: new Array<string>(),

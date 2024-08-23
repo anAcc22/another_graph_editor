@@ -38,6 +38,36 @@ class Node {
   }
 }
 
+function generateRandomCoords() {
+  randomCoords = [];
+
+  for (let i = 0; i < RANDOM_COORDS_CNT; i++) {
+    let x = (Math.random() * canvasWidth) / 2 + canvasWidth / 4;
+    let y = (Math.random() * canvasHeight) / 2 + canvasHeight / 4;
+
+    let xFailCnt = 0;
+    let yFailCnt = 0;
+
+    while (x <= nodeRadius || x >= canvasWidth - nodeRadius) {
+      x = (Math.random() * canvasWidth) / 2 + canvasWidth / 4;
+      xFailCnt++;
+      if (xFailCnt === 10) {
+        break;
+      }
+    }
+
+    while (y <= nodeRadius || y >= canvasHeight - nodeRadius) {
+      y = (Math.random() * canvasHeight) / 2 + canvasHeight / 4;
+      yFailCnt++;
+      if (yFailCnt === 10) {
+        break;
+      }
+    }
+
+    randomCoords.push({ x, y });
+  }
+}
+
 function isInteger(val: string) {
   return parseInt(val, 10).toString() === val;
 }
@@ -215,6 +245,7 @@ function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
 }
 
 const FPS = 60;
+const RANDOM_COORDS_CNT = 200;
 
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
@@ -265,6 +296,8 @@ const FILL_COLORS_DARK = [
 const FILL_COLORS_LENGTH = 10;
 
 let currentTime = 0;
+
+let randomCoords: Vector2D[] = [];
 
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
@@ -327,30 +360,15 @@ let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
 function updateNodes(graph: Graph): void {
-  for (const u of graph.nodes) {
+  for (let i = 0; i < graph.nodes.length; i++) {
+    const u = graph.nodes[i];
+
     if (!nodes.includes(u)) {
-      let x = Math.random() * canvasWidth;
-      let y = Math.random() * canvasHeight;
-
-      let xFailCnt = 0;
-      let yFailCnt = 0;
-
-      while (x <= nodeRadius || x >= canvasWidth - nodeRadius) {
-        x = Math.round(Math.random() * canvasWidth);
-        xFailCnt++;
-        if (xFailCnt === 10) {
-          break;
-        }
-      }
-      while (y <= nodeRadius || y >= canvasHeight - nodeRadius) {
-        y = Math.round(Math.random() * canvasHeight);
-        yFailCnt++;
-        if (yFailCnt === 10) {
-          break;
-        }
-      }
+      const x = randomCoords[i % RANDOM_COORDS_CNT].x;
+      const y = randomCoords[i % RANDOM_COORDS_CNT].y;
 
       nodes.push(u);
+
       nodeMap.set(u, new Node(x, y));
     }
   }
@@ -537,6 +555,7 @@ export function updateGraphParChild(graph: Graph) {
 export function resizeGraphParChild(width: number, height: number) {
   canvasWidth = width;
   canvasHeight = height;
+  generateRandomCoords();
 }
 
 export function updateDirectedParChild(d: boolean) {
@@ -630,6 +649,8 @@ export function animateGraphParChild(
   ctx: CanvasRenderingContext2D,
   setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) {
+  generateRandomCoords();
+
   canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();
 

@@ -392,7 +392,7 @@ function updateVelocities() {
           edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
 
         if (isEdge) {
-          aMag = Math.pow(Math.abs(dist - nodeDist), 1.5) / 100_000;
+          aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
           if (dist >= nodeDist) {
             aMag *= -1;
           }
@@ -444,7 +444,7 @@ function updateVelocities() {
       const yTarget = CANVAS_FIELD_DIST + (depth - 0.5) * layerHeight;
       const y = nodeMap.get(u)!.pos.y;
 
-      let ay = Math.pow(Math.abs(y - yTarget), 1.65) / 100;
+      let ay = Math.pow(Math.abs(y - yTarget), 1.75) / 100;
 
       if (y > yTarget) {
         ay *= -1;
@@ -643,7 +643,9 @@ export function animateGraphEdges(
         draggedNodes.push(u);
       }
     });
-    if (nodes.length) {
+
+    if (draggedNodes.length) {
+      draggedNodes = [draggedNodes[draggedNodes.length - 1]];
       canvas.style.cursor = "pointer";
     }
   });

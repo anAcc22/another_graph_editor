@@ -402,7 +402,7 @@ function updateVelocities() {
       if (v !== u) {
         const vPos = nodeMap.get(v)!.pos;
 
-        const dist = euclidDist(uPos, vPos);
+        const dist = Math.max(euclidDist(uPos, vPos), 10);
 
         let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 

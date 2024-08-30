@@ -131,6 +131,7 @@ function drawEdgeLabel(
   u: Vector2D,
   v: Vector2D,
   label: string,
+  putAbove: boolean,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
@@ -151,10 +152,18 @@ function drawEdgeLabel(
   ctx.font = `${nodeRadius - 2}px JB`;
   ctx.fillStyle = edgeLabelColor;
 
-  if (py <= 0) {
-    ctx.fillText(label, mx + px, my + py);
+  if (putAbove) {
+    if (py <= 0) {
+      ctx.fillText(label, mx + px, my + py);
+    } else {
+      ctx.fillText(label, mx - px, my - py);
+    }
   } else {
-    ctx.fillText(label, mx - px, my - py);
+    if (py <= 0) {
+      ctx.fillText(label, mx - px, my - py);
+    } else {
+      ctx.fillText(label, mx + px, my + py);
+    }
   }
 }
 
@@ -619,6 +628,8 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
     const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
 
+    const eRev = e.split(" ")[1] + " " + e.split(" ")[0];
+
     if (settings.treeMode && backedgeMap !== undefined && backedgeMap.get(e)) {
       ctx.setLineDash([2, 10]);
     }
@@ -638,7 +649,15 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     }
 
     if (edgeLabels.has(e)) {
-      drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!);
+      if (!edgeLabels.has(eRev)) {
+        drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, true);
+      } else {
+        if (e < eRev) {
+          drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, true);
+        } else {
+          drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, false);
+        }
+      }
     }
   }
 }

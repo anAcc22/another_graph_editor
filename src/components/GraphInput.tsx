@@ -1,8 +1,10 @@
 import { parseGraphInputEdges } from "./parseGraphInput";
 import { parseGraphInputParentChild } from "./parseGraphInput";
 import { useEffect, useState } from "react";
+
 import { InputFormat, ParsedGraph } from "../types";
 import { Graph } from "../types";
+import { sortNodes } from "./utils";
 
 interface Props {
   graphEdges: Graph;
@@ -148,8 +150,8 @@ export function GraphInput({
           onChange={processNodeLabels}
           value={
             inputFormat === "edges"
-              ? [...graphEdges.nodes].sort().join(" ")
-              : [...graphParChild.nodes].sort().join(" ")
+              ? sortNodes(graphEdges.nodes).join(" ")
+              : sortNodes(graphParChild.nodes).join(" ")
           }
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2

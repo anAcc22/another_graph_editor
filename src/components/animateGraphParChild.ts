@@ -17,11 +17,13 @@ interface Vector2D {
 class Node {
   pos: Vector2D;
   vel: Vector2D = { x: 0, y: 0 };
+  selected: boolean;
   constructor(x: number, y: number) {
     this.pos = {
       x,
       y,
     };
+    this.selected = false;
   }
   inBounds(): boolean {
     const x = this.pos.x;
@@ -223,16 +225,28 @@ function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
   ctx.stroke();
 }
 
-function drawCircle(ctx: CanvasRenderingContext2D, u: Vector2D) {
+function drawCircle(ctx: CanvasRenderingContext2D, u: Vector2D, sel: boolean) {
   ctx.beginPath();
 
   ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
 
   ctx.fill();
   ctx.stroke();
+
+  if (sel) {
+    ctx.beginPath();
+    ctx.arc(
+      u.x,
+      u.y,
+      SELECTED_SCALE * (nodeRadius - nodeBorderWidthHalf),
+      0,
+      2 * Math.PI,
+    );
+    ctx.stroke();
+  }
 }
 
-function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
+function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D, sel: boolean) {
   ctx.beginPath();
 
   const length = nodeRadius - nodeBorderWidthHalf;
@@ -247,6 +261,22 @@ function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D) {
 
   ctx.fill();
   ctx.stroke();
+
+  if (sel) {
+    ctx.beginPath();
+
+    const length = SELECTED_SCALE * (nodeRadius - nodeBorderWidthHalf);
+
+    let theta = Math.PI / 6;
+
+    for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
+      const x = u.x + length * Math.cos(theta);
+      const y = u.y + length * Math.sin(theta);
+      ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
+  }
 }
 
 const FPS = 60;
@@ -268,6 +298,7 @@ const NODE_LABEL_OUTLINE_DARK = "hsl(10, 10%, 30%)";
 const TEXT_Y_OFFSET = 1;
 
 const NODE_FRICTION = 0.05;
+const SELECTED_SCALE = 1.25;
 
 const CANVAS_FIELD_DIST = 50;
 
@@ -300,6 +331,7 @@ const FILL_COLORS_DARK = [
 const FILL_COLORS_LENGTH = 10;
 
 let currentTime = 0;
+let prevTime = 0;
 
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
@@ -601,9 +633,9 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
       ];
 
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
-      drawHexagon(ctx, node.pos);
+      drawHexagon(ctx, node.pos, node.selected);
     } else {
-      drawCircle(ctx, node.pos);
+      drawCircle(ctx, node.pos, node.selected);
     }
 
     ctx.textBaseline = "middle";
@@ -671,6 +703,7 @@ export function animateGraphParChild(
 
   canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();
+    prevTime = currentTime;
 
     mousePos = {
       x: event.offsetX,
@@ -714,6 +747,10 @@ export function animateGraphParChild(
 
   canvas.addEventListener("pointerup", (event) => {
     event.preventDefault();
+    if (currentTime - prevTime <= 25 && draggedNodes.length) {
+      const sel = nodeMap.get(draggedNodes[0])!.selected;
+      nodeMap.get(draggedNodes[0])!.selected = !sel;
+    }
     draggedNodes = [];
     canvas.style.cursor = "default";
   });

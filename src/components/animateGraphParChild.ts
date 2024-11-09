@@ -331,7 +331,7 @@ const FILL_COLORS_DARK = [
 const FILL_COLORS_LENGTH = 10;
 
 let currentTime = 0;
-let prevTime = 0;
+let prevMS = performance.now();
 
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
@@ -703,7 +703,8 @@ export function animateGraphParChild(
 
   canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();
-    prevTime = currentTime;
+
+    if (draggedNodes.length === 0) prevMS = performance.now();
 
     mousePos = {
       x: event.offsetX,
@@ -747,7 +748,8 @@ export function animateGraphParChild(
 
   canvas.addEventListener("pointerup", (event) => {
     event.preventDefault();
-    if (currentTime - prevTime <= 25 && draggedNodes.length) {
+    const curMS = performance.now();
+    if (curMS - prevMS <= 250 && draggedNodes.length) {
       const sel = nodeMap.get(draggedNodes[0])!.selected;
       nodeMap.get(draggedNodes[0])!.selected = !sel;
     }

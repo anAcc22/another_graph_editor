@@ -78,16 +78,28 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
-function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+function drawArrow(
+  ctx: CanvasRenderingContext2D,
+  u: Vector2D,
+  v: Vector2D,
+  r: number,
+  toFlip: boolean,
+) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
+
+  let px = u.y - v.y;
+  let py = v.x - u.x;
+
+  px *= 0.187 * (toFlip ? -1 : 1) * (r + 1);
+  py *= 0.187 * (toFlip ? -1 : 1) * (r + 1);
 
   ctx.lineWidth = 1.5 * nodeBorderWidthHalf;
 
   ctx.strokeStyle = edgeColor;
   ctx.fillStyle = edgeColor;
 
-  const mx = (u.x + v.x) / 2;
-  const my = (u.y + v.y) / 2;
+  const mx = (u.x + v.x) / 2 + px;
+  const my = (u.y + v.y) / 2 + py;
 
   ctx.beginPath();
 
@@ -132,14 +144,15 @@ function drawEdgeLabel(
   ctx: CanvasRenderingContext2D,
   u: Vector2D,
   v: Vector2D,
+  r: number,
   label: string,
-  putAbove: boolean,
+  toFlip: boolean,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= (2 * nodeRadius) / 3 / Math.hypot(px, py);
-  py *= (2 * nodeRadius) / 3 / Math.hypot(px, py);
+  px *= 0.275 * (toFlip ? -1 : 1) * (r + 1);
+  py *= 0.275 * (toFlip ? -1 : 1) * (r + 1);
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -154,19 +167,7 @@ function drawEdgeLabel(
   ctx.font = `${nodeRadius - 2}px JB`;
   ctx.fillStyle = edgeLabelColor;
 
-  if (putAbove) {
-    if (py <= 0) {
-      ctx.fillText(label, mx + px, my + py);
-    } else {
-      ctx.fillText(label, mx - px, my - py);
-    }
-  } else {
-    if (py <= 0) {
-      ctx.fillText(label, mx - px, my - py);
-    } else {
-      ctx.fillText(label, mx + px, my + py);
-    }
-  }
+  ctx.fillText(label, mx + px, my + py);
 }
 
 function drawOctagon(
@@ -211,17 +212,26 @@ function drawOctagon(
   ctx.fillText(label, x, y);
 }
 
-function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
+function drawLine(
+  ctx: CanvasRenderingContext2D,
+  u: Vector2D,
+  v: Vector2D,
+  r: number,
+  toFlip: boolean,
+) {
+  let px = u.y - v.y;
+  let py = v.x - u.x;
 
+  px *= 0.5 * r * (toFlip ? -1 : 1);
+  py *= 0.5 * (toFlip ? -1 : 1);
+
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
   ctx.strokeStyle = edgeColor;
 
   ctx.beginPath();
-
   ctx.moveTo(u.x, u.y);
-  ctx.lineTo(v.x, v.y);
+  ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
 
-  ctx.fill();
   ctx.stroke();
 }
 
@@ -671,23 +681,23 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
       drawBridge(ctx, pt1, pt2);
     } else {
-      drawLine(ctx, pt1, pt2);
+      drawLine(ctx, pt1, pt2, 1, false);
     }
 
     ctx.setLineDash([]);
 
     if (directed) {
-      drawArrow(ctx, pt1, pt2);
+      drawArrow(ctx, pt1, pt2, 1, false);
     }
 
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
-        drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, true);
+        drawEdgeLabel(ctx, pt1, pt2, 1, edgeLabels.get(e)!, false);
       } else {
         if (e < eRev) {
-          drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, true);
+          drawEdgeLabel(ctx, pt1, pt2, 1, edgeLabels.get(e)!, false);
         } else {
-          drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, false);
+          drawEdgeLabel(ctx, pt1, pt2, 1, edgeLabels.get(e)!, false);
         }
       }
     }

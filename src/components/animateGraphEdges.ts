@@ -152,14 +152,14 @@ function drawEdgeLabel(
   let py = v.x - u.x;
 
   const toFlip = r % 2 == 0;
+  const bx = px / euclidDist(u, v),
+    by = py / euclidDist(u, v);
 
-  if (r === 0) {
-    px *= 0.2;
-    py *= 0.2;
-  } else {
-    px *= 0.55 * (toFlip ? -1 : 1) * Math.floor(r / 2 + 1);
-    py *= 0.55 * (toFlip ? -1 : 1) * Math.floor(r / 2 + 1);
-  }
+  px *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  py *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+
+  px -= 15 * bx;
+  py -= 15 * by;
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -686,7 +686,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     ctx.strokeStyle = strokeColor;
 
-    const rTest = 1;
+    const rTest = 3;
 
     if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
       drawBridge(ctx, pt1, pt2);

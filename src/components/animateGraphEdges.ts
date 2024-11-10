@@ -83,15 +83,16 @@ function drawArrow(
   u: Vector2D,
   v: Vector2D,
   r: number,
-  toFlip: boolean,
 ) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
 
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= 0.187 * (toFlip ? -1 : 1) * (r + 1);
-  py *= 0.187 * (toFlip ? -1 : 1) * (r + 1);
+  const toFlip = r % 2 == 0;
+
+  px *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  py *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
 
   ctx.lineWidth = 1.5 * nodeBorderWidthHalf;
 
@@ -146,13 +147,19 @@ function drawEdgeLabel(
   v: Vector2D,
   r: number,
   label: string,
-  toFlip: boolean,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= 0.275 * (toFlip ? -1 : 1) * (r + 1);
-  py *= 0.275 * (toFlip ? -1 : 1) * (r + 1);
+  const toFlip = r % 2 == 0;
+
+  if (r === 0) {
+    px *= 0.2;
+    py *= 0.2;
+  } else {
+    px *= 0.55 * (toFlip ? -1 : 1) * Math.floor(r / 2 + 1);
+    py *= 0.55 * (toFlip ? -1 : 1) * Math.floor(r / 2 + 1);
+  }
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -217,13 +224,14 @@ function drawLine(
   u: Vector2D,
   v: Vector2D,
   r: number,
-  toFlip: boolean,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= 0.5 * r * (toFlip ? -1 : 1);
-  py *= 0.5 * (toFlip ? -1 : 1);
+  const toFlip = r % 2 == 0;
+
+  px *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  py *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
 
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
   ctx.strokeStyle = edgeColor;
@@ -678,26 +686,28 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     ctx.strokeStyle = strokeColor;
 
+    const rTest = 1;
+
     if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
       drawBridge(ctx, pt1, pt2);
     } else {
-      drawLine(ctx, pt1, pt2, 1, false);
+      drawLine(ctx, pt1, pt2, rTest);
     }
 
     ctx.setLineDash([]);
 
     if (directed) {
-      drawArrow(ctx, pt1, pt2, 1, false);
+      drawArrow(ctx, pt1, pt2, rTest);
     }
 
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
-        drawEdgeLabel(ctx, pt1, pt2, 1, edgeLabels.get(e)!, false);
+        drawEdgeLabel(ctx, pt1, pt2, rTest, edgeLabels.get(e)!);
       } else {
         if (e < eRev) {
-          drawEdgeLabel(ctx, pt1, pt2, 1, edgeLabels.get(e)!, false);
+          drawEdgeLabel(ctx, pt1, pt2, rTest, edgeLabels.get(e)!);
         } else {
-          drawEdgeLabel(ctx, pt1, pt2, 1, edgeLabels.get(e)!, false);
+          drawEdgeLabel(ctx, pt1, pt2, rTest, edgeLabels.get(e)!);
         }
       }
     }

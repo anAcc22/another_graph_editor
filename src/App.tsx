@@ -62,10 +62,30 @@ function App() {
             : "light bg-ovr text-text absolute w-full min-h-200 overflow-scroll"
         }
       >
+        <div
+          className="font-jetbrains text-base sm:top-2 lg:top-2 sm:left-2
+            lg:left-2 absolute space-x-2 flex border-2 border-border rounded-lg
+            px-2 py-1 justify-between items-center hover:border-border-hover
+            z-10 bg-block group"
+        >
+          Changelog
+          <div
+            className="absolute border-2 text-sm px-2 py-1 border-border
+              hover:border-border-hover rounded-lg bg-block left-0 top-8 w-64
+              invisible group-hover:visible"
+          >
+            10 Nov 2024
+            <ul className="list-disc list-inside">
+              <li>Mark/Unmark nodes on click</li>
+            </ul>
+          </div>
+        </div>
+
         <a
-          className="font-jetbrains text-sm flex sm:top-2 lg:top-2 sm:right-2
-            lg:right-2 absolute border-2 border-border rounded-lg px-2 py-1
-            justify-between items-center hover:border-border-hover z-10"
+          className="font-jetbrains text-base sm:top-2 lg:top-2 sm:right-2
+            lg:right-2 absolute space-x-2 flex border-2 border-border rounded-lg
+            px-2 py-1 justify-between items-center hover:border-border-hover
+            z-10 bg-block"
           href="https://github.com/anAcc22/another_graph_editor"
         >
           {settings.darkMode ? (

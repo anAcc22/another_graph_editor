@@ -17,6 +17,7 @@ export interface Settings {
   showBridges: boolean;
   treeMode: boolean;
   lockMode: boolean;
+  fixedMode: boolean;
 }
 
 export interface ParsedGraph {

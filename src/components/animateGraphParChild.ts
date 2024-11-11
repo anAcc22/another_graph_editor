@@ -386,6 +386,7 @@ let settings: Settings = {
   showBridges: false,
   treeMode: false,
   lockMode: false,
+  fixedMode: false,
 };
 
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
@@ -468,6 +469,8 @@ function updateEdges(graph: Graph): void {
 
 function updateVelocities() {
   for (const u of nodes) {
+    if (nodeMap.get(u)!.selected && settings.fixedMode) continue;
+
     const uPos = nodeMap.get(u)!.pos;
 
     for (const v of nodes) {

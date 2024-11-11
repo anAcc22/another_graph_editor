@@ -51,6 +51,7 @@ function App() {
     showBridges: false,
     treeMode: false,
     lockMode: false,
+    fixedMode: false,
   });
 
   return (
@@ -66,7 +67,7 @@ function App() {
           className="font-jetbrains text-base sm:top-2 lg:top-2 sm:left-2
             lg:left-2 absolute space-x-2 flex border-2 border-border rounded-lg
             px-2 py-1 justify-between items-center hover:border-border-hover
-            z-10 bg-block group"
+            z-20 bg-block group"
         >
           Changelog
           <div
@@ -85,7 +86,7 @@ function App() {
           className="font-jetbrains text-base sm:top-2 lg:top-2 sm:right-2
             lg:right-2 absolute space-x-2 flex border-2 border-border rounded-lg
             px-2 py-1 justify-between items-center hover:border-border-hover
-            z-10 bg-block"
+            z-20 bg-block"
           href="https://github.com/anAcc22/another_graph_editor"
         >
           {settings.darkMode ? (

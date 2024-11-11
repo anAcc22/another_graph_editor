@@ -203,6 +203,16 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           settings={settings}
           updateSettings={setSettings}
         />
+
+        <SettingsToggleSection
+          title={"Fixed Mode"}
+          leftLabel={"Off"}
+          rightLabel={"On"}
+          toggleID={"settingsFixedMode"}
+          settingsName={"fixedMode"}
+          settings={settings}
+          updateSettings={setSettings}
+        />
       </div>
     </>
   );

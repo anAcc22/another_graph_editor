@@ -78,27 +78,43 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
-function drawArrow(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
+function drawArrow(
+  ctx: CanvasRenderingContext2D,
+  u: Vector2D,
+  v: Vector2D,
+  r: number,
+  toReverse: boolean,
+) {
   const theta = Math.atan2(v.y - u.y, v.x - u.x);
+
+  let px = u.y - v.y;
+  let py = v.x - u.x;
+
+  const toFlip = r % 2 == 0;
+
+  px *= 0.375 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  py *= 0.375 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
 
   ctx.lineWidth = 1.5 * nodeBorderWidthHalf;
 
   ctx.strokeStyle = edgeColor;
   ctx.fillStyle = edgeColor;
 
-  const mx = (u.x + v.x) / 2;
-  const my = (u.y + v.y) / 2;
+  const mx = (u.x + v.x) / 2 + px;
+  const my = (u.y + v.y) / 2 + py;
 
   ctx.beginPath();
 
+  const mult = toReverse ? -1 : 1;
+
   ctx.moveTo(mx, my);
   ctx.lineTo(
-    mx - (nodeRadius / 2) * Math.cos(theta - Math.PI / 6),
-    my - (nodeRadius / 2) * Math.sin(theta - Math.PI / 6),
+    mx - mult * (nodeRadius / 2) * Math.cos(theta - Math.PI / 6),
+    my - mult * (nodeRadius / 2) * Math.sin(theta - Math.PI / 6),
   );
   ctx.lineTo(
-    mx - (nodeRadius / 2) * Math.cos(theta + Math.PI / 6),
-    my - (nodeRadius / 2) * Math.sin(theta + Math.PI / 6),
+    mx - mult * (nodeRadius / 2) * Math.cos(theta + Math.PI / 6),
+    my - mult * (nodeRadius / 2) * Math.sin(theta + Math.PI / 6),
   );
   ctx.lineTo(mx, my);
 
@@ -132,14 +148,21 @@ function drawEdgeLabel(
   ctx: CanvasRenderingContext2D,
   u: Vector2D,
   v: Vector2D,
+  r: number,
   label: string,
-  putAbove: boolean,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  px *= (2 * nodeRadius) / 3 / Math.hypot(px, py);
-  py *= (2 * nodeRadius) / 3 / Math.hypot(px, py);
+  const toFlip = r % 2 == 0;
+  const bx = px / euclidDist(u, v),
+    by = py / euclidDist(u, v);
+
+  px *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  py *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+
+  px -= 12 * bx;
+  py -= 12 * by;
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -151,22 +174,10 @@ function drawEdgeLabel(
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
 
-  ctx.font = `${nodeRadius - 2}px JB`;
+  ctx.font = `${nodeRadius - 5}px JB`;
   ctx.fillStyle = edgeLabelColor;
 
-  if (putAbove) {
-    if (py <= 0) {
-      ctx.fillText(label, mx + px, my + py);
-    } else {
-      ctx.fillText(label, mx - px, my - py);
-    }
-  } else {
-    if (py <= 0) {
-      ctx.fillText(label, mx - px, my - py);
-    } else {
-      ctx.fillText(label, mx + px, my + py);
-    }
-  }
+  ctx.fillText(label, mx + px, my + py);
 }
 
 function drawOctagon(
@@ -211,17 +222,27 @@ function drawOctagon(
   ctx.fillText(label, x, y);
 }
 
-function drawLine(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
+function drawLine(
+  ctx: CanvasRenderingContext2D,
+  u: Vector2D,
+  v: Vector2D,
+  r: number,
+) {
+  let px = u.y - v.y;
+  let py = v.x - u.x;
 
+  const toFlip = r % 2 == 0;
+
+  px *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  py *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+
+  ctx.lineWidth = 2 * nodeBorderWidthHalf;
   ctx.strokeStyle = edgeColor;
 
   ctx.beginPath();
-
   ctx.moveTo(u.x, u.y);
-  ctx.lineTo(v.x, v.y);
+  ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
 
-  ctx.fill();
   ctx.stroke();
 }
 
@@ -381,7 +402,7 @@ let labelOffset = 0;
 let draggedNodes: string[] = [];
 
 let edges: string[] = [];
-
+let edgeToPos = new Map<string, number>();
 let edgeLabels = new Map<string, string>();
 
 let adj = new Map<string, string[]>();
@@ -433,6 +454,16 @@ function updateNodes(graph: Graph): void {
 
 function updateEdges(graph: Graph): void {
   edges = graph.edges;
+  for (const e of edges) {
+    const [u, v, rStr] = e.split(" ");
+    const eBase = [u, v].join(" ");
+    const rNum = parseInt(rStr);
+    if (edgeToPos.get(eBase) === undefined) {
+      edgeToPos.set(eBase, rNum);
+    } else {
+      edgeToPos.set(eBase, Math.max(rNum, edgeToPos.get(eBase)!));
+    }
+  }
 }
 
 function updateVelocities() {
@@ -447,8 +478,18 @@ function updateVelocities() {
 
         let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 
-        const isEdge =
-          edges.includes([u, v].join(" ")) || edges.includes([v, u].join(" "));
+        let isEdge = false;
+
+        const toMatch = [u, v].join(" ");
+        const toMatchRev = [v, u].join(" ");
+        const toMatchLength = toMatch.length;
+
+        for (const e of edges) {
+          const edgBase = e.substring(0, toMatchLength);
+          if (edgBase === toMatch || edgBase === toMatchRev) {
+            isEdge = true;
+          }
+        }
 
         if (isEdge) {
           aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
@@ -657,37 +698,55 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 
 function renderEdges(ctx: CanvasRenderingContext2D) {
   for (const e of edges) {
-    const pt1 = nodeMap.get(e.split(" ")[0])!.pos;
-    const pt2 = nodeMap.get(e.split(" ")[1])!.pos;
+    let pt1 = nodeMap.get(e.split(" ")[0])!.pos;
+    let pt2 = nodeMap.get(e.split(" ")[1])!.pos;
+    let toReverse = false;
 
+    if (e.split(" ")[0] > e.split(" ")[1]) {
+      [pt1, pt2] = [pt2, pt1];
+      toReverse = true;
+    }
+
+    const eBase = [e.split(" ")[0], e.split(" ")[1]].join(" ");
+    const edr = parseInt(e.split(" ")[2]);
     const eRev = e.split(" ")[1] + " " + e.split(" ")[0];
+    const edrMax = edgeToPos.get(eBase);
 
-    if (settings.treeMode && backedgeMap !== undefined && backedgeMap.get(e)) {
+    if (
+      settings.treeMode &&
+      backedgeMap !== undefined &&
+      (edr !== 0 || backedgeMap.get(eBase))
+    ) {
       ctx.setLineDash([2, 10]);
     }
 
     ctx.strokeStyle = strokeColor;
 
-    if (settings.showBridges && bridgeMap !== undefined && bridgeMap.get(e)) {
+    if (
+      settings.showBridges &&
+      bridgeMap !== undefined &&
+      edrMax === 0 &&
+      bridgeMap.get(eBase)
+    ) {
       drawBridge(ctx, pt1, pt2);
     } else {
-      drawLine(ctx, pt1, pt2);
+      drawLine(ctx, pt1, pt2, edr);
     }
 
     ctx.setLineDash([]);
 
     if (directed) {
-      drawArrow(ctx, pt1, pt2);
+      drawArrow(ctx, pt1, pt2, edr, toReverse);
     }
 
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
-        drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, true);
+        drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!);
       } else {
         if (e < eRev) {
-          drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, true);
+          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!);
         } else {
-          drawEdgeLabel(ctx, pt1, pt2, edgeLabels.get(e)!, false);
+          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!);
         }
       }
     }

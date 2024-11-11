@@ -150,6 +150,7 @@ function drawEdgeLabel(
   v: Vector2D,
   r: number,
   label: string,
+  toReverse: boolean,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
@@ -161,8 +162,10 @@ function drawEdgeLabel(
   px *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
   py *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
 
-  px -= 12 * bx;
-  py -= 12 * by;
+  const mult = toReverse ? -1 : 1;
+
+  px += mult * 13 * bx;
+  py += mult * 13 * by;
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -387,6 +390,7 @@ let settings: Settings = {
   treeMode: false,
   lockMode: false,
   fixedMode: false,
+  multiedgeMode: true,
 };
 
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
@@ -455,6 +459,7 @@ function updateNodes(graph: Graph): void {
 
 function updateEdges(graph: Graph): void {
   edges = graph.edges;
+  edgeToPos.clear();
   for (const e of edges) {
     const [u, v, rStr] = e.split(" ");
     const eBase = [u, v].join(" ");
@@ -700,7 +705,19 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 }
 
 function renderEdges(ctx: CanvasRenderingContext2D) {
-  for (const e of edges) {
+  let renderedEdges = [...edges];
+
+  if (!settings.multiedgeMode) {
+    renderedEdges = [];
+    for (const e of edges) {
+      const eBase = [e.split(" ")[0], e.split(" ")[1]].join(" ");
+      if (parseInt(e.split(" ")[2]) === edgeToPos.get(eBase)) {
+        renderedEdges.push(e);
+      }
+    }
+  }
+
+  for (const e of renderedEdges) {
     let pt1 = nodeMap.get(e.split(" ")[0])!.pos;
     let pt2 = nodeMap.get(e.split(" ")[1])!.pos;
     let toReverse = false;
@@ -711,7 +728,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
     }
 
     const eBase = [e.split(" ")[0], e.split(" ")[1]].join(" ");
-    const edr = parseInt(e.split(" ")[2]);
+    const edr = settings.multiedgeMode ? parseInt(e.split(" ")[2]) : 0;
     const eRev = e.split(" ")[1] + " " + e.split(" ")[0];
     const edrMax = edgeToPos.get(eBase);
 
@@ -742,14 +759,17 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
       drawArrow(ctx, pt1, pt2, edr, toReverse);
     }
 
+    let labelReverse = false;
+    if (!settings.multiedgeMode) labelReverse = toReverse;
+
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
-        drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!);
+        drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!, labelReverse);
       } else {
         if (e < eRev) {
-          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!);
+          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!, labelReverse);
         } else {
-          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!);
+          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!, labelReverse);
         }
       }
     }

@@ -52,6 +52,7 @@ function App() {
     treeMode: false,
     lockMode: false,
     fixedMode: false,
+    multiedgeMode: true,
   });
 
   return (
@@ -72,12 +73,13 @@ function App() {
           Changelog
           <div
             className="absolute border-2 text-sm px-2 py-1 border-border-hover
-              rounded-lg bg-block left-0 top-8 w-96 invisible group-hover:visible"
+              rounded-lg bg-block left-0 top-8 w-100 invisible
+              group-hover:visible"
           >
             11 Nov 2024
             <ul className="list-disc list-inside">
               <li>
-                Add <b>multiedge</b> support
+                Add <b>multiedge mode</b> (enabled by default)
               </li>
               <li>
                 Add <b>fixed mode</b> (fix/unfix marked nodes)

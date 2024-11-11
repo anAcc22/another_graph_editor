@@ -213,6 +213,16 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           settings={settings}
           updateSettings={setSettings}
         />
+
+        <SettingsToggleSection
+          title={"Multiedge Mode"}
+          leftLabel={"Off"}
+          rightLabel={"On"}
+          toggleID={"settingsMultiedgeMode"}
+          settingsName={"multiedgeMode"}
+          settings={settings}
+          updateSettings={setSettings}
+        />
       </div>
     </>
   );

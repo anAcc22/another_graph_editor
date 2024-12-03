@@ -490,10 +490,10 @@ function updateVelocities() {
 
         const toMatch = [u, v].join(" ");
         const toMatchRev = [v, u].join(" ");
-        const toMatchLength = toMatch.length;
 
         for (const e of edges) {
-          const edgBase = e.substring(0, toMatchLength);
+          const _ = e.split(" ");
+          const edgBase = [_[0], _[1]].join(" ");
           if (edgBase === toMatch || edgBase === toMatchRev) {
             isEdge = true;
           }

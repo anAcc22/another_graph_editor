@@ -27,12 +27,17 @@ export function InputTab({
   return (
     <div>
       <button
-        className={`w-7 h-7 border-2 border-border duration-500 ease-in-out
-          transition-border hover:rounded-3xl hover:border-border-hover bg-${
-          currentId === tabId ? "clear-normal" : "block" }
-          hover:bg-${currentId === tabId ? "clear-hover" : "bg-tab-hover"}
-          rounded-md px-2 py-1 inline-flex items-center justify-center
-          active:bg-tab-active`}
+        className={
+          currentId === tabId
+            ? `w-7 h-7 border-2 border-clear-normal duration-500 ease-in-out
+              transition hover:rounded-3xl bg-clear-hover hover:bg-clear-hover
+              rounded-md px-2 py-1 inline-flex items-center justify-center
+              active:bg-tab-active`
+            : `w-7 h-7 border-2 border-border duration-500 ease-in-out
+              transition hover:rounded-3xl bg-block hover:border-border-hover
+              hover:bg-bg-tab-hover rounded-md px-2 py-1 inline-flex
+              items-center justify-center active:bg-tab-active`
+        }
         id={tabId.toString()}
         onClick={() => {
           setCurrentId(tabId);

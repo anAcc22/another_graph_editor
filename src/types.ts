@@ -7,6 +7,21 @@ export interface Graph {
   nodeLabels: Map<string, string>;
 }
 
+export interface TestCase {
+  /* NOTE: <<- Summary ->>
+   * Each testcase encompasses two graphs internally, the first being
+   * the graph parsed from the "edges" input format, and the second being
+   * the graph parsed from the "parentChild" input format.
+   *
+   * Consider implementing an adjacency matrix input format in the future.
+   */
+  graphEdges: Graph;
+  graphParChild: Graph;
+  inputFormat: InputFormat;
+}
+
+export type TestCases = Map<number, TestCase>;
+
 export interface Settings {
   labelOffset: number;
   darkMode: boolean;

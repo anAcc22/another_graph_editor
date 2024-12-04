@@ -1,38 +1,23 @@
-import { Graph, InputFormat } from "../types";
+import { TestCases } from "../types";
 import { Settings } from "../types";
 import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import { updateDirectedEdges } from "./animateGraphEdges";
-import { updateSettingsEdges } from "./animateGraphEdges";
-import { animateGraphEdges } from "./animateGraphEdges";
+import { updateDirected } from "./animateGraph";
+import { updateSettings } from "./animateGraph";
+import { animateGraph } from "./animateGraph";
 
-import { resizeGraphEdges } from "./animateGraphEdges";
-import { updateGraphEdges } from "./animateGraphEdges";
-
-import { updateDirectedParChild } from "./animateGraphParChild";
-import { updateSettingsParChild } from "./animateGraphParChild";
-import { animateGraphParChild } from "./animateGraphParChild";
-
-import { resizeGraphParChild } from "./animateGraphParChild";
-import { updateGraphParChild } from "./animateGraphParChild";
+import { resizeGraph } from "./animateGraph";
+import { updateGraph } from "./animateGraph";
 
 interface Props {
-  graph: Graph;
-  inputFormatToRender: string;
-  inputFormat: InputFormat;
+  testCases: TestCases;
   directed: boolean;
   settings: Settings;
 }
 
-export function GraphCanvas({
-  graph,
-  inputFormatToRender,
-  inputFormat,
-  directed,
-  settings,
-}: Props) {
+export function GraphCanvas({ testCases, directed, settings }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
 
   const [image, setImage] = useState<string>();
@@ -75,26 +60,12 @@ export function GraphCanvas({
 
       ctx.scale(pixelRatio, pixelRatio);
 
-      if (inputFormatToRender === "edges") {
-        resizeGraphEdges(
-          rect.width - canvasBorderX,
-          rect.height - canvasBorderY,
-        );
-      } else {
-        resizeGraphParChild(
-          rect.width - canvasBorderX,
-          rect.height - canvasBorderY,
-        );
-      }
+      resizeGraph(rect.width - canvasBorderX, rect.height - canvasBorderY);
     };
 
     resizeCanvas();
 
-    if (inputFormatToRender === "edges") {
-      animateGraphEdges(canvas, ctx, setImage);
-    } else {
-      animateGraphParChild(canvas, ctx, setImage);
-    }
+    animateGraph(canvas, ctx, setImage);
 
     window.addEventListener("resize", resizeCanvas);
     return () => {
@@ -103,29 +74,19 @@ export function GraphCanvas({
   }, []);
 
   useEffect(() => {
-    if (inputFormat === "edges") {
-      updateGraphEdges(graph);
-    } else {
-      updateGraphParChild(graph);
-    }
-  }, [graph]);
+    updateGraph(testCases);
+  }, [testCases]);
 
   useEffect(() => {
-    updateDirectedEdges(directed);
-    updateDirectedParChild(directed);
+    updateDirected(directed);
   }, [directed]);
 
   useEffect(() => {
-    updateSettingsEdges(settings);
-    updateSettingsParChild(settings);
+    updateSettings(settings);
   }, [settings]);
 
   return (
-    <div
-      className={
-        inputFormat === inputFormatToRender ? "flex h-screen" : "invisible"
-      }
-    >
+    <div className="flex h-screen">
       <div
         className="flex flex-col sm:w-7/8 sm:h-3/4 lg:w-1/3 xl:w-1/2 lg:h-2/3
           m-auto sm:top-1/8 sm:left-1/16 lg:top-1/2 lg:left-1/2

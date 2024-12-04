@@ -3,14 +3,13 @@ import { parseGraphInputParentChild } from "./parseGraphInput";
 import { useEffect, useState } from "react";
 
 import { InputFormat, ParsedGraph } from "../types";
-import { Graph } from "../types";
-import { sortNodes } from "./utils";
+import { TestCases } from "../types";
+import { padNode, sortNodes } from "./utils";
 
 interface Props {
-  graphEdges: Graph;
-  setGraphEdges: React.Dispatch<React.SetStateAction<Graph>>;
-  graphParChild: Graph;
-  setGraphParChild: React.Dispatch<React.SetStateAction<Graph>>;
+  testCases: TestCases;
+  setTestCases: React.Dispatch<React.SetStateAction<TestCases>>;
+  testCaseNumber: number;
   inputFormat: InputFormat;
   setInputFormat: React.Dispatch<React.SetStateAction<InputFormat>>;
   directed: boolean;
@@ -18,10 +17,9 @@ interface Props {
 }
 
 export function GraphInput({
-  graphEdges,
-  setGraphEdges,
-  graphParChild,
-  setGraphParChild,
+  testCases,
+  setTestCases,
+  testCaseNumber,
   inputFormat,
   setInputFormat,
   directed,
@@ -54,14 +52,26 @@ export function GraphInput({
         roots,
         (document.getElementById("graphInputEdges") as HTMLTextAreaElement)
           .value,
-        (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
-          .value,
+        (
+          document.getElementById(
+            "graphInputNodeLabelsEdges",
+          ) as HTMLTextAreaElement
+        ).value,
+        testCaseNumber,
       );
       if (parsedGraph.status === "BAD") {
         setInputStatus(false);
       } else {
         setInputStatus(true);
-        setGraphEdges(parsedGraph.graph!);
+        setTestCases((testCases) => {
+          const newTestCases = new Map(testCases);
+          newTestCases.set(testCaseNumber, {
+            graphEdges: parsedGraph.graph!,
+            graphParChild: newTestCases.get(testCaseNumber)!.graphParChild!,
+            inputFormat: "edges",
+          });
+          return newTestCases;
+        });
       }
     } else {
       parsedGraph = parseGraphInputParentChild(
@@ -72,14 +82,26 @@ export function GraphInput({
           .value,
         (document.getElementById("graphInputEdgeLabels") as HTMLTextAreaElement)
           .value,
-        (document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement)
-          .value,
+        (
+          document.getElementById(
+            "graphInputNodeLabelsParChild",
+          ) as HTMLTextAreaElement
+        ).value,
+        testCaseNumber,
       );
       if (parsedGraph.status === "BAD") {
         setInputStatus(false);
       } else {
         setInputStatus(true);
-        setGraphParChild(parsedGraph.graph!);
+        setTestCases((testCases) => {
+          const newTestCases = new Map(testCases);
+          newTestCases.set(testCaseNumber, {
+            graphEdges: newTestCases.get(testCaseNumber)!.graphEdges!,
+            graphParChild: parsedGraph.graph!,
+            inputFormat: "parentChild",
+          });
+          return newTestCases;
+        });
       }
     }
   };
@@ -90,10 +112,17 @@ export function GraphInput({
     ).value
       .trim()
       .split(/\s+/)
-      .filter((u) => u.length);
+      .filter((u) => u.length)
+      .map((u) => padNode(u, testCaseNumber, inputFormat));
 
     const nodeLabels = (
-      document.getElementById("graphInputNodeLabels") as HTMLTextAreaElement
+      inputFormat === "edges"
+        ? (document.getElementById(
+            "graphInputNodeLabelsEdges",
+          ) as HTMLTextAreaElement)
+        : (document.getElementById(
+            "graphInputNodeLabelsParChild",
+          ) as HTMLTextAreaElement)
     ).value
       .trim()
       .split(/\s+/)
@@ -110,9 +139,31 @@ export function GraphInput({
     }
 
     if (inputFormat === "edges") {
-      setGraphEdges({ ...graphEdges, nodeLabels: mp });
+      setTestCases((testCases) => {
+        const newTestCases = new Map(testCases);
+        newTestCases.set(testCaseNumber, {
+          graphEdges: {
+            ...newTestCases.get(testCaseNumber)!.graphEdges!,
+            nodeLabels: mp,
+          },
+          graphParChild: newTestCases.get(testCaseNumber)!.graphParChild!,
+          inputFormat: "edges",
+        });
+        return newTestCases;
+      });
     } else {
-      setGraphParChild({ ...graphParChild, nodeLabels: mp });
+      setTestCases((testCases) => {
+        const newTestCases = new Map(testCases);
+        newTestCases.set(testCaseNumber, {
+          graphEdges: newTestCases.get(testCaseNumber)!.graphEdges!,
+          graphParChild: {
+            ...newTestCases.get(testCaseNumber)!.graphParChild!,
+            nodeLabels: mp,
+          },
+          inputFormat: "parentChild",
+        });
+        return newTestCases;
+      });
     }
   };
 
@@ -126,6 +177,15 @@ export function GraphInput({
 
   useEffect(() => {
     processGraphInput();
+    setTestCases((testCases) => {
+      const newTestCases = new Map(testCases);
+      newTestCases.set(testCaseNumber, {
+        graphEdges: newTestCases.get(testCaseNumber)!.graphEdges,
+        graphParChild: newTestCases.get(testCaseNumber)!.graphParChild!,
+        inputFormat,
+      });
+      return newTestCases;
+    });
   }, [inputFormat]);
 
   return (
@@ -150,8 +210,12 @@ export function GraphInput({
           onChange={processNodeLabels}
           value={
             inputFormat === "edges"
-              ? sortNodes(graphEdges.nodes).join(" ")
-              : sortNodes(graphParChild.nodes).join(" ")
+              ? sortNodes(testCases.get(testCaseNumber)!.graphEdges.nodes).join(
+                  " ",
+                )
+              : sortNodes(
+                  testCases.get(testCaseNumber)!.graphParChild.nodes,
+                ).join(" ")
           }
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
@@ -162,16 +226,37 @@ export function GraphInput({
         <h4 className="text-base font-semibold">Node Labels</h4>
         <textarea
           wrap="off"
-          name="graphInputNodeLabels"
-          id="graphInputNodeLabels"
+          name="graphInputNodeLabelsEdges"
+          id="graphInputNodeLabelsEdges"
           rows={1}
           onChange={processNodeLabels}
           onKeyDown={handleTextAreaKeyDown}
           placeholder="TIP: '_' -> empty label"
-          className="bg-ovr font-semibold font-jetbrains resize-none border-2
-            rounded-md px-2 py-1 border-single focus:outline-none text-lg
-            border-border focus:border-border-active placeholder-placeholder
-            placeholder:italic w-auto no-scrollbar"
+          className={
+            inputFormat === "edges"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active placeholder-placeholder
+                placeholder:italic w-auto no-scrollbar`
+              : "hidden"
+          }
+        ></textarea>
+        <textarea
+          wrap="off"
+          name="graphInputNodeLabelsParChild"
+          id="graphInputNodeLabelsParChild"
+          rows={1}
+          onChange={processNodeLabels}
+          onKeyDown={handleTextAreaKeyDown}
+          placeholder="TIP: '_' -> empty label"
+          className={
+            inputFormat === "parentChild"
+              ? `bg-ovr font-semibold font-jetbrains resize-none border-2
+                rounded-md px-2 py-1 border-single focus:outline-none text-lg
+                border-border focus:border-border-active placeholder-placeholder
+                placeholder:italic w-auto no-scrollbar`
+              : "hidden"
+          }
         ></textarea>
 
         <br />
@@ -222,11 +307,11 @@ export function GraphInput({
           </span>
           <label className="relative inline w-9">
             <input
-              onClick={() =>
+              onClick={() => {
                 setInputFormat(
                   inputFormat === "edges" ? "parentChild" : "edges",
-                )
-              }
+                );
+              }}
               type="checkbox"
               id="inputFormatCheckbox"
               className="peer invisible"

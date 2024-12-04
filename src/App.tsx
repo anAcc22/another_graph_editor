@@ -3,27 +3,31 @@ import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
 import { InputFormat, Settings } from "./types";
-import { Graph } from "./types";
+import { TestCase, TestCases, Graph } from "./types";
 
 import { useState } from "react";
 
-function App() {
-  const [graphEdges, setGraphEdges] = useState<Graph>({
+const getDefaultGraph = (): Graph => {
+  return {
     nodes: new Array<string>(),
     adj: new Map<string, string[]>(),
     rev: new Map<string, string[]>(),
     edges: new Array<string>(),
     edgeLabels: new Map<string, string>(),
     nodeLabels: new Map<string, string>(),
-  });
+  };
+};
 
-  const [graphParChild, setGraphParChild] = useState<Graph>({
-    nodes: new Array<string>(),
-    adj: new Map<string, string[]>(),
-    rev: new Map<string, string[]>(),
-    edges: new Array<string>(),
-    edgeLabels: new Map<string, string>(),
-    nodeLabels: new Map<string, string>(),
+function App() {
+  const [testCaseNumber, setTestCaseNumber] = useState<number>(0);
+  const [testCases, setTestCases] = useState<TestCases>(() => {
+    const init = new Map<number, TestCase>();
+    init.set(0, {
+      graphEdges: getDefaultGraph(),
+      graphParChild: getDefaultGraph(),
+      inputFormat: "edges",
+    });
+    return init;
   });
 
   const [inputFormat, setInputFormat] = useState<InputFormat>("edges");
@@ -117,10 +121,9 @@ function App() {
         </a>
 
         <GraphInput
-          graphEdges={graphEdges}
-          setGraphEdges={setGraphEdges}
-          graphParChild={graphParChild}
-          setGraphParChild={setGraphParChild}
+          testCases={testCases}
+          setTestCases={setTestCases}
+          testCaseNumber={testCaseNumber}
           inputFormat={inputFormat}
           setInputFormat={setInputFormat}
           directed={directed}
@@ -129,17 +132,7 @@ function App() {
 
         <div className="relative z-0">
           <GraphCanvas
-            graph={graphEdges}
-            inputFormatToRender={"edges"}
-            inputFormat={inputFormat}
-            directed={directed}
-            settings={settings}
-          />
-
-          <GraphCanvas
-            graph={graphParChild}
-            inputFormatToRender={"parentChild"}
-            inputFormat={inputFormat}
+            testCases={testCases}
             directed={directed}
             settings={settings}
           />

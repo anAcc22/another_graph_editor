@@ -1,6 +1,8 @@
-import { Graph } from "../types";
+import { TestCases } from "../types";
 import { Settings } from "../types";
 import { ColorMap, CutMap, LayerMap, BackedgeMap, BridgeMap } from "../types";
+
+import { stripNode } from "./utils";
 
 import { buildComponents } from "./graphComponents";
 import { buildSCComponents } from "./graphComponents";
@@ -396,6 +398,7 @@ let settings: Settings = {
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
 
 let nodes: string[] = [];
+let nodesToConceal = new Set<String>();
 let nodeMap = new Map<string, Node>();
 
 let nodeDist: number = 40;
@@ -421,11 +424,11 @@ let backedgeMap: BackedgeMap | undefined = undefined;
 let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
-function updateNodes(graph: Graph): void {
+function updateNodes(graphNodes: string[]): void {
   let deletedNodes: string[] = [];
 
   for (const u of nodes) {
-    if (!graph.nodes.includes(u)) {
+    if (!graphNodes.includes(u)) {
       deletedNodes.push(u);
     }
   }
@@ -437,8 +440,8 @@ function updateNodes(graph: Graph): void {
     nodeMap.delete(u);
   }
 
-  for (let i = 0; i < graph.nodes.length; i++) {
-    const u = graph.nodes[i];
+  for (let i = 0; i < graphNodes.length; i++) {
+    const u = graphNodes[i];
 
     if (!nodes.includes(u)) {
       let coords = generateRandomCoords();
@@ -454,11 +457,11 @@ function updateNodes(graph: Graph): void {
     }
   }
 
-  nodes = graph.nodes;
+  nodes = graphNodes;
 }
 
-function updateEdges(graph: Graph): void {
-  edges = graph.edges;
+function updateEdges(graphEdges: string[]): void {
+  edges = graphEdges;
   edgeToPos.clear();
   for (const e of edges) {
     const [u, v, rStr] = e.split(" ");
@@ -474,11 +477,13 @@ function updateEdges(graph: Graph): void {
 
 function updateVelocities() {
   for (const u of nodes) {
+    if (nodesToConceal.has(u)) continue;
     if (nodeMap.get(u)!.selected && settings.fixedMode) continue;
 
     const uPos = nodeMap.get(u)!.pos;
 
     for (const v of nodes) {
+      if (nodesToConceal.has(v)) continue;
       if (v !== u) {
         const vPos = nodeMap.get(v)!.pos;
 
@@ -629,29 +634,82 @@ function buildSettings(): void {
   }
 }
 
-export function updateGraphParChild(graph: Graph) {
-  updateNodes(graph);
-  updateEdges(graph);
+export function updateGraph(testCases: TestCases) {
+  nodesToConceal.clear();
 
-  adj = graph.adj;
-  rev = graph.rev;
+  let rawNodes: string[] = [];
+  let rawEdges: string[] = [];
 
-  nodeLabels = graph.nodeLabels;
-  edgeLabels = graph.edgeLabels;
+  let rawAdj = new Map<string, string[]>();
+  let rawRev = new Map<string, string[]>();
+
+  let rawEdgeLabels = new Map<string, string>();
+  let rawNodeLabels = new Map<string, string>();
+
+  testCases.forEach((testCase, _) => {
+    if (testCase.inputFormat === "edges") {
+      testCase.graphParChild.nodes.map((u) => nodesToConceal.add(u));
+    } else {
+      testCase.graphEdges.nodes.map((u) => nodesToConceal.add(u));
+    }
+
+    rawNodes = [...rawNodes, ...testCase.graphEdges.nodes];
+    rawNodes = [...rawNodes, ...testCase.graphParChild.nodes];
+
+    rawEdges = [...rawEdges, ...testCase.graphEdges.edges];
+    rawEdges = [...rawEdges, ...testCase.graphParChild.edges];
+
+    testCase.graphEdges.adj.forEach((v, k) => {
+      rawAdj.set(k, v);
+    });
+    testCase.graphParChild.adj.forEach((v, k) => {
+      rawAdj.set(k, v);
+    });
+
+    testCase.graphEdges.rev.forEach((v, k) => {
+      rawRev.set(k, v);
+    });
+    testCase.graphParChild.rev.forEach((v, k) => {
+      rawRev.set(k, v);
+    });
+
+    testCase.graphEdges.edgeLabels.forEach((v, k) => {
+      rawEdgeLabels.set(k, v);
+    });
+    testCase.graphParChild.edgeLabels.forEach((v, k) => {
+      rawEdgeLabels.set(k, v);
+    });
+
+    testCase.graphEdges.nodeLabels.forEach((v, k) => {
+      rawNodeLabels.set(k, v);
+    });
+    testCase.graphParChild.nodeLabels.forEach((v, k) => {
+      rawNodeLabels.set(k, v);
+    });
+  });
+
+  updateNodes(rawNodes);
+  updateEdges(rawEdges);
+
+  adj = new Map<string, string[]>(rawAdj);
+  rev = new Map<string, string[]>(rawRev);
+
+  nodeLabels = new Map<string, string>(rawNodeLabels);
+  edgeLabels = new Map<string, string>(rawEdgeLabels);
 
   buildSettings();
 }
 
-export function resizeGraphParChild(width: number, height: number) {
+export function resizeGraph(width: number, height: number) {
   canvasWidth = width;
   canvasHeight = height;
 }
 
-export function updateDirectedParChild(d: boolean) {
+export function updateDirected(d: boolean) {
   directed = d;
 }
 
-export function updateSettingsParChild(s: Settings) {
+export function updateSettings(s: Settings) {
   settings = s;
   buildSettings();
 }
@@ -667,6 +725,8 @@ function resetMisplacedNodes() {
 function renderNodes(ctx: CanvasRenderingContext2D) {
   for (let i = 0; i < nodes.length; i++) {
     const u = nodes[i];
+
+    if (nodesToConceal.has(u)) continue;
 
     const node = nodeMap.get(u)!;
 
@@ -690,10 +750,12 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
 
+    const s = stripNode(u);
+
     ctx.font = `${nodeRadius}px JB`;
     ctx.fillStyle = textColor;
     ctx.fillText(
-      isInteger(u) ? (parseInt(u, 10) + labelOffset).toString() : u,
+      isInteger(s) ? (parseInt(s, 10) + labelOffset).toString() : s,
       node!.pos.x,
       node!.pos.y + TEXT_Y_OFFSET,
     );
@@ -718,6 +780,8 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
   }
 
   for (const e of renderedEdges) {
+    if (nodesToConceal.has(e.split(" ")[0])) continue;
+
     let pt1 = nodeMap.get(e.split(" ")[0])!.pos;
     let pt2 = nodeMap.get(e.split(" ")[1])!.pos;
     let toReverse = false;
@@ -776,7 +840,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
   }
 }
 
-export function animateGraphParChild(
+export function animateGraph(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   setImage: React.Dispatch<React.SetStateAction<string | undefined>>,

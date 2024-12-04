@@ -1,4 +1,5 @@
 import { ParsedGraph } from "../types";
+import { padNode } from "./utils";
 
 /* function isConvertibleToNum(s: string): boolean {
   for (const c of s) {
@@ -13,6 +14,7 @@ interface LeetcodeParsed {
   status: "ok" | "bad";
   edges: Array<string[]>;
 }
+
 function parseLeetcodeStyle(s: string): LeetcodeParsed {
   if (s.length >= 4 && s[0] === "[" && s[1] === "[") {
     if (s[s.length - 1] === "]" && s[s.length - 2] === "]") {
@@ -37,6 +39,7 @@ export function parseGraphInputParentChild(
   child: string,
   labels: string,
   nodeLabels: string,
+  testCaseNumber: number,
 ): ParsedGraph {
   const p = parent
     .trim()
@@ -71,35 +74,38 @@ export function parseGraphInputParentChild(
     .trim()
     .split(/\s+/)
     .map((u) => {
-      if (u.length && !nodes.includes(u)) {
-        nodes.push(u);
-        adj.set(u, []);
+      const pu = padNode(u, testCaseNumber, "parentChild");
+      if (u.length && !nodes.includes(pu)) {
+        nodes.push(pu);
+        adj.set(pu, []);
       }
     });
 
   for (let i = 0; i < edgeCnt; i++) {
-    if (p[i] === c[i] && !nodes.includes(p[i])) {
-      nodes.push(p[i]);
-      adj.set(p[i], []);
+    const pi = padNode(p[i], testCaseNumber, "parentChild");
+    const ci = padNode(c[i], testCaseNumber, "parentChild");
+    if (pi === ci && !nodes.includes(pi)) {
+      nodes.push(pi);
+      adj.set(pi, []);
     } else {
-      if (!nodes.includes(p[i])) {
-        nodes.push(p[i]);
-        adj.set(p[i], [c[i]]);
+      if (!nodes.includes(pi)) {
+        nodes.push(pi);
+        adj.set(pi, [ci]);
       } else {
-        adj.set(p[i], [...adj.get(p[i])!, c[i]]);
+        adj.set(pi, [...adj.get(pi)!, ci]);
       }
 
-      if (!nodes.includes(c[i])) {
-        nodes.push(c[i]);
-        adj.set(c[i], []);
+      if (!nodes.includes(ci)) {
+        nodes.push(ci);
+        adj.set(ci, []);
       }
 
       let edgeBase = "";
 
-      if (p[i] <= c[i]) {
-        edgeBase = [p[i], c[i]].join(" ");
+      if (pi <= ci) {
+        edgeBase = [pi, ci].join(" ");
       } else {
-        edgeBase = [c[i], p[i]].join(" ");
+        edgeBase = [ci, pi].join(" ");
       }
 
       if (edgeToPos.get(edgeBase) === undefined) {
@@ -108,10 +114,10 @@ export function parseGraphInputParentChild(
         edgeToPos.set(edgeBase, edgeToPos.get(edgeBase)! + 1);
       }
 
-      edges.push([p[i], c[i], edgeToPos.get(edgeBase)].join(" "));
+      edges.push([pi, ci, edgeToPos.get(edgeBase)].join(" "));
 
       if (i < l.length) {
-        edgeLabels.set([p[i], c[i], edgeToPos.get(edgeBase)].join(" "), l[i]);
+        edgeLabels.set([pi, ci, edgeToPos.get(edgeBase)].join(" "), l[i]);
       }
     }
   }
@@ -158,6 +164,7 @@ export function parseGraphInputEdges(
   roots: string,
   input: string,
   nodeLabels: string,
+  testCaseNumber: number,
 ): ParsedGraph {
   const leetcodes = new Array<string[]>();
 
@@ -193,41 +200,45 @@ export function parseGraphInputEdges(
     .trim()
     .split(/\s+/)
     .map((u) => {
-      if (u.length && !nodes.includes(u)) {
-        nodes.push(u);
-        adj.set(u, []);
+      const pu = padNode(u, testCaseNumber, "edges");
+      if (u.length && !nodes.includes(pu)) {
+        nodes.push(pu);
+        adj.set(pu, []);
       }
     });
 
   for (const e of raw) {
     if (e.length == 1) {
-      if (!nodes.includes(e[0])) {
-        nodes.push(e[0]);
-        adj.set(e[0], []);
+      const pu = padNode(e[0], testCaseNumber, "edges");
+      if (!nodes.includes(pu)) {
+        nodes.push(pu);
+        adj.set(pu, []);
       }
     } else if (e.length <= 3) {
-      if (e[0] === e[1] && !nodes.includes(e[0])) {
-        nodes.push(e[0]);
-        adj.set(e[0], []);
+      const pu = padNode(e[0], testCaseNumber, "edges");
+      const pv = padNode(e[1], testCaseNumber, "edges");
+      if (pu === pv && !nodes.includes(pu)) {
+        nodes.push(pu);
+        adj.set(pu, []);
       } else {
-        if (!nodes.includes(e[0])) {
-          nodes.push(e[0]);
-          adj.set(e[0], [e[1]]);
-        } else if (!adj.get(e[0])!.includes(e[1])) {
-          adj.set(e[0], [...adj.get(e[0])!, e[1]]);
+        if (!nodes.includes(pu)) {
+          nodes.push(pu);
+          adj.set(pu, [pv]);
+        } else if (!adj.get(pu)!.includes(pv)) {
+          adj.set(pu, [...adj.get(pu)!, pv]);
         }
 
-        if (!nodes.includes(e[1])) {
-          nodes.push(e[1]);
-          adj.set(e[1], []);
+        if (!nodes.includes(pv)) {
+          nodes.push(pv);
+          adj.set(pv, []);
         }
 
         let edgeBase = "";
 
-        if (e[0] <= e[1]) {
-          edgeBase = [e[0], e[1]].join(" ");
+        if (pu <= pv) {
+          edgeBase = [pu, pv].join(" ");
         } else {
-          edgeBase = [e[1], e[0]].join(" ");
+          edgeBase = [pv, pu].join(" ");
         }
 
         if (edgeToPos.get(edgeBase) === undefined) {
@@ -236,10 +247,10 @@ export function parseGraphInputEdges(
           edgeToPos.set(edgeBase, edgeToPos.get(edgeBase)! + 1);
         }
 
-        edges.push([e[0], e[1], edgeToPos.get(edgeBase)].join(" "));
+        edges.push([pu, pv, edgeToPos.get(edgeBase)].join(" "));
 
         if (e.length === 3) {
-          edgeLabels.set([e[0], e[1], edgeToPos.get(edgeBase)].join(" "), e[2]);
+          edgeLabels.set([pu, pv, edgeToPos.get(edgeBase)].join(" "), e[2]);
         }
       }
     } else {

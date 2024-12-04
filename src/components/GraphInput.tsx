@@ -7,9 +7,11 @@ import { TestCases } from "../types";
 import { padNode, sortNodes } from "./utils";
 
 interface Props {
+  key: number;
   testCases: TestCases;
   setTestCases: React.Dispatch<React.SetStateAction<TestCases>>;
-  testCaseNumber: number;
+  inputId: number;
+  currentId: number;
   inputFormat: InputFormat;
   setInputFormat: React.Dispatch<React.SetStateAction<InputFormat>>;
   directed: boolean;
@@ -19,7 +21,8 @@ interface Props {
 export function GraphInput({
   testCases,
   setTestCases,
-  testCaseNumber,
+  inputId,
+  currentId,
   inputFormat,
   setInputFormat,
   directed,
@@ -37,12 +40,12 @@ export function GraphInput({
         inputFormat === "edges"
           ? (
               document.getElementById(
-                "graphInputRootsEdges",
+                "graphInputRootsEdges" + inputId,
               ) as HTMLTextAreaElement
             ).value
           : (
               document.getElementById(
-                "graphInputRootsParChild",
+                "graphInputRootsParChild" + inputId,
               ) as HTMLTextAreaElement
             ).value;
     }
@@ -50,14 +53,17 @@ export function GraphInput({
     if (inputFormat === "edges") {
       parsedGraph = parseGraphInputEdges(
         roots,
-        (document.getElementById("graphInputEdges") as HTMLTextAreaElement)
-          .value,
         (
           document.getElementById(
-            "graphInputNodeLabelsEdges",
+            "graphInputEdges" + inputId,
           ) as HTMLTextAreaElement
         ).value,
-        testCaseNumber,
+        (
+          document.getElementById(
+            "graphInputNodeLabelsEdges" + inputId,
+          ) as HTMLTextAreaElement
+        ).value,
+        inputId,
       );
       if (parsedGraph.status === "BAD") {
         setInputStatus(false);
@@ -65,9 +71,9 @@ export function GraphInput({
         setInputStatus(true);
         setTestCases((testCases) => {
           const newTestCases = new Map(testCases);
-          newTestCases.set(testCaseNumber, {
+          newTestCases.set(inputId, {
             graphEdges: parsedGraph.graph!,
-            graphParChild: newTestCases.get(testCaseNumber)!.graphParChild!,
+            graphParChild: newTestCases.get(inputId)!.graphParChild!,
             inputFormat: "edges",
           });
           return newTestCases;
@@ -76,18 +82,27 @@ export function GraphInput({
     } else {
       parsedGraph = parseGraphInputParentChild(
         roots,
-        (document.getElementById("graphInputParent") as HTMLTextAreaElement)
-          .value,
-        (document.getElementById("graphInputChild") as HTMLTextAreaElement)
-          .value,
-        (document.getElementById("graphInputEdgeLabels") as HTMLTextAreaElement)
-          .value,
         (
           document.getElementById(
-            "graphInputNodeLabelsParChild",
+            "graphInputParent" + inputId,
           ) as HTMLTextAreaElement
         ).value,
-        testCaseNumber,
+        (
+          document.getElementById(
+            "graphInputChild" + inputId,
+          ) as HTMLTextAreaElement
+        ).value,
+        (
+          document.getElementById(
+            "graphInputEdgeLabels" + inputId,
+          ) as HTMLTextAreaElement
+        ).value,
+        (
+          document.getElementById(
+            "graphInputNodeLabelsParChild" + inputId,
+          ) as HTMLTextAreaElement
+        ).value,
+        inputId,
       );
       if (parsedGraph.status === "BAD") {
         setInputStatus(false);
@@ -95,8 +110,8 @@ export function GraphInput({
         setInputStatus(true);
         setTestCases((testCases) => {
           const newTestCases = new Map(testCases);
-          newTestCases.set(testCaseNumber, {
-            graphEdges: newTestCases.get(testCaseNumber)!.graphEdges!,
+          newTestCases.set(inputId, {
+            graphEdges: newTestCases.get(inputId)!.graphEdges!,
             graphParChild: parsedGraph.graph!,
             inputFormat: "parentChild",
           });
@@ -108,20 +123,22 @@ export function GraphInput({
 
   const processNodeLabels = () => {
     const currentNodes = (
-      document.getElementById("graphInputCurrentNodes") as HTMLTextAreaElement
+      document.getElementById(
+        "graphInputCurrentNodes" + inputId,
+      ) as HTMLTextAreaElement
     ).value
       .trim()
       .split(/\s+/)
       .filter((u) => u.length)
-      .map((u) => padNode(u, testCaseNumber, inputFormat));
+      .map((u) => padNode(u, inputId, inputFormat));
 
     const nodeLabels = (
       inputFormat === "edges"
         ? (document.getElementById(
-            "graphInputNodeLabelsEdges",
+            "graphInputNodeLabelsEdges" + inputId,
           ) as HTMLTextAreaElement)
         : (document.getElementById(
-            "graphInputNodeLabelsParChild",
+            "graphInputNodeLabelsParChild" + inputId,
           ) as HTMLTextAreaElement)
     ).value
       .trim()
@@ -141,12 +158,12 @@ export function GraphInput({
     if (inputFormat === "edges") {
       setTestCases((testCases) => {
         const newTestCases = new Map(testCases);
-        newTestCases.set(testCaseNumber, {
+        newTestCases.set(inputId, {
           graphEdges: {
-            ...newTestCases.get(testCaseNumber)!.graphEdges!,
+            ...newTestCases.get(inputId)!.graphEdges!,
             nodeLabels: mp,
           },
-          graphParChild: newTestCases.get(testCaseNumber)!.graphParChild!,
+          graphParChild: newTestCases.get(inputId)!.graphParChild!,
           inputFormat: "edges",
         });
         return newTestCases;
@@ -154,10 +171,10 @@ export function GraphInput({
     } else {
       setTestCases((testCases) => {
         const newTestCases = new Map(testCases);
-        newTestCases.set(testCaseNumber, {
-          graphEdges: newTestCases.get(testCaseNumber)!.graphEdges!,
+        newTestCases.set(inputId, {
+          graphEdges: newTestCases.get(inputId)!.graphEdges!,
           graphParChild: {
-            ...newTestCases.get(testCaseNumber)!.graphParChild!,
+            ...newTestCases.get(inputId)!.graphParChild!,
             nodeLabels: mp,
           },
           inputFormat: "parentChild",
@@ -179,9 +196,9 @@ export function GraphInput({
     processGraphInput();
     setTestCases((testCases) => {
       const newTestCases = new Map(testCases);
-      newTestCases.set(testCaseNumber, {
-        graphEdges: newTestCases.get(testCaseNumber)!.graphEdges,
-        graphParChild: newTestCases.get(testCaseNumber)!.graphParChild!,
+      newTestCases.set(inputId, {
+        graphEdges: newTestCases.get(inputId)!.graphEdges,
+        graphParChild: newTestCases.get(inputId)!.graphParChild!,
         inputFormat,
       });
       return newTestCases;
@@ -190,32 +207,30 @@ export function GraphInput({
 
   return (
     <>
-      <div
-        className="font-jetbrains flex flex-col border-2 rounded-lg bg-block
-          shadow-shadow shadow border-border sm:ml-1/16 sm:mt-1/8 sm:mr-1/16
-          lg:m-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4
-          hover:border-border-hover lg:left-1/24 xl:left-5/200 xl:w-1/5 p-3
-          space-y-3 z-10"
+      <li
+        className={
+          inputId === currentId
+            ? `font-jetbrains flex flex-col border-2 rounded-lg bg-block
+              shadow-shadow shadow border-border sm:ml-1/16 sm:mt-1/8 sm:mr-1/16
+              lg:m-0 p-3 space-y-3 list-none`
+            : "hidden"
+        }
       >
-        <h3 className="font-bold text-lg">Graph Data</h3>
-
-        <br />
-
         <h4 className="text-base font-semibold">Current Nodes</h4>
         <textarea
           wrap="off"
           rows={1}
           name="graphInputCurrentNodes"
-          id="graphInputCurrentNodes"
+          id={"graphInputCurrentNodes" + inputId}
           onChange={processNodeLabels}
           value={
-            inputFormat === "edges"
-              ? sortNodes(testCases.get(testCaseNumber)!.graphEdges.nodes).join(
-                  " ",
-                )
-              : sortNodes(
-                  testCases.get(testCaseNumber)!.graphParChild.nodes,
-                ).join(" ")
+            testCases.get(inputId) === undefined
+              ? ""
+              : inputFormat === "edges"
+                ? sortNodes(testCases.get(inputId)!.graphEdges.nodes).join(" ")
+                : sortNodes(testCases.get(inputId)!.graphParChild.nodes).join(
+                    " ",
+                  )
           }
           readOnly
           className="bg-ovr font-semibold font-jetbrains resize-none border-2
@@ -227,7 +242,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputNodeLabelsEdges"
-          id="graphInputNodeLabelsEdges"
+          id={"graphInputNodeLabelsEdges" + inputId}
           rows={1}
           onChange={processNodeLabels}
           onKeyDown={handleTextAreaKeyDown}
@@ -237,14 +252,14 @@ export function GraphInput({
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active placeholder-placeholder
-                placeholder:italic w-auto no-scrollbar`
+                w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>
         <textarea
           wrap="off"
           name="graphInputNodeLabelsParChild"
-          id="graphInputNodeLabelsParChild"
+          id={"graphInputNodeLabelsParChild" + inputId}
           rows={1}
           onChange={processNodeLabels}
           onKeyDown={handleTextAreaKeyDown}
@@ -274,7 +289,7 @@ export function GraphInput({
                   onClick={() => {
                     setInputFormat("edges");
                     let checkbox = document.getElementById(
-                      "inputFormatCheckbox",
+                      "inputFormatCheckbox" + inputId,
                     ) as HTMLInputElement;
                     checkbox.checked = false;
                   }}
@@ -295,7 +310,7 @@ export function GraphInput({
                   onClick={() => {
                     setInputFormat("parentChild");
                     let checkbox = document.getElementById(
-                      "inputFormatCheckbox",
+                      "inputFormatCheckbox" + inputId,
                     ) as HTMLInputElement;
                     checkbox.checked = true;
                   }}
@@ -313,7 +328,7 @@ export function GraphInput({
                 );
               }}
               type="checkbox"
-              id="inputFormatCheckbox"
+              id={"inputFormatCheckbox" + inputId}
               className="peer invisible"
             />
             <span
@@ -342,7 +357,7 @@ export function GraphInput({
                   onClick={() => {
                     setDirected(false);
                     let checkbox = document.getElementById(
-                      "directedCheckbox",
+                      "directedCheckbox" + inputId,
                     ) as HTMLInputElement;
                     checkbox.checked = false;
                   }}
@@ -363,7 +378,7 @@ export function GraphInput({
                   onClick={() => {
                     setDirected(true);
                     let checkbox = document.getElementById(
-                      "directedCheckbox",
+                      "directedCheckbox" + inputId,
                     ) as HTMLInputElement;
                     checkbox.checked = true;
                   }}
@@ -377,7 +392,7 @@ export function GraphInput({
             <input
               onClick={() => setDirected(!directed)}
               type="checkbox"
-              id="directedCheckbox"
+              id={"directedCheckbox" + inputId}
               className="peer invisible"
             />
             <span
@@ -407,7 +422,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputRootsEdges"
-          id="graphInputRootsEdges"
+          id={"graphInputRootsEdges" + inputId}
           rows={1}
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
@@ -432,7 +447,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputRootsParChild"
-          id="graphInputRootsParChild"
+          id={"graphInputRootsParChild" + inputId}
           rows={1}
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
@@ -455,7 +470,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputEdges"
-          id="graphInputEdges"
+          id={"graphInputEdges" + inputId}
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
           rows={8}
@@ -478,7 +493,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputParent"
-          id="graphInputParent"
+          id={"graphInputParent" + inputId}
           rows={1}
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
@@ -501,7 +516,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputChild"
-          id="graphInputChild"
+          id={"graphInputChild" + inputId}
           rows={1}
           defaultValue={"1 2 3 4 5 6 7 8 9"}
           onChange={processGraphInput}
@@ -525,7 +540,7 @@ export function GraphInput({
         <textarea
           wrap="off"
           name="graphInputEdgeLabels"
-          id="graphInputEdgeLabels"
+          id={"graphInputEdgeLabels" + inputId}
           rows={1}
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
@@ -546,13 +561,13 @@ export function GraphInput({
               if (inputFormat === "edges") {
                 (
                   document.getElementById(
-                    "graphInputEdges",
+                    "graphInputEdges" + inputId,
                   ) as HTMLTextAreaElement
                 ).value = "";
               } else {
                 (
                   document.getElementById(
-                    "graphInputParent",
+                    "graphInputParent" + inputId,
                   ) as HTMLTextAreaElement
                 ).value = "";
               }
@@ -577,7 +592,7 @@ export function GraphInput({
             </span>
           )}
         </div>
-      </div>
+      </li>
     </>
   );
 }

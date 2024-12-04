@@ -59,7 +59,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           title={"Theme"}
           leftLabel={"Light"}
           rightLabel={"Dark"}
-          toggleID={"settingsTheme"}
+          toggleId={"settingsTheme"}
           settingsName={"darkMode"}
           settings={settings}
           updateSettings={(newSettings) => {
@@ -160,7 +160,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           title={"Components"}
           leftLabel={"Hide"}
           rightLabel={"Show"}
-          toggleID={"settingsComponents"}
+          toggleId={"settingsComponents"}
           settingsName={"showComponents"}
           settings={settings}
           updateSettings={setSettings}
@@ -171,7 +171,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
             title={"Bridges and Cut Vertices"}
             leftLabel={"Hide"}
             rightLabel={"Show"}
-            toggleID={"settingsBridges"}
+            toggleId={"settingsBridges"}
             settingsName={"showBridges"}
             settings={settings}
             updateSettings={setSettings}
@@ -185,7 +185,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
             title={"Tree Mode"}
             leftLabel={"Off"}
             rightLabel={"On"}
-            toggleID={"settingsTreeMode"}
+            toggleId={"settingsTreeMode"}
             settingsName={"treeMode"}
             settings={settings}
             updateSettings={setSettings}
@@ -198,7 +198,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           title={"Lock Mode"}
           leftLabel={"Off"}
           rightLabel={"On"}
-          toggleID={"settingsLockMode"}
+          toggleId={"settingsLockMode"}
           settingsName={"lockMode"}
           settings={settings}
           updateSettings={setSettings}
@@ -208,7 +208,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           title={"Fixed Mode"}
           leftLabel={"Off"}
           rightLabel={"On"}
-          toggleID={"settingsFixedMode"}
+          toggleId={"settingsFixedMode"}
           settingsName={"fixedMode"}
           settings={settings}
           updateSettings={setSettings}
@@ -218,7 +218,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           title={"Multiedge Mode"}
           leftLabel={"Off"}
           rightLabel={"On"}
-          toggleID={"settingsMultiedgeMode"}
+          toggleId={"settingsMultiedgeMode"}
           settingsName={"multiedgeMode"}
           settings={settings}
           updateSettings={setSettings}

@@ -4,7 +4,7 @@ interface Props {
   title: string;
   leftLabel: string;
   rightLabel: string;
-  toggleID: string;
+  toggleId: string;
   settingsName: keyof Settings;
   settings: Settings;
   updateSettings: (settings: Settings) => void;
@@ -14,7 +14,7 @@ export function SettingsToggleSection({
   title,
   leftLabel,
   rightLabel,
-  toggleID,
+  toggleId,
   settingsName,
   settings,
   updateSettings,
@@ -38,7 +38,7 @@ export function SettingsToggleSection({
                     [settingsName]: false,
                   });
                   let checkbox = document.getElementById(
-                    toggleID,
+                    toggleId,
                   ) as HTMLInputElement;
                   checkbox.checked = false;
                 }}
@@ -62,7 +62,7 @@ export function SettingsToggleSection({
                     [settingsName]: true,
                   });
                   let checkbox = document.getElementById(
-                    toggleID,
+                    toggleId,
                   ) as HTMLInputElement;
                   checkbox.checked = true;
                 }}
@@ -82,7 +82,7 @@ export function SettingsToggleSection({
             }
             type="checkbox"
             checked={settings[settingsName] as boolean}
-            id={toggleID}
+            id={toggleId}
             className="peer invisible"
             onChange={() => {}}
           />

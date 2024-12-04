@@ -1,25 +1,18 @@
-import { GraphInput } from "./components/GraphInput";
+import { InputTabs } from "./components/InputTabs";
+
 import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
 import { InputFormat, Settings } from "./types";
-import { TestCase, TestCases, Graph } from "./types";
+import { TestCase, TestCases } from "./types";
+
+import { getDefaultGraph } from "./components/utils";
 
 import { useState } from "react";
 
-const getDefaultGraph = (): Graph => {
-  return {
-    nodes: new Array<string>(),
-    adj: new Map<string, string[]>(),
-    rev: new Map<string, string[]>(),
-    edges: new Array<string>(),
-    edgeLabels: new Map<string, string>(),
-    nodeLabels: new Map<string, string>(),
-  };
-};
-
 function App() {
   const [testCaseNumber, setTestCaseNumber] = useState<number>(0);
+  const [currentId, setCurrentId] = useState<number>(0);
   const [testCases, setTestCases] = useState<TestCases>(() => {
     const init = new Map<number, TestCase>();
     init.set(0, {
@@ -32,6 +25,9 @@ function App() {
 
   const [inputFormat, setInputFormat] = useState<InputFormat>("edges");
   const [directed, setDirected] = useState<boolean>(false);
+
+  const [tabs, setTabs] = useState<number[]>([0]);
+  const [inputs, setInputs] = useState<number[]>([0]);
 
   const [settings, setSettings] = useState<Settings>({
     labelOffset: 0,
@@ -120,10 +116,17 @@ function App() {
           <div className="ml-2">Github</div>
         </a>
 
-        <GraphInput
+        <InputTabs
+          tabs={tabs}
+          setTabs={setTabs}
+          inputs={inputs}
+          setInputs={setInputs}
           testCases={testCases}
           setTestCases={setTestCases}
           testCaseNumber={testCaseNumber}
+          setTestCaseNumber={setTestCaseNumber}
+          currentId={currentId}
+          setCurrentId={setCurrentId}
           inputFormat={inputFormat}
           setInputFormat={setInputFormat}
           directed={directed}

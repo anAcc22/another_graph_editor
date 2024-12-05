@@ -124,7 +124,7 @@ export function GraphInput({
     if (testCases.get(inputId) === undefined) return;
     const inputFormat = testCases.get(inputId)!.inputFormat;
 
-    const currentNodes = (
+    let currentNodes = (
       document.getElementById(
         "graphInputCurrentNodes" + inputId,
       ) as HTMLTextAreaElement
@@ -133,6 +133,8 @@ export function GraphInput({
       .split(/\s+/)
       .filter((u) => u.length)
       .map((u) => padNode(u, inputId, inputFormat));
+
+    currentNodes = sortNodes(currentNodes);
 
     const nodeLabels = (
       inputFormat === "edges"

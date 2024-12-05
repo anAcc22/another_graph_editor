@@ -83,8 +83,21 @@ function App() {
           <div
             className="absolute border-2 text-sm px-2 py-1 border-border-hover
               rounded-lg bg-block left-0 top-8 w-100 invisible
-              group-hover:visible"
+              group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            5 Dec 2024
+            <ul className="list-disc list-inside">
+              <li>
+                Support multiple graphs (aka testcases)
+              </li>
+              <li>
+                Split settings into <b>general</b> and <b>appearance</b>.
+              </li>
+              <li>
+                Add <b>bipartite mode</b>
+              </li>
+            </ul>
+            <hr className="border-dashed border-border" />
             11 Nov 2024
             <ul className="list-disc list-inside">
               <li>

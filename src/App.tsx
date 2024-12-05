@@ -39,6 +39,10 @@ function App() {
       localStorage.getItem("nodeRadius") !== null
         ? Number.parseInt(localStorage.getItem("nodeRadius")!)
         : 16,
+    fontSize:
+      localStorage.getItem("fontSize") !== null
+        ? Number.parseInt(localStorage.getItem("fontSize")!)
+        : 10,
     nodeBorderWidthHalf:
       localStorage.getItem("nodeBorderWidthHalf") !== null
         ? Number.parseFloat(localStorage.getItem("nodeBorderWidthHalf")!)

@@ -27,6 +27,7 @@ export interface Settings {
   labelOffset: number;
   darkMode: boolean;
   nodeRadius: number;
+  fontSize: number;
   nodeBorderWidthHalf: number;
   edgeLength: number;
   showComponents: boolean;

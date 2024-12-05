@@ -179,7 +179,7 @@ function drawEdgeLabel(
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
 
-  ctx.font = `${nodeRadius - 5}px JB`;
+  ctx.font = `${settings.fontSize}px JB`;
   ctx.fillStyle = edgeLabelColor;
 
   ctx.fillText(label, mx + px, my + py);
@@ -222,7 +222,7 @@ function drawOctagon(
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
 
-  ctx.font = `${nodeRadius - 2}px JB`;
+  ctx.font = `${settings.fontSize}px JB`;
   ctx.fillStyle = nodeLabelColor;
   ctx.fillText(label, x, y);
 }
@@ -382,9 +382,11 @@ let oldDirected = false;
 let directed = false;
 
 let settings: Settings = {
+  settingsFormat: "general",
   labelOffset: 0,
   darkMode: true,
   nodeRadius: 15,
+  fontSize: 15,
   nodeBorderWidthHalf: 15,
   edgeLength: 10,
   showComponents: false,
@@ -752,7 +754,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 
     const s = stripNode(u);
 
-    ctx.font = `${nodeRadius}px JB`;
+    ctx.font = `${settings.fontSize+2}px JB`;
     ctx.fillStyle = textColor;
     ctx.fillText(
       isInteger(s) ? (parseInt(s, 10) + labelOffset).toString() : s,

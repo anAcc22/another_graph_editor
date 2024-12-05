@@ -269,7 +269,7 @@ export function GraphInput({
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active placeholder-placeholder
-                placeholder:italic w-auto no-scrollbar`
+                w-auto no-scrollbar`
               : "hidden"
           }
         ></textarea>

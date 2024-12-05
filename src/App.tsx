@@ -57,6 +57,7 @@ function App() {
     showComponents: false,
     showBridges: false,
     treeMode: false,
+    bipartiteMode: false,
     lockMode: false,
     fixedMode: false,
     multiedgeMode: true,

@@ -8,6 +8,7 @@ import { buildComponents } from "./graphComponents";
 import { buildSCComponents } from "./graphComponents";
 
 import { buildTreeLayers } from "./graphTreeLayers";
+import { buildBipartite } from "./graphBipartite";
 
 import { buildBridges } from "./graphBridges";
 
@@ -393,6 +394,7 @@ let settings: Settings = {
   showComponents: false,
   showBridges: false,
   treeMode: false,
+  bipartiteMode: false,
   lockMode: false,
   fixedMode: false,
   multiedgeMode: true,
@@ -547,7 +549,7 @@ function updateVelocities() {
       y: clamp((nodeMap.get(u)!.vel.y + ayB) * (1 - NODE_FRICTION), -100, 100),
     };
 
-    if (settings.treeMode && layerMap !== undefined) {
+    if (layerMap !== undefined) {
       const depth = layerMap.get(u)![0];
       const maxDepth = layerMap.get(u)![1];
 
@@ -606,33 +608,35 @@ function buildSettings(): void {
 
   labelOffset = settings.labelOffset;
 
+  colorMap = undefined;
+  layerMap = undefined;
+  backedgeMap = undefined;
+  cutMap = undefined;
+  bridgeMap = undefined;
+
+  if (settings.bipartiteMode) {
+    let isBipartite: boolean;
+    [isBipartite, colorMap, layerMap] = buildBipartite(nodes, adj);
+    localStorage.setItem("isBipartite", isBipartite.toString());
+    if (!isBipartite) {
+      colorMap = undefined;
+      layerMap = undefined;
+    }
+  }
+
   if (directed) {
     if (settings.showComponents) {
       colorMap = buildSCComponents(nodes, adj, rev);
-    } else {
-      colorMap = undefined;
     }
-    layerMap = undefined;
-    backedgeMap = undefined;
-    cutMap = undefined;
-    bridgeMap = undefined;
   } else {
     if (settings.showComponents) {
       colorMap = buildComponents(nodes, adj, rev);
-    } else {
-      colorMap = undefined;
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
-    } else {
-      layerMap = undefined;
-      backedgeMap = undefined;
     }
     if (settings.showBridges) {
       [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
-    } else {
-      cutMap = undefined;
-      bridgeMap = undefined;
     }
   }
 }
@@ -700,6 +704,10 @@ export function updateGraph(testCases: TestCases) {
   nodeLabels = new Map<string, string>(rawNodeLabels);
   edgeLabels = new Map<string, string>(rawEdgeLabels);
 
+  let isBipartite: boolean;
+  [isBipartite] = buildBipartite(nodes, adj);
+  localStorage.setItem("isBipartite", isBipartite.toString());
+
   buildSettings();
 }
 
@@ -755,7 +763,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
 
     const s = stripNode(u);
 
-    ctx.font = `${settings.fontSize+2}px JB`;
+    ctx.font = `${settings.fontSize + 2}px JB`;
     ctx.fillStyle = textColor;
     ctx.fillText(
       isInteger(s) ? (parseInt(s, 10) + labelOffset).toString() : s,

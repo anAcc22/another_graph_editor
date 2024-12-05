@@ -58,7 +58,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           toggleId={"settingsComponents"}
           settingsName={"showComponents"}
           settings={settings}
-          updateSettings={setSettings}
+          setSettings={setSettings}
         />
 
         {!directed ? (
@@ -69,7 +69,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             toggleId={"settingsBridges"}
             settingsName={"showBridges"}
             settings={settings}
-            updateSettings={setSettings}
+            setSettings={setSettings}
           />
         ) : (
           <></>
@@ -83,10 +83,26 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             toggleId={"settingsTreeMode"}
             settingsName={"treeMode"}
             settings={settings}
-            updateSettings={setSettings}
+            setSettings={setSettings}
           />
         ) : (
           <></>
+        )}
+
+        {localStorage.getItem("isBipartite") === "true" ? (
+          <SettingsToggleSection
+            title={"Bipartite Mode"}
+            leftLabel={"Off"}
+            rightLabel={"On"}
+            toggleId={"settingsBipartiteMode"}
+            settingsName={"bipartiteMode"}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        ) : (
+          <h4 className="font-semibold text-base">
+            <s>Bipartite Mode</s>
+          </h4>
         )}
 
         <SettingsToggleSection
@@ -96,7 +112,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           toggleId={"settingsLockMode"}
           settingsName={"lockMode"}
           settings={settings}
-          updateSettings={setSettings}
+          setSettings={setSettings}
         />
 
         <SettingsToggleSection
@@ -106,7 +122,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           toggleId={"settingsFixedMode"}
           settingsName={"fixedMode"}
           settings={settings}
-          updateSettings={setSettings}
+          setSettings={setSettings}
         />
 
         <SettingsToggleSection
@@ -116,7 +132,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           toggleId={"settingsMultiedgeMode"}
           settingsName={"multiedgeMode"}
           settings={settings}
-          updateSettings={setSettings}
+          setSettings={setSettings}
         />
       </div>
     </>

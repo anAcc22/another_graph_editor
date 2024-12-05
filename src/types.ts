@@ -34,6 +34,7 @@ export interface Settings {
   showComponents: boolean;
   showBridges: boolean;
   treeMode: boolean;
+  bipartiteMode: boolean;
   lockMode: boolean;
   fixedMode: boolean;
   multiedgeMode: boolean;

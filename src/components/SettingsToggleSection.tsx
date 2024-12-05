@@ -7,7 +7,7 @@ interface Props {
   toggleId: string;
   settingsName: keyof Settings;
   settings: Settings;
-  updateSettings: (settings: Settings) => void;
+  setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 }
 
 export function SettingsToggleSection({
@@ -17,7 +17,7 @@ export function SettingsToggleSection({
   toggleId,
   settingsName,
   settings,
-  updateSettings,
+  setSettings,
 }: Props) {
   return (
     <>
@@ -33,9 +33,28 @@ export function SettingsToggleSection({
               <span
                 className="p-0 hover:cursor-pointer"
                 onClick={() => {
-                  updateSettings({
-                    ...settings,
-                    [settingsName]: false,
+                  setSettings((settings) => {
+                    const newSettings = {
+                      ...settings,
+                      [settingsName]: false,
+                    };
+                    if (
+                      newSettings.bipartiteMode &&
+                      settingsName === "bipartiteMode"
+                    ) {
+                      newSettings["treeMode"] = false;
+                      newSettings["showComponents"] = false;
+                    }
+                    if (newSettings.treeMode && settingsName === "treeMode") {
+                      newSettings["bipartiteMode"] = false;
+                    }
+                    if (
+                      newSettings.showComponents &&
+                      settingsName === "showComponents"
+                    ) {
+                      newSettings["bipartiteMode"] = false;
+                    }
+                    return newSettings;
                   });
                   let checkbox = document.getElementById(
                     toggleId,
@@ -57,9 +76,28 @@ export function SettingsToggleSection({
               <span
                 className="p-0 hover:cursor-pointer"
                 onClick={() => {
-                  updateSettings({
-                    ...settings,
-                    [settingsName]: true,
+                  setSettings((settings) => {
+                    const newSettings = {
+                      ...settings,
+                      [settingsName]: true,
+                    };
+                    if (
+                      newSettings.bipartiteMode &&
+                      settingsName === "bipartiteMode"
+                    ) {
+                      newSettings["treeMode"] = false;
+                      newSettings["showComponents"] = false;
+                    }
+                    if (newSettings.treeMode && settingsName === "treeMode") {
+                      newSettings["bipartiteMode"] = false;
+                    }
+                    if (
+                      newSettings.showComponents &&
+                      settingsName === "showComponents"
+                    ) {
+                      newSettings["bipartiteMode"] = false;
+                    }
+                    return newSettings;
                   });
                   let checkbox = document.getElementById(
                     toggleId,
@@ -75,9 +113,28 @@ export function SettingsToggleSection({
         <label className="relative inline w-9">
           <input
             onClick={() =>
-              updateSettings({
-                ...settings,
-                [settingsName]: !settings[settingsName],
+              setSettings((settings) => {
+                const newSettings = {
+                  ...settings,
+                  [settingsName]: !settings[settingsName],
+                };
+                if (
+                  newSettings.bipartiteMode &&
+                  settingsName === "bipartiteMode"
+                ) {
+                  newSettings["treeMode"] = false;
+                  newSettings["showComponents"] = false;
+                }
+                if (newSettings.treeMode && settingsName === "treeMode") {
+                  newSettings["bipartiteMode"] = false;
+                }
+                if (
+                  newSettings.showComponents &&
+                  settingsName === "showComponents"
+                ) {
+                  newSettings["bipartiteMode"] = false;
+                }
+                return newSettings;
               })
             }
             type="checkbox"

@@ -131,10 +131,10 @@ export function GraphInput({
     ).value
       .trim()
       .split(/\s+/)
-      .filter((u) => u.length)
-      .map((u) => padNode(u, inputId, inputFormat));
+      .filter((u) => u.length);
 
     currentNodes = sortNodes(currentNodes);
+    currentNodes = currentNodes.map((u) => padNode(u, inputId, inputFormat));
 
     const nodeLabels = (
       inputFormat === "edges"

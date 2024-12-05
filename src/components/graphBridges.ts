@@ -8,6 +8,8 @@ export function buildBridges(
   let depth = new Map<string, number>();
   let memo = new Map<string, number>();
 
+  let edgeCnt = new Map<string, number>();
+
   let seen = new Set<string>();
 
   let coc = new Map<string, string[]>();
@@ -22,6 +24,11 @@ export function buildBridges(
 
   for (const [u, vs] of adj.entries()) {
     for (const v of vs) {
+      const baseEdge = [u, v].sort().join(" ");
+      edgeCnt.set(
+        baseEdge,
+        edgeCnt.get(baseEdge) === undefined ? 1 : edgeCnt.get(baseEdge)! + 1,
+      );
       if (!coc.get(u)!.includes(v)) {
         coc.set(u, [...coc.get(u)!, v]);
       }
@@ -56,6 +63,8 @@ export function buildBridges(
     }
 
     if (depth.get(u)! !== 1 && memo.get(u)! === 0) {
+      const baseEdge = [u, pu].sort().join(" ");
+      if (edgeCnt.get(baseEdge)! >= 2) return;
       bridgeMap.set([u, pu].join(" "), true);
       bridgeMap.set([pu, u].join(" "), true);
     }

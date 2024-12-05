@@ -207,6 +207,7 @@ function drawOctagon(
   ctx.strokeStyle = nodeLabelOutlineColor;
   ctx.fillStyle = fillColors[0];
 
+  ctx.setLineDash([1, 4]);
   ctx.beginPath();
 
   let theta = 0;
@@ -217,8 +218,8 @@ function drawOctagon(
     ctx.lineTo(nx, ny);
   }
 
-  ctx.fill();
   ctx.stroke();
+  ctx.setLineDash([]);
 
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
@@ -313,14 +314,14 @@ const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_LABEL_LIGHT = "hsl(30, 50%, 40%)";
 const NODE_LABEL_LIGHT = "hsl(10, 50%, 40%)";
-const NODE_LABEL_OUTLINE_LIGHT = "hsl(10, 10%, 70%)";
+const NODE_LABEL_OUTLINE_LIGHT = "hsl(10, 2%, 70%)";
 
 const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_LABEL_DARK = "hsl(30, 70%, 60%)";
 const NODE_LABEL_DARK = "hsl(10, 70%, 60%)";
-const NODE_LABEL_OUTLINE_DARK = "hsl(10, 10%, 30%)";
+const NODE_LABEL_OUTLINE_DARK = "hsl(10, 2%, 30%)";
 
 const TEXT_Y_OFFSET = 1;
 

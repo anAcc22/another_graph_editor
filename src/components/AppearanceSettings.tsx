@@ -29,7 +29,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           setSettings={setSettings}
         />
 
-        <br />
+        <hr className="border-dashed border-border" />
 
         <h4 className="font-semibold">Node Radius</h4>
         <input

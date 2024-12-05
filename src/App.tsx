@@ -69,8 +69,10 @@ function App() {
       <div
         className={
           settings.darkMode
-            ? "dark bg-ovr text-text absolute w-full min-h-200 overflow-scroll"
-            : "light bg-ovr text-text absolute w-full min-h-200 overflow-scroll"
+            ? `dark bg-ovr text-text absolute w-full min-h-[840px]
+              overflow-scroll`
+            : `light bg-ovr text-text absolute w-full min-h-[840px]
+              overflow-scroll`
         }
       >
         <div
@@ -87,9 +89,7 @@ function App() {
           >
             5 Dec 2024
             <ul className="list-disc list-inside">
-              <li>
-                Support multiple graphs (aka testcases)
-              </li>
+              <li>Support multiple graphs (aka testcases)</li>
               <li>
                 Split settings into <b>general</b> and <b>appearance</b>.
               </li>

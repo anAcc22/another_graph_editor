@@ -14,8 +14,8 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         className={
           settings.settingsFormat === "appearance"
             ? `font-jetbrains flex flex-col border-2 rounded-lg bg-block
-              shadow-shadow shadow border-border sm:ml-1/16 sm:mb-1/8 sm:mr-1/16
-              lg:m-0 hover:border-border-hover p-3 space-y-3`
+              shadow-shadow shadow border-border hover:border-border-hover p-3
+              space-y-3`
             : "hidden"
         }
       >

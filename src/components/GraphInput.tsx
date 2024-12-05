@@ -202,8 +202,7 @@ export function GraphInput({
         className={
           inputId === currentId
             ? `font-jetbrains flex flex-col border-2 rounded-lg bg-block
-              shadow-shadow shadow border-border sm:ml-1/16 sm:mt-1/8 sm:mr-1/16
-              lg:m-0 p-3 space-y-3 list-none`
+              shadow-shadow shadow border-border p-3 space-y-3 list-none`
             : "hidden"
         }
       >

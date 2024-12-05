@@ -13,7 +13,8 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
     <div
       className="font-jetbrains flex flex-col m-0 hover:border-border-hover
         xl:right-5/200 space-y-3 z-10 lg:absolute lg:right-1/24 xl:w-1/5
-        lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4"
+        lg:top-1/2 lg:-translate-y-1/2 lg:w-1/4 sm:ml-1/16 sm:mb-1/8 sm:mr-1/16
+        lg:m-0"
     >
       <div className="no-scrollbar overflow-scroll">
         <div className="flex space-x-3">

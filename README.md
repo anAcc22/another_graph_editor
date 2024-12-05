@@ -24,13 +24,17 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
   node `p[i]` to `c[i]`.
   - Assuming a nonzero number of nodes, you may also label each node. This
   is useful in scenarios where you are offered an array `a`, where `a[i]`
-  corresponds to the value at node `i`.
+  corresponds to the value at node `i` (simply copy and paste the given array into
+  **node labels**).
 - Label offset (to convert a zero-indexed input to one-indexed and vice versa)
 - Dark/light themes
-- Undirected/directed mode
-- Normal/tree mode
+- Undirected/directed graphs
+- Normal/tree/bipartite modes
+- Lock mode (fix marked nodes in place)
 - Show/hide bridges and cut vertices
 - Show/hide components
+- Multi-edge support
+- Multi-testcase support
 
 <p align="center">
     <img src="screenshots/parentChild.png?" />
@@ -51,22 +55,6 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 > [!NOTE]
 > *Tree Mode* and *Bridges* are only available for undirected graphs.
 
-> [!NOTE]
-> For directed graphs, **strongly connected components** are displayed.
-
-## Configuration
-
-In addition to the light/dark themes, there are three sliders available
-for adjusting the *node radius*, *line thickness*, and *edge length* at discrete
-intervals. Your configuration will be preserved across refreshes.
-
-> [!NOTE]
-> As the node radius changes, the font size is scaled accordingly to maintain readability.
-
-By default, the graph is in *Force Mode*, where edges hold everything together
-and nodes repel one another, creating a cool space-like effect. To disable
-this behavior, simply toggle *Lock Mode*.
-
 ## Usage
 
 Adjust the input format to your liking and type away!
@@ -85,9 +73,46 @@ Adjust the input format to your liking and type away!
 > When entering node labels, if you want to skip over a particular node,
 > use the character '_' as a placeholder.
 
-### Tree Mode
+## Handling Multiple Testcases/Graphs
+
+To add a new testcase, click the green button to add a new "tab". You
+may enter each test case into its own separate tab. To delete a tab, hover
+over the desired tab for a moment, and a red cross will show up. Click
+the red cross to delete it.
+
+> [!CAUTION]
+> When you delete a tab, all graph data within that tab will be destroyed,
+> so please proceed with caution.
+
+## Configuration
+
+There are two means of configuration: **General** and **Appearance**, the
+former handles the main "modes" while the latter lets you control how
+the graph is rendered.
+
+### General
+
+#### Components
+This mode reveals the connected components of a graph.
+
+> [!NOTE]
+> For directed graphs, **strongly connected components** are displayed.
+
+Components are distinguished via different colors.
+
+#### Bridges and Cut Vertices
+
+A *bridge* is an edge that increases the number of components when removed.
+A *cut vertice* (aka articulation point) is defined similarly.
+
+Bridges are represented with two parallel lines, while cut vertices take
+on a hexagonal shape.
+
+#### Tree Mode
 
 In this mode, the *first* node that appears in the input data becomes the root.
+Nodes are arranged in "layers" according to their position within the tree
+hierarchy, allowing for easier visualization.
 
 <p align="center">
     <img src="screenshots/twoRootBefore.png?" />
@@ -122,6 +147,51 @@ displayed instead, where *back edges* are displayed as dotted lines.
 <p align="center">
 <em>A DFS Tree With Bridges and Cut Vertices Shown</em>
 </p>
+
+#### Bipartite Mode
+
+Bipartite graphs may also be displayed. Nodes of each disjoint set are
+colored (and positioned) differently.
+
+<p align="center">
+    <img src="screenshots/bipartite.png?" />
+</p>
+
+<p align="center">
+<em>A Bipartite Graph</em>
+</p>
+
+> [!CAUTION]
+> When enabled, both *Tree Mode* and *Components* will be *unset*. This works
+> in reverse as well, when either *Tree Mode* or *Components* is set, *Bipartite
+> Mode* will be turned off.
+
+> [!TIP]
+> If the graph isn't bipartite, this mode becomes unavailable.
+
+#### Lock Mode
+
+By default, the graph is in *Force Mode*, where edges hold everything together
+and nodes repel one another, creating a cool space-like effect. To disable
+this behavior, simply toggle *Lock Mode*.
+
+#### Fixed Mode
+
+You may *mark* a node by clicking it, these nodes have a double border. By
+default, they'll float around as usual. If you wish to fix them in place,
+toggle *Fixed Mode*.
+
+#### Multiedge Mode
+
+This mode allows for multiple edges between two nodes, it's enabled by
+default. When disabled, no matter how many times you enter the same edge,
+only a single one would be registered.
+
+### Appearance
+
+In addition to the light/dark themes, there are multiple sliders available
+for altering parameters like the node radius, font size, etc. Your settings
+are saved across refreshes using `localStorage`.
 
 ## Credits
 

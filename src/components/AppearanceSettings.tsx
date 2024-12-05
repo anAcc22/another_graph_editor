@@ -26,10 +26,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           toggleId={"settingsTheme"}
           settingsName={"darkMode"}
           settings={settings}
-          updateSettings={(newSettings) => {
-            setSettings(newSettings);
-            localStorage.setItem("darkMode", newSettings.darkMode.toString());
-          }}
+          setSettings={setSettings}
         />
 
         <br />

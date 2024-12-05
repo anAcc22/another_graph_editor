@@ -54,6 +54,12 @@ export function SettingsToggleSection({
                     ) {
                       newSettings["bipartiteMode"] = false;
                     }
+                    if (settingsName === "darkMode") {
+                      localStorage.setItem(
+                        "darkMode",
+                        newSettings.darkMode.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -97,6 +103,12 @@ export function SettingsToggleSection({
                     ) {
                       newSettings["bipartiteMode"] = false;
                     }
+                    if (settingsName === "darkMode") {
+                      localStorage.setItem(
+                        "darkMode",
+                        newSettings.darkMode.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -133,6 +145,12 @@ export function SettingsToggleSection({
                   settingsName === "showComponents"
                 ) {
                   newSettings["bipartiteMode"] = false;
+                }
+                if (settingsName === "darkMode") {
+                  localStorage.setItem(
+                    "darkMode",
+                    newSettings.darkMode.toString(),
+                  );
                 }
                 return newSettings;
               })

@@ -202,7 +202,8 @@ export function GraphInput({
         className={
           inputId === currentId
             ? `font-jetbrains flex flex-col border-2 rounded-lg bg-block
-              shadow-shadow shadow border-border p-3 space-y-3 list-none`
+              shadow-shadow shadow border-border p-3 space-y-3 list-none
+              hover:border-border-hover`
             : "hidden"
         }
       >

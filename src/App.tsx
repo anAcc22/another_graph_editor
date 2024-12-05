@@ -3,7 +3,7 @@ import { InputTabs } from "./components/InputTabs";
 import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
-import { InputFormat, Settings } from "./types";
+import { Settings } from "./types";
 import { TestCase, TestCases } from "./types";
 
 import { getDefaultGraph } from "./components/utils";
@@ -23,7 +23,6 @@ function App() {
     return init;
   });
 
-  const [inputFormat, setInputFormat] = useState<InputFormat>("edges");
   const [directed, setDirected] = useState<boolean>(false);
 
   const [tabs, setTabs] = useState<number[]>([0]);
@@ -136,8 +135,6 @@ function App() {
           setTestCaseNumber={setTestCaseNumber}
           currentId={currentId}
           setCurrentId={setCurrentId}
-          inputFormat={inputFormat}
-          setInputFormat={setInputFormat}
           directed={directed}
           setDirected={setDirected}
         />

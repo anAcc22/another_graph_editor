@@ -1,8 +1,8 @@
 import { parseGraphInputEdges } from "./parseGraphInput";
 import { parseGraphInputParentChild } from "./parseGraphInput";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { InputFormat, ParsedGraph } from "../types";
+import { ParsedGraph } from "../types";
 import { TestCases } from "../types";
 import { padNode, sortNodes } from "./utils";
 
@@ -12,8 +12,6 @@ interface Props {
   setTestCases: React.Dispatch<React.SetStateAction<TestCases>>;
   inputId: number;
   currentId: number;
-  inputFormat: InputFormat;
-  setInputFormat: React.Dispatch<React.SetStateAction<InputFormat>>;
   directed: boolean;
   setDirected: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,14 +21,15 @@ export function GraphInput({
   setTestCases,
   inputId,
   currentId,
-  inputFormat,
-  setInputFormat,
   directed,
   setDirected,
 }: Props) {
   const [inputStatus, setInputStatus] = useState<boolean>(true);
 
   const processGraphInput = () => {
+    if (testCases.get(inputId) === undefined) return;
+    const inputFormat = testCases.get(inputId)!.inputFormat;
+
     let parsedGraph: ParsedGraph;
 
     let roots = "";
@@ -122,6 +121,9 @@ export function GraphInput({
   };
 
   const processNodeLabels = () => {
+    if (testCases.get(inputId) === undefined) return;
+    const inputFormat = testCases.get(inputId)!.inputFormat;
+
     const currentNodes = (
       document.getElementById(
         "graphInputCurrentNodes" + inputId,
@@ -192,19 +194,6 @@ export function GraphInput({
     }
   };
 
-  useEffect(() => {
-    processGraphInput();
-    setTestCases((testCases) => {
-      const newTestCases = new Map(testCases);
-      newTestCases.set(inputId, {
-        graphEdges: newTestCases.get(inputId)!.graphEdges,
-        graphParChild: newTestCases.get(inputId)!.graphParChild!,
-        inputFormat,
-      });
-      return newTestCases;
-    });
-  }, [inputFormat]);
-
   return (
     <>
       <li
@@ -226,7 +215,7 @@ export function GraphInput({
           value={
             testCases.get(inputId) === undefined
               ? ""
-              : inputFormat === "edges"
+              : testCases.get(inputId)!.inputFormat === "edges"
                 ? sortNodes(testCases.get(inputId)!.graphEdges.nodes).join(" ")
                 : sortNodes(testCases.get(inputId)!.graphParChild.nodes).join(
                     " ",
@@ -248,7 +237,7 @@ export function GraphInput({
           onKeyDown={handleTextAreaKeyDown}
           placeholder="TIP: '_' -> empty label"
           className={
-            inputFormat === "edges"
+            testCases.get(inputId)?.inputFormat === "edges"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active placeholder-placeholder
@@ -265,7 +254,7 @@ export function GraphInput({
           onKeyDown={handleTextAreaKeyDown}
           placeholder="TIP: '_' -> empty label"
           className={
-            inputFormat === "parentChild"
+            testCases.get(inputId)?.inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active placeholder-placeholder
@@ -279,7 +268,7 @@ export function GraphInput({
         <div className="flex font-light text-sm justify-between">
           <span>
             <span>
-              {inputFormat === "edges" ? (
+              {testCases.get(inputId)?.inputFormat === "edges" ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
                   Edges
                 </span>
@@ -287,7 +276,16 @@ export function GraphInput({
                 <span
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
-                    setInputFormat("edges");
+                    setTestCases((testCases) => {
+                      const newTestCases = new Map(testCases);
+                      newTestCases.set(inputId, {
+                        graphEdges: newTestCases.get(inputId)!.graphEdges,
+                        graphParChild:
+                          newTestCases.get(inputId)!.graphParChild!,
+                        inputFormat: "edges",
+                      });
+                      return newTestCases;
+                    });
                     let checkbox = document.getElementById(
                       "inputFormatCheckbox" + inputId,
                     ) as HTMLInputElement;
@@ -300,7 +298,7 @@ export function GraphInput({
             </span>
             <span> | </span>
             <span>
-              {inputFormat === "parentChild" ? (
+              {testCases.get(inputId)?.inputFormat === "parentChild" ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
                   Parent-Child
                 </span>
@@ -308,7 +306,16 @@ export function GraphInput({
                 <span
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
-                    setInputFormat("parentChild");
+                    setTestCases((testCases) => {
+                      const newTestCases = new Map(testCases);
+                      newTestCases.set(inputId, {
+                        graphEdges: newTestCases.get(inputId)!.graphEdges,
+                        graphParChild:
+                          newTestCases.get(inputId)!.graphParChild!,
+                        inputFormat: "parentChild",
+                      });
+                      return newTestCases;
+                    });
                     let checkbox = document.getElementById(
                       "inputFormatCheckbox" + inputId,
                     ) as HTMLInputElement;
@@ -323,9 +330,18 @@ export function GraphInput({
           <label className="relative inline w-9">
             <input
               onClick={() => {
-                setInputFormat(
-                  inputFormat === "edges" ? "parentChild" : "edges",
-                );
+                setTestCases((testCases) => {
+                  const newTestCases = new Map(testCases);
+                  const oldInputFormat = newTestCases.get(inputId)!.inputFormat;
+
+                  newTestCases.set(inputId, {
+                    graphEdges: newTestCases.get(inputId)!.graphEdges,
+                    graphParChild: newTestCases.get(inputId)!.graphParChild!,
+                    inputFormat:
+                      oldInputFormat === "edges" ? "parentChild" : "edges",
+                  });
+                  return newTestCases;
+                });
               }}
               type="checkbox"
               id={"inputFormatCheckbox" + inputId}
@@ -412,7 +428,7 @@ export function GraphInput({
 
         <h4
           className={
-            !directed && inputFormat === "edges"
+            !directed && testCases.get(inputId)?.inputFormat === "edges"
               ? "text-base font-semibold"
               : "hidden"
           }
@@ -427,7 +443,7 @@ export function GraphInput({
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
           className={
-            !directed && inputFormat === "edges"
+            !directed && testCases.get(inputId)?.inputFormat === "edges"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active w-auto no-scrollbar`
@@ -437,7 +453,7 @@ export function GraphInput({
 
         <h4
           className={
-            !directed && inputFormat === "parentChild"
+            !directed && testCases.get(inputId)?.inputFormat === "parentChild"
               ? "text-base font-semibold"
               : "hidden"
           }
@@ -452,7 +468,7 @@ export function GraphInput({
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
           className={
-            !directed && inputFormat === "parentChild"
+            !directed && testCases.get(inputId)?.inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active w-auto no-scrollbar`
@@ -462,7 +478,9 @@ export function GraphInput({
 
         <h4
           className={
-            inputFormat === "edges" ? "text-base font-semibold" : "hidden"
+            testCases.get(inputId)?.inputFormat === "edges"
+              ? "text-base font-semibold"
+              : "hidden"
           }
         >
           Edges
@@ -475,7 +493,7 @@ export function GraphInput({
           onKeyDown={handleTextAreaKeyDown}
           rows={8}
           className={
-            inputFormat === "edges"
+            testCases.get(inputId)?.inputFormat === "edges"
               ? `font-semibold font-jetbrains resize-none border-2 rounded-md
                 px-2 py-1 border-single focus:outline-none text-lg border-border
                 focus:border-border-active bg-ovr w-auto no-scrollbar`
@@ -485,7 +503,9 @@ export function GraphInput({
 
         <h4
           className={
-            inputFormat === "parentChild" ? "text-base font-semibold" : "hidden"
+            testCases.get(inputId)?.inputFormat === "parentChild"
+              ? "text-base font-semibold"
+              : "hidden"
           }
         >
           Parent Array
@@ -498,7 +518,7 @@ export function GraphInput({
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
           className={
-            inputFormat === "parentChild"
+            testCases.get(inputId)?.inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active w-auto no-scrollbar`
@@ -508,7 +528,9 @@ export function GraphInput({
 
         <h4
           className={
-            inputFormat === "parentChild" ? "text-base font-semibold" : "hidden"
+            testCases.get(inputId)?.inputFormat === "parentChild"
+              ? "text-base font-semibold"
+              : "hidden"
           }
         >
           Child Array
@@ -522,7 +544,7 @@ export function GraphInput({
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
           className={
-            inputFormat === "parentChild"
+            testCases.get(inputId)?.inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active w-auto no-scrollbar`
@@ -532,7 +554,9 @@ export function GraphInput({
 
         <h4
           className={
-            inputFormat === "parentChild" ? "text-base font-semibold" : "hidden"
+            testCases.get(inputId)?.inputFormat === "parentChild"
+              ? "text-base font-semibold"
+              : "hidden"
           }
         >
           Edge Labels
@@ -545,7 +569,7 @@ export function GraphInput({
           onChange={processGraphInput}
           onKeyDown={handleTextAreaKeyDown}
           className={
-            inputFormat === "parentChild"
+            testCases.get(inputId)?.inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
                 rounded-md px-2 py-1 border-single focus:outline-none text-lg
                 border-border focus:border-border-active w-auto no-scrollbar`
@@ -558,7 +582,7 @@ export function GraphInput({
             className="bg-clear-normal hover:bg-clear-hover
               active:bg-clear-active inline rounded-md px-2 py-1"
             onClick={() => {
-              if (inputFormat === "edges") {
+              if (testCases.get(inputId)?.inputFormat === "edges") {
                 (
                   document.getElementById(
                     "graphInputEdges" + inputId,

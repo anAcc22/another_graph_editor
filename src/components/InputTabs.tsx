@@ -16,8 +16,6 @@ interface Props {
   setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>;
   currentId: number;
   setCurrentId: React.Dispatch<React.SetStateAction<number>>;
-  inputFormat: InputFormat;
-  setInputFormat: React.Dispatch<React.SetStateAction<InputFormat>>;
   directed: boolean;
   setDirected: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -33,8 +31,6 @@ export function InputTabs({
   setTestCaseNumber,
   currentId,
   setCurrentId,
-  inputFormat,
-  setInputFormat,
   directed,
   setDirected,
 }: Props) {
@@ -102,8 +98,6 @@ export function InputTabs({
               setTestCases={setTestCases}
               inputId={input}
               currentId={currentId}
-              inputFormat={inputFormat}
-              setInputFormat={setInputFormat}
               directed={directed}
               setDirected={setDirected}
             />

@@ -23,6 +23,7 @@ export interface TestCase {
 export type TestCases = Map<number, TestCase>;
 
 export interface Settings {
+  settingsFormat: SettingsFormat;
   labelOffset: number;
   darkMode: boolean;
   nodeRadius: number;
@@ -42,6 +43,7 @@ export interface ParsedGraph {
 }
 
 export type InputFormat = "edges" | "parentChild";
+export type SettingsFormat = "general" | "appearance";
 
 export type ColorMap = Map<string, number>;
 

@@ -53,6 +53,7 @@ function App() {
     lockMode: false,
     fixedMode: false,
     multiedgeMode: true,
+    settingsFormat: "general",
   });
 
   return (

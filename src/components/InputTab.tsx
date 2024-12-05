@@ -30,7 +30,7 @@ export function InputTab({
         className={
           currentId === tabId
             ? `w-7 h-7 border-2 border-clear-normal duration-500 ease-in-out
-              transition hover:rounded-3xl bg-clear-hover hover:bg-clear-hover
+              transition hover:rounded-3xl bg-clear-hover hover:bg-clear-active
               rounded-md px-2 py-1 inline-flex items-center justify-center
               active:bg-tab-active`
             : `w-7 h-7 border-2 border-border duration-500 ease-in-out

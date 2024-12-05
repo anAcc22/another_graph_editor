@@ -70,8 +70,8 @@ export function InputTabs({
             ))}
             <button
               className="hover:bg-format-ok-hover duration-500 ease-in-out
-                transition-border hover:rounded-3xl bg-format-ok rounded-md px-2
-                py-1 w-7 h-7 inline-flex items-center justify-center border-2
+                transition hover:rounded-3xl bg-format-ok rounded-md px-2 py-1
+                w-7 h-7 inline-flex items-center justify-center border-2
                 border-format-ok-border active:bg-format-ok-active"
               onClick={() => {
                 const newTabId = testCaseNumber + 1;

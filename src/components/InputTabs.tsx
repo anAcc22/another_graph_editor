@@ -1,4 +1,4 @@
-import { TestCases, InputFormat } from "../types";
+import { TestCases, } from "../types";
 import { GraphInput } from "./GraphInput";
 import { InputTab } from "./InputTab";
 import { getDefaultGraph } from "./utils";

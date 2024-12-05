@@ -30,6 +30,7 @@ export interface Settings {
   fontSize: number;
   nodeBorderWidthHalf: number;
   edgeLength: number;
+  edgeLabelSeparation: number;
   showComponents: boolean;
   showBridges: boolean;
   treeMode: boolean;

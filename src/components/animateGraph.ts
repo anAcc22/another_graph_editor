@@ -166,8 +166,8 @@ function drawEdgeLabel(
 
   const mult = toReverse ? -1 : 1;
 
-  px += mult * 13 * bx;
-  py += mult * 13 * by;
+  px += mult * settings.edgeLabelSeparation * bx;
+  py += mult * settings.edgeLabelSeparation * by;
 
   const mx = (u.x + v.x) / 2;
   const my = (u.y + v.y) / 2;
@@ -389,6 +389,7 @@ let settings: Settings = {
   fontSize: 15,
   nodeBorderWidthHalf: 15,
   edgeLength: 10,
+  edgeLabelSeparation: 10,
   showComponents: false,
   showBridges: false,
   treeMode: false,

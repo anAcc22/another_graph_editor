@@ -51,6 +51,10 @@ function App() {
       localStorage.getItem("edgeLength") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLength")!)
         : 10,
+    edgeLabelSeparation:
+      localStorage.getItem("edgeLabelSeparation") !== null
+        ? Number.parseFloat(localStorage.getItem("edgeLabelSeparation")!)
+        : 10,
     showComponents: false,
     showBridges: false,
     treeMode: false,

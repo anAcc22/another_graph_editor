@@ -144,6 +144,37 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
             localStorage.setItem("edgeLength", newEdgeLength.toString());
           }}
         />
+
+        <h4 className="font-semibold">Edge Label Separation</h4>
+        <input
+          type="range"
+          min={0}
+          max={15}
+          step={1}
+          value={settings.edgeLabelSeparation - 10}
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newEdgeLabelSeparation = 10 + Number.parseInt(e.target.value);
+            setSettings({
+              ...settings,
+              edgeLabelSeparation: newEdgeLabelSeparation,
+            });
+            localStorage.setItem(
+              "edgeLabelSeparation",
+              newEdgeLabelSeparation.toString(),
+            );
+          }}
+        />
+
         <br />
       </div>
     </>

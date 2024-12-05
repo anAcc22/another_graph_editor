@@ -32,11 +32,11 @@ export function InputTab({
             ? `w-7 h-7 border-2 border-clear-normal duration-500 ease-in-out
               transition hover:rounded-3xl bg-clear-hover hover:bg-clear-active
               rounded-md px-2 py-1 inline-flex items-center justify-center
-              active:bg-tab-active`
+              active:bg-tab-active font-semibold`
             : `w-7 h-7 border-2 border-border duration-500 ease-in-out
               transition hover:rounded-3xl bg-block hover:border-border-hover
               hover:bg-bg-tab-hover rounded-md px-2 py-1 inline-flex
-              items-center justify-center active:bg-tab-active`
+              items-center justify-center active:bg-tab-active font-semibold`
         }
         id={tabId.toString()}
         onClick={() => {

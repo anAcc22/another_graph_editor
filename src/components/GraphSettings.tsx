@@ -22,10 +22,10 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
               settings.settingsFormat === "general"
                 ? `h-7 border-2 border-clear-normal bg-clear-hover
                   hover:bg-clear-active rounded-md px-2 py-1 inline-flex
-                  items-center justify-center active:bg-tab-active`
+                  items-center justify-center active:bg-tab-active font-semibold`
                 : `h-7 border-2 border-border bg-block hover:border-border-hover
                   hover:bg-bg-tab-hover rounded-md px-2 py-1 inline-flex
-                  items-center justify-center active:bg-tab-active`
+                  items-center justify-center active:bg-tab-active font-semibold`
             }
             onClick={() => {
               setSettings({ ...settings, settingsFormat: "general" });
@@ -38,10 +38,10 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
               settings.settingsFormat === "appearance"
                 ? `h-7 border-2 border-clear-normal bg-clear-hover
                   hover:bg-clear-active rounded-md px-2 py-1 inline-flex
-                  items-center justify-center active:bg-tab-active`
+                  items-center justify-center active:bg-tab-active font-semibold`
                 : `h-7 border-2 border-border bg-block hover:border-border-hover
                   hover:bg-bg-tab-hover rounded-md px-2 py-1 inline-flex
-                  items-center justify-center active:bg-tab-active`
+                  items-center justify-center active:bg-tab-active font-semibold`
             }
             onClick={() => {
               setSettings({ ...settings, settingsFormat: "appearance" });

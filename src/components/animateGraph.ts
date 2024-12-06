@@ -12,6 +12,9 @@ import { buildBipartite } from "./graphBipartite";
 
 import { buildBridges } from "./graphBridges";
 
+import { drawLine, drawArrow, drawBridge, drawEdgeLabel } from "./drawingTools";
+import { drawCircle, drawHexagon, drawOctagon } from "./drawingTools";
+
 interface Vector2D {
   x: number;
   y: number;
@@ -81,232 +84,6 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
-function drawArrow(
-  ctx: CanvasRenderingContext2D,
-  u: Vector2D,
-  v: Vector2D,
-  r: number,
-  toReverse: boolean,
-) {
-  const theta = Math.atan2(v.y - u.y, v.x - u.x);
-
-  let px = u.y - v.y;
-  let py = v.x - u.x;
-
-  const toFlip = r % 2 == 0;
-
-  px *= 0.375 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-  py *= 0.375 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-
-  ctx.lineWidth = 1.5 * nodeBorderWidthHalf;
-
-  ctx.strokeStyle = edgeColor;
-  ctx.fillStyle = edgeColor;
-
-  const mx = (u.x + v.x) / 2 + px;
-  const my = (u.y + v.y) / 2 + py;
-
-  ctx.beginPath();
-
-  const mult = toReverse ? -1 : 1;
-
-  ctx.moveTo(mx, my);
-  ctx.lineTo(
-    mx - mult * (nodeRadius / 2) * Math.cos(theta - Math.PI / 6),
-    my - mult * (nodeRadius / 2) * Math.sin(theta - Math.PI / 6),
-  );
-  ctx.lineTo(
-    mx - mult * (nodeRadius / 2) * Math.cos(theta + Math.PI / 6),
-    my - mult * (nodeRadius / 2) * Math.sin(theta + Math.PI / 6),
-  );
-  ctx.lineTo(mx, my);
-
-  ctx.fill();
-  ctx.stroke();
-}
-
-function drawBridge(ctx: CanvasRenderingContext2D, u: Vector2D, v: Vector2D) {
-  let px = u.y - v.y;
-  let py = v.x - u.x;
-
-  px *= nodeRadius / 5 / Math.hypot(px, py);
-  py *= nodeRadius / 5 / Math.hypot(px, py);
-
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
-
-  ctx.strokeStyle = edgeColor;
-
-  ctx.beginPath();
-
-  ctx.moveTo(u.x + px, u.y + py);
-  ctx.lineTo(v.x + px, v.y + py);
-
-  ctx.moveTo(u.x - px, u.y - py);
-  ctx.lineTo(v.x - px, v.y - py);
-
-  ctx.stroke();
-}
-
-function drawEdgeLabel(
-  ctx: CanvasRenderingContext2D,
-  u: Vector2D,
-  v: Vector2D,
-  r: number,
-  label: string,
-  toReverse: boolean,
-) {
-  let px = u.y - v.y;
-  let py = v.x - u.x;
-
-  const toFlip = r % 2 == 0;
-  const bx = px / euclidDist(u, v),
-    by = py / euclidDist(u, v);
-
-  px *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-  py *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-
-  const mult = toReverse ? -1 : 1;
-
-  px += mult * settings.edgeLabelSeparation * bx;
-  py += mult * settings.edgeLabelSeparation * by;
-
-  const mx = (u.x + v.x) / 2;
-  const my = (u.y + v.y) / 2;
-
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
-
-  ctx.beginPath();
-
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "center";
-
-  ctx.font = `${settings.fontSize}px JB`;
-  ctx.fillStyle = edgeLabelColor;
-
-  ctx.fillText(label, mx + px, my + py);
-}
-
-function drawOctagon(
-  ctx: CanvasRenderingContext2D,
-  u: Vector2D,
-  label: string,
-) {
-  const length = 14 + (3 * (nodeRadius - 16)) / 2;
-
-  let x = u.x;
-  let y = u.y;
-
-  if (Math.abs(u.y - nodeRadius - 2 * length) <= 5) {
-    y += nodeRadius + length;
-  } else {
-    y -= nodeRadius + length;
-  }
-
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
-
-  ctx.strokeStyle = nodeLabelOutlineColor;
-  ctx.fillStyle = fillColors[0];
-
-  ctx.setLineDash([1, 4]);
-  ctx.beginPath();
-
-  let theta = 0;
-
-  for (let i = 0; i < 9; i++, theta += Math.PI / 4) {
-    const nx = x + (length - nodeBorderWidthHalf) * Math.cos(theta);
-    const ny = y + (length - nodeBorderWidthHalf) * Math.sin(theta);
-    ctx.lineTo(nx, ny);
-  }
-
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "center";
-
-  ctx.font = `${settings.fontSize}px JB`;
-  ctx.fillStyle = nodeLabelColor;
-  ctx.fillText(label, x, y);
-}
-
-function drawLine(
-  ctx: CanvasRenderingContext2D,
-  u: Vector2D,
-  v: Vector2D,
-  r: number,
-) {
-  let px = u.y - v.y;
-  let py = v.x - u.x;
-
-  const toFlip = r % 2 == 0;
-
-  px *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-  py *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
-  ctx.strokeStyle = edgeColor;
-
-  ctx.beginPath();
-  ctx.moveTo(u.x, u.y);
-  ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
-
-  ctx.stroke();
-}
-
-function drawCircle(ctx: CanvasRenderingContext2D, u: Vector2D, sel: boolean) {
-  ctx.beginPath();
-
-  ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
-
-  ctx.fill();
-  ctx.stroke();
-
-  if (sel) {
-    ctx.beginPath();
-    ctx.arc(
-      u.x,
-      u.y,
-      SELECTED_SCALE * (nodeRadius - nodeBorderWidthHalf),
-      0,
-      2 * Math.PI,
-    );
-    ctx.stroke();
-  }
-}
-
-function drawHexagon(ctx: CanvasRenderingContext2D, u: Vector2D, sel: boolean) {
-  ctx.beginPath();
-
-  const length = nodeRadius - nodeBorderWidthHalf;
-
-  let theta = Math.PI / 6;
-
-  for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
-    const x = u.x + length * Math.cos(theta);
-    const y = u.y + length * Math.sin(theta);
-    ctx.lineTo(x, y);
-  }
-
-  ctx.fill();
-  ctx.stroke();
-
-  if (sel) {
-    ctx.beginPath();
-
-    const length = SELECTED_SCALE * (nodeRadius - nodeBorderWidthHalf);
-
-    let theta = Math.PI / 6;
-
-    for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
-      const x = u.x + length * Math.cos(theta);
-      const y = u.y + length * Math.sin(theta);
-      ctx.lineTo(x, y);
-    }
-
-    ctx.stroke();
-  }
-}
-
 const FPS = 60;
 
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
@@ -326,7 +103,6 @@ const NODE_LABEL_OUTLINE_DARK = "hsl(10, 2%, 30%)";
 const TEXT_Y_OFFSET = 1;
 
 const NODE_FRICTION = 0.05;
-const SELECTED_SCALE = 1.25;
 
 const CANVAS_FIELD_DIST = 50;
 
@@ -551,6 +327,10 @@ function updateVelocities() {
     };
 
     if (layerMap !== undefined) {
+      nodeMap.get(u)!.vel = {
+        x: nodeMap.get(u)!.vel.x,
+        y: 0,
+      };
       const depth = layerMap.get(u)![0];
       const maxDepth = layerMap.get(u)![1];
 
@@ -754,9 +534,15 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
       ];
 
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
-      drawHexagon(ctx, node.pos, node.selected);
+      drawHexagon(
+        ctx,
+        node.pos,
+        node.selected,
+        nodeBorderWidthHalf,
+        nodeRadius,
+      );
     } else {
-      drawCircle(ctx, node.pos, node.selected);
+      drawCircle(ctx, node.pos, node.selected, nodeBorderWidthHalf, nodeRadius);
     }
 
     ctx.textBaseline = "middle";
@@ -773,7 +559,16 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     );
 
     if (nodeLabels.has(nodes[i])) {
-      drawOctagon(ctx, node.pos, nodeLabels.get(nodes[i])!);
+      drawOctagon(
+        ctx,
+        node.pos,
+        nodeLabels.get(nodes[i])!,
+        settings,
+        nodeBorderWidthHalf,
+        nodeRadius,
+        nodeLabelColor,
+        nodeLabelOutlineColor,
+      );
     }
   }
 }
@@ -824,15 +619,24 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
       edrMax === 0 &&
       bridgeMap.get(eBase)
     ) {
-      drawBridge(ctx, pt1, pt2);
+      drawBridge(ctx, pt1, pt2, nodeBorderWidthHalf, nodeRadius, edgeColor);
     } else {
-      drawLine(ctx, pt1, pt2, edr);
+      drawLine(ctx, pt1, pt2, edr, nodeBorderWidthHalf, edgeColor);
     }
 
     ctx.setLineDash([]);
 
     if (directed) {
-      drawArrow(ctx, pt1, pt2, edr, toReverse);
+      drawArrow(
+        ctx,
+        pt1,
+        pt2,
+        edr,
+        toReverse,
+        nodeBorderWidthHalf,
+        nodeRadius,
+        edgeColor,
+      );
     }
 
     let labelReverse = false;
@@ -840,12 +644,42 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
-        drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!, labelReverse);
+        drawEdgeLabel(
+          ctx,
+          pt1,
+          pt2,
+          edr,
+          edgeLabels.get(e)!,
+          labelReverse,
+          settings,
+          nodeBorderWidthHalf,
+          edgeLabelColor,
+        );
       } else {
         if (e < eRev) {
-          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!, labelReverse);
+          drawEdgeLabel(
+            ctx,
+            pt1,
+            pt2,
+            edr,
+            edgeLabels.get(e)!,
+            labelReverse,
+            settings,
+            nodeBorderWidthHalf,
+            edgeLabelColor,
+          );
         } else {
-          drawEdgeLabel(ctx, pt1, pt2, edr, edgeLabels.get(e)!, labelReverse);
+          drawEdgeLabel(
+            ctx,
+            pt1,
+            pt2,
+            edr,
+            edgeLabels.get(e)!,
+            labelReverse,
+            settings,
+            nodeBorderWidthHalf,
+            edgeLabelColor,
+          );
         }
       }
     }

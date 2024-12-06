@@ -75,6 +75,24 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           <></>
         )}
 
+        {!directed && localStorage.getItem("isEdgeNumeric") === "true" ? (
+          <SettingsToggleSection
+            title={"Minimum Spanning Tree(s)"}
+            leftLabel={"Hide"}
+            rightLabel={"Show"}
+            toggleId={"settingsShowMSTs"}
+            settingsName={"showMSTs"}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        ) : !directed ? (
+          <h4 className="font-semibold text-border">
+            <s>Minimum Spanning Tree(s)</s>
+          </h4>
+        ) : (
+          <></>
+        )}
+
         {!directed ? (
           <SettingsToggleSection
             title={"Tree Mode"}
@@ -100,7 +118,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             setSettings={setSettings}
           />
         ) : (
-          <h4 className="font-semibold text-base">
+          <h4 className="font-semibold text-border">
             <s>Bipartite Mode</s>
           </h4>
         )}

@@ -33,6 +33,7 @@ export interface Settings {
   edgeLabelSeparation: number;
   showComponents: boolean;
   showBridges: boolean;
+  showMSTs: boolean;
   treeMode: boolean;
   bipartiteMode: boolean;
   lockMode: boolean;
@@ -58,3 +59,5 @@ export type LayerMap = Map<string, Layer>;
 
 export type BackedgeMap = Map<string, boolean>;
 export type BridgeMap = Map<string, boolean>;
+
+export type MSTMap = Map<string, boolean>;

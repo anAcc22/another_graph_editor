@@ -1,6 +1,13 @@
 import { TestCases } from "../types";
 import { Settings } from "../types";
-import { ColorMap, CutMap, LayerMap, BackedgeMap, BridgeMap } from "../types";
+import {
+  ColorMap,
+  CutMap,
+  LayerMap,
+  BackedgeMap,
+  BridgeMap,
+  MSTMap,
+} from "../types";
 
 import { stripNode } from "./utils";
 
@@ -11,6 +18,8 @@ import { buildTreeLayers } from "./graphTreeLayers";
 import { buildBipartite } from "./graphBipartite";
 
 import { buildBridges } from "./graphBridges";
+
+import { buildMSTs } from "./graphMSTs";
 
 import { drawLine, drawArrow, drawBridge, drawEdgeLabel } from "./drawingTools";
 import { drawCircle, drawHexagon, drawOctagon } from "./drawingTools";
@@ -170,6 +179,7 @@ let settings: Settings = {
   edgeLabelSeparation: 10,
   showComponents: false,
   showBridges: false,
+  showMSTs: false,
   treeMode: false,
   bipartiteMode: false,
   lockMode: false,
@@ -204,6 +214,8 @@ let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
 
 let backedgeMap: BackedgeMap | undefined = undefined;
+
+let mstMap: MSTMap | undefined = undefined;
 
 let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
@@ -385,6 +397,7 @@ function buildSettings(): void {
   backedgeMap = undefined;
   cutMap = undefined;
   bridgeMap = undefined;
+  mstMap = undefined;
 
   if (settings.bipartiteMode) {
     let isBipartite: boolean;
@@ -410,11 +423,16 @@ function buildSettings(): void {
     if (settings.showBridges) {
       [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
     }
+    if (settings.showMSTs) {
+      mstMap = buildMSTs(nodes, edges, edgeLabels);
+    }
   }
 }
 
 export function updateGraph(testCases: TestCases) {
   nodesToConceal.clear();
+
+  let isEdgeNumeric = true;
 
   let rawNodes: string[] = [];
   let rawEdges: string[] = [];
@@ -467,6 +485,18 @@ export function updateGraph(testCases: TestCases) {
     });
   });
 
+  for (const e of rawEdges) {
+    if (
+      rawEdgeLabels.get(e) === undefined ||
+      !isInteger(rawEdgeLabels.get(e)!)
+    ) {
+      isEdgeNumeric = false;
+      break;
+    }
+  }
+
+  localStorage.setItem("isEdgeNumeric", isEdgeNumeric.toString());
+
   updateNodes(rawNodes);
   updateEdges(rawEdges);
 
@@ -477,7 +507,7 @@ export function updateGraph(testCases: TestCases) {
 
   adj.forEach((vs, u) => {
     adjSet.set(u, new Set<string>(vs));
-  })
+  });
 
   nodeLabels = new Map<string, string>(rawNodeLabels);
   edgeLabels = new Map<string, string>(rawEdgeLabels);
@@ -525,10 +555,10 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.strokeStyle = strokeColor;
     ctx.fillStyle =
       fillColors[
-      colorMap === undefined
-        ? 0
-        : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
-    ];
+        colorMap === undefined
+          ? 0
+          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
+      ];
 
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
       drawHexagon(
@@ -602,23 +632,34 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     if (
       settings.treeMode &&
-        backedgeMap !== undefined &&
-        (edr !== 0 || backedgeMap.get(eBase))
+      backedgeMap !== undefined &&
+      (edr !== 0 || backedgeMap.get(eBase))
     ) {
       ctx.setLineDash([2, 10]);
     }
 
     ctx.strokeStyle = strokeColor;
 
+    let thickness = nodeBorderWidthHalf;
+
+    if (
+      localStorage.getItem("isEdgeNumeric") === "true" &&
+      settings.showMSTs &&
+      mstMap !== undefined &&
+      mstMap.get(e)
+    ) {
+      thickness *= 2;
+    }
+
     if (
       settings.showBridges &&
-        bridgeMap !== undefined &&
-        edrMax === 0 &&
-        bridgeMap.get(eBase)
+      bridgeMap !== undefined &&
+      edrMax === 0 &&
+      bridgeMap.get(eBase)
     ) {
-      drawBridge(ctx, pt1, pt2, nodeBorderWidthHalf, nodeRadius, edgeColor);
+      drawBridge(ctx, pt1, pt2, thickness, nodeRadius, edgeColor);
     } else {
-      drawLine(ctx, pt1, pt2, edr, nodeBorderWidthHalf, edgeColor);
+      drawLine(ctx, pt1, pt2, edr, thickness, edgeColor);
     }
 
     ctx.setLineDash([]);
@@ -630,7 +671,7 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
         pt2,
         edr,
         toReverse,
-        nodeBorderWidthHalf,
+        thickness,
         nodeRadius,
         edgeColor,
       );

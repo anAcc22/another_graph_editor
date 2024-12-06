@@ -56,6 +56,7 @@ function App() {
         : 10,
     showComponents: false,
     showBridges: false,
+    showMSTs: false,
     treeMode: false,
     bipartiteMode: false,
     lockMode: false,
@@ -87,11 +88,16 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            6 Dec 2024
+            <ul className="list-disc list-inside">
+              <li>Add minimum spanning tree(s)</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             5 Dec 2024
             <ul className="list-disc list-inside">
               <li>Support multiple graphs (aka testcases)</li>
               <li>
-                Split settings into <b>general</b> and <b>appearance</b>.
+                Split settings into <b>general</b> and <b>appearance</b>
               </li>
               <li>
                 Add <b>bipartite mode</b>

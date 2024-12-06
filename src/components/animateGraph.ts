@@ -198,6 +198,8 @@ let edgeLabels = new Map<string, string>();
 let adj = new Map<string, string[]>();
 let rev = new Map<string, string[]>();
 
+let adjSet = new Map<string, Set<string>>(); // PERF: used to compute `isEdge`
+
 let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
 
@@ -273,7 +275,7 @@ function updateVelocities() {
 
         let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 
-        let isEdge = adj.get(u)!.includes(v) || adj.get(v)!.includes(u);
+        let isEdge = adjSet.get(u)!.has(v) || adjSet.get(v)!.has(u);
 
         if (isEdge) {
           aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
@@ -471,6 +473,12 @@ export function updateGraph(testCases: TestCases) {
   adj = new Map<string, string[]>(rawAdj);
   rev = new Map<string, string[]>(rawRev);
 
+  adjSet = new Map<string, Set<string>>();
+
+  adj.forEach((vs, u) => {
+    adjSet.set(u, new Set<string>(vs));
+  })
+
   nodeLabels = new Map<string, string>(rawNodeLabels);
   edgeLabels = new Map<string, string>(rawEdgeLabels);
 
@@ -517,10 +525,10 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.strokeStyle = strokeColor;
     ctx.fillStyle =
       fillColors[
-        colorMap === undefined
-          ? 0
-          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
-      ];
+      colorMap === undefined
+        ? 0
+        : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
+    ];
 
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
       drawHexagon(
@@ -594,8 +602,8 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     if (
       settings.treeMode &&
-      backedgeMap !== undefined &&
-      (edr !== 0 || backedgeMap.get(eBase))
+        backedgeMap !== undefined &&
+        (edr !== 0 || backedgeMap.get(eBase))
     ) {
       ctx.setLineDash([2, 10]);
     }
@@ -604,9 +612,9 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
     if (
       settings.showBridges &&
-      bridgeMap !== undefined &&
-      edrMax === 0 &&
-      bridgeMap.get(eBase)
+        bridgeMap !== undefined &&
+        edrMax === 0 &&
+        bridgeMap.get(eBase)
     ) {
       drawBridge(ctx, pt1, pt2, nodeBorderWidthHalf, nodeRadius, edgeColor);
     } else {

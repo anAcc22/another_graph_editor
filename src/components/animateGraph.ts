@@ -273,18 +273,7 @@ function updateVelocities() {
 
         let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 
-        let isEdge = false;
-
-        const toMatch = [u, v].join(" ");
-        const toMatchRev = [v, u].join(" ");
-
-        for (const e of edges) {
-          const _ = e.split(" ");
-          const edgBase = [_[0], _[1]].join(" ");
-          if (edgBase === toMatch || edgBase === toMatchRev) {
-            isEdge = true;
-          }
-        }
+        let isEdge = adj.get(u)!.includes(v) || adj.get(v)!.includes(u);
 
         if (isEdge) {
           aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;

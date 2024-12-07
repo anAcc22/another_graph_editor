@@ -23,6 +23,8 @@ export interface TestCase {
 export type TestCases = Map<number, TestCase>;
 
 export interface Settings {
+  markBorder: MarkBorder;
+  markColor: number;
   settingsFormat: SettingsFormat;
   labelOffset: number;
   darkMode: boolean;
@@ -37,6 +39,7 @@ export interface Settings {
   treeMode: boolean;
   bipartiteMode: boolean;
   lockMode: boolean;
+  markedNodes: boolean;
   fixedMode: boolean;
   multiedgeMode: boolean;
 }
@@ -61,3 +64,5 @@ export type BackedgeMap = Map<string, boolean>;
 export type BridgeMap = Map<string, boolean>;
 
 export type MSTMap = Map<string, boolean>;
+
+export type MarkBorder = "single" | "double";

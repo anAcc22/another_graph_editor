@@ -29,6 +29,8 @@ function App() {
   const [inputs, setInputs] = useState<number[]>([0]);
 
   const [settings, setSettings] = useState<Settings>({
+    markBorder: "double",
+    markColor: 1,
     labelOffset: 0,
     darkMode:
       localStorage.getItem("darkMode") !== null
@@ -60,6 +62,10 @@ function App() {
     treeMode: false,
     bipartiteMode: false,
     lockMode: false,
+    markedNodes:
+      localStorage.getItem("markedNodes") !== null
+        ? localStorage.getItem("markedNodes") == "true"
+        : false,
     fixedMode: false,
     multiedgeMode: true,
     settingsFormat: "general",
@@ -88,12 +94,18 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
-            6 Dec 2024
+            <p>7 Dec 2024</p>
+            <ul className="list-disc list-inside">
+              <li>Add <b>palette</b> to color nodes on click</li>
+              <li>Allow user to disable marking behavior</li>
+            </ul>
+            <hr className="border-dashed border-border" />
+            <p>6 Dec 2024</p>
             <ul className="list-disc list-inside">
               <li>Add minimum spanning tree(s)</li>
             </ul>
             <hr className="border-dashed border-border" />
-            5 Dec 2024
+            <p>5 Dec 2024</p>
             <ul className="list-disc list-inside">
               <li>Support multiple graphs (aka testcases)</li>
               <li>
@@ -104,7 +116,7 @@ function App() {
               </li>
             </ul>
             <hr className="border-dashed border-border" />
-            11 Nov 2024
+            <p>11 Nov 2024</p>
             <ul className="list-disc list-inside">
               <li>
                 Add <b>multiedge mode</b> (enabled by default)
@@ -114,7 +126,7 @@ function App() {
               </li>
             </ul>
             <hr className="border-dashed border-border" />
-            10 Nov 2024
+            <p>10 Nov 2024</p>
             <ul className="list-disc list-inside">
               <li>Mark/Unmark nodes on click</li>
             </ul>
@@ -164,6 +176,7 @@ function App() {
             testCases={testCases}
             directed={directed}
             settings={settings}
+            setSettings={setSettings}
           />
         </div>
 

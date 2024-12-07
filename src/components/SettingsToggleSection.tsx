@@ -60,6 +60,12 @@ export function SettingsToggleSection({
                         newSettings.darkMode.toString(),
                       );
                     }
+                    if (settingsName === "markedNodes") {
+                      localStorage.setItem(
+                        "markedNodes",
+                        newSettings.markedNodes.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -109,6 +115,12 @@ export function SettingsToggleSection({
                         newSettings.darkMode.toString(),
                       );
                     }
+                    if (settingsName === "markedNodes") {
+                      localStorage.setItem(
+                        "markedNodes",
+                        newSettings.markedNodes.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -150,6 +162,12 @@ export function SettingsToggleSection({
                   localStorage.setItem(
                     "darkMode",
                     newSettings.darkMode.toString(),
+                  );
+                }
+                if (settingsName === "markedNodes") {
+                  localStorage.setItem(
+                    "markedNodes",
+                    newSettings.markedNodes.toString(),
                   );
                 }
                 return newSettings;

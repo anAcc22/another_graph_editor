@@ -147,14 +147,36 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
         />
 
         <SettingsToggleSection
-          title={"Fixed Mode"}
-          leftLabel={"Off"}
-          rightLabel={"On"}
-          toggleId={"settingsFixedMode"}
-          settingsName={"fixedMode"}
+          title={"Mark/Unmark Nodes on Click"}
+          leftLabel={"Disable"}
+          rightLabel={"Enable"}
+          toggleId={"settingsMarkedNodes"}
+          settingsName={"markedNodes"}
           settings={settings}
           setSettings={setSettings}
         />
+
+        {settings.markedNodes ? (
+          <SettingsToggleSection
+            title={"Fixed Mode"}
+            leftLabel={"Off"}
+            rightLabel={"On"}
+            toggleId={"settingsFixedMode"}
+            settingsName={"fixedMode"}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        ) : (
+          <SettingsToggleSectionDimmed
+            title={"Fixed Mode"}
+            leftLabel={"Off"}
+            rightLabel={"On"}
+            toggleId={"settingsFixedMode"}
+            settingsName={"fixedMode"}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        )}
 
         <SettingsToggleSection
           title={"Multiedge Mode"}

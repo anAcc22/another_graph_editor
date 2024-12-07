@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
+import { GraphPalette } from "./GraphPalette";
+
 import { updateDirected } from "./animateGraph";
 import { updateSettings } from "./animateGraph";
 import { animateGraph } from "./animateGraph";
@@ -15,9 +17,10 @@ interface Props {
   testCases: TestCases;
   directed: boolean;
   settings: Settings;
+  setSettings: React.Dispatch<React.SetStateAction<Settings>>
 }
 
-export function GraphCanvas({ testCases, directed, settings }: Props) {
+export function GraphCanvas({ testCases, directed, settings, setSettings }: Props) {
   let ref = useRef<HTMLCanvasElement>(null);
 
   const [image, setImage] = useState<string>();
@@ -92,6 +95,7 @@ export function GraphCanvas({ testCases, directed, settings }: Props) {
           m-auto sm:top-1/8 sm:left-1/16 lg:top-1/2 lg:left-1/2
           lg:-translate-x-1/2 lg:-translate-y-1/2 sm:absolute lg:absolute"
       >
+        <GraphPalette settings={settings} setSettings={setSettings} />
         <canvas
           ref={ref}
           className="active:cursor-pointer h-full border-2 border-border
@@ -101,7 +105,7 @@ export function GraphCanvas({ testCases, directed, settings }: Props) {
         <a
           download="graph.png"
           href={image}
-          className="font-jetbrains text-sm w-36 mt-2 text-center border-2
+          className="font-jetbrains text-sm w-36 mt-3 text-center border-2
             border-border rounded-lg px-2 py-1 justify-between items-center
             hover:border-border-hover hover:cursor-pointer ml-auto"
         >

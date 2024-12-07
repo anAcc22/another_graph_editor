@@ -21,7 +21,9 @@ export function SettingsToggleSectionDimmed({
 }: Props) {
   return (
     <>
-      <h4 className="font-semibold text-base text-border-hover"><s>{title}</s></h4>
+      <h4 className="font-semibold text-base text-border-hover">
+        <s>{title}</s>
+      </h4>
       <div className="flex font-light text-sm justify-between">
         <span>
           <span>
@@ -58,6 +60,12 @@ export function SettingsToggleSectionDimmed({
                       localStorage.setItem(
                         "darkMode",
                         newSettings.darkMode.toString(),
+                      );
+                    }
+                    if (settingsName === "markedNodes") {
+                      localStorage.setItem(
+                        "markedNodes",
+                        newSettings.markedNodes.toString(),
                       );
                     }
                     return newSettings;
@@ -109,6 +117,12 @@ export function SettingsToggleSectionDimmed({
                         newSettings.darkMode.toString(),
                       );
                     }
+                    if (settingsName === "markedNodes") {
+                      localStorage.setItem(
+                        "markedNodes",
+                        newSettings.markedNodes.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -150,6 +164,12 @@ export function SettingsToggleSectionDimmed({
                   localStorage.setItem(
                     "darkMode",
                     newSettings.darkMode.toString(),
+                  );
+                }
+                if (settingsName === "markedNodes") {
+                  localStorage.setItem(
+                    "markedNodes",
+                    newSettings.markedNodes.toString(),
                   );
                 }
                 return newSettings;

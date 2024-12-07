@@ -1,5 +1,6 @@
 import { Settings } from "../types";
 import { SettingsToggleSection } from "./SettingsToggleSection";
+import { SettingsToggleSectionDimmed } from "./SettingsToggleSectionDimmed";
 
 interface Props {
   directed: boolean;
@@ -86,9 +87,15 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             setSettings={setSettings}
           />
         ) : !directed ? (
-          <h4 className="font-semibold text-border">
-            <s>Minimum Spanning Tree(s)</s>
-          </h4>
+          <SettingsToggleSectionDimmed
+            title={"Minimum Spanning Tree(s)"}
+            leftLabel={"Hide"}
+            rightLabel={"Show"}
+            toggleId={"settingsShowMSTs"}
+            settingsName={"showMSTs"}
+            settings={settings}
+            setSettings={setSettings}
+          />
         ) : (
           <></>
         )}
@@ -118,9 +125,15 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             setSettings={setSettings}
           />
         ) : (
-          <h4 className="font-semibold text-border">
-            <s>Bipartite Mode</s>
-          </h4>
+          <SettingsToggleSectionDimmed
+            title={"Bipartite Mode"}
+            leftLabel={"Off"}
+            rightLabel={"On"}
+            toggleId={"settingsBipartiteMode"}
+            settingsName={"bipartiteMode"}
+            settings={settings}
+            setSettings={setSettings}
+          />
         )}
 
         <SettingsToggleSection

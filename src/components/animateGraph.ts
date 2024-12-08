@@ -883,9 +883,9 @@ export function animateGraph(
       const u = draggedNodes[0];
       const sel = nodeMap.get(u)!.selected;
       if (settings.markedNodes) nodeMap.get(u)!.selected = !sel;
-      if (settings.markColor === 1) {
+      if (settings.markColor === 2) {
         nodeMap.get(u)!.markColor = undefined;
-      } else {
+      } else if (settings.markColor >= 3) {
         nodeMap.get(u)!.markColor = settings.markColor;
       }
     }

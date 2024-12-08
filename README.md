@@ -31,8 +31,9 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 - Undirected/directed graphs
 - Normal/tree/bipartite modes
 - Lock mode (fix marked nodes in place)
-- Show/hide bridges and cut vertices
-- Show/hide components
+- Bridges and cut vertices
+- (Strongly-connected) components
+- Minimum spanning tree(s)
 - Multi-edge support
 - Multi-testcase support
 
@@ -84,6 +85,17 @@ the red cross to delete it.
 > When you delete a tab, all graph data within that tab will be destroyed,
 > so please proceed with caution.
 
+## Node Coloring
+
+Using the palette situated above the main canvas, you may select a color
+and upon clicking a node, it'll take on your selected color.
+
+> [!CAUTION]
+> Your color will override those produced by *Components* or *Bipartite Mode*.
+
+The top leftmost circle in the palette resets the cursor to normal, while
+the red circle just below it erases the color of any colored node.
+
 ## Configuration
 
 There are two means of configuration: **General** and **Appearance**, the
@@ -107,6 +119,20 @@ A *cut vertice* (aka articulation point) is defined similarly.
 
 Bridges are represented with two parallel lines, while cut vertices take
 on a hexagonal shape.
+
+#### Minimum Spanning Tree(s)
+
+If *all* edge weights are provided and they are of numeric value, this mode
+becomes available. MSTs are computed for each component, and edges that
+are part of the MSTs are bolded.
+
+<p align="center">
+    <img src="screenshots/mst.png?" />
+</p>
+
+<p align="center">
+<em>A Minimum Spanning Tree</em>
+</p>
 
 #### Tree Mode
 
@@ -175,11 +201,18 @@ By default, the graph is in *Force Mode*, where edges hold everything together
 and nodes repel one another, creating a cool space-like effect. To disable
 this behavior, simply toggle *Lock Mode*.
 
+#### Mark/Unmark Nodes on Click
+
+When enabled, you may *mark* a node by clicking it. These nodes have a double
+border.
+
+> [!TIP]
+> If you prefer to color nodes instead, you might want to disable this
+> feature.
+
 #### Fixed Mode
 
-You may *mark* a node by clicking it, these nodes have a double border. By
-default, they'll float around as usual. If you wish to fix them in place,
-toggle *Fixed Mode*.
+If you wish to fix *marked nodes* in place, toggle *Fixed Mode*.
 
 #### Multiedge Mode
 

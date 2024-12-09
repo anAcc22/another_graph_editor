@@ -29,7 +29,7 @@ function App() {
   const [inputs, setInputs] = useState<number[]>([0]);
 
   const [settings, setSettings] = useState<Settings>({
-    expandedCanvas: true,
+    expandedCanvas: false,
     markBorder: "double",
     markColor: 1,
     labelOffset: 0,

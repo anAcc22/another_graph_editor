@@ -29,6 +29,7 @@ function App() {
   const [inputs, setInputs] = useState<number[]>([0]);
 
   const [settings, setSettings] = useState<Settings>({
+    expandedCanvas: true,
     markBorder: "double",
     markColor: 1,
     labelOffset: 0,
@@ -94,9 +95,18 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>9 Dec 2024</p>
+            <ul className="list-disc list-inside">
+              <li>
+                Add toggle button to expand/shrink canvas
+              </li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>7 Dec 2024</p>
             <ul className="list-disc list-inside">
-              <li>Add <b>palette</b> to color nodes on click</li>
+              <li>
+                Add <b>palette</b> to color nodes on click
+              </li>
               <li>Allow user to disable marking behavior</li>
             </ul>
             <hr className="border-dashed border-border" />
@@ -180,11 +190,15 @@ function App() {
           />
         </div>
 
-        <GraphSettings
-          directed={directed}
-          settings={settings}
-          setSettings={setSettings}
-        />
+        {settings.expandedCanvas ? (
+          <></>
+        ) : (
+          <GraphSettings
+            directed={directed}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        )}
       </div>
     </>
   );

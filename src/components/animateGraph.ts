@@ -258,6 +258,7 @@ let oldDirected = false;
 let directed = false;
 
 let settings: Settings = {
+  expandedCanvas: false,
   markBorder: "double",
   markColor: 1,
   settingsFormat: "general",

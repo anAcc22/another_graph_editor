@@ -23,6 +23,7 @@ export interface TestCase {
 export type TestCases = Map<number, TestCase>;
 
 export interface Settings {
+  expandedCanvas: boolean;
   markBorder: MarkBorder;
   markColor: number;
   settingsFormat: SettingsFormat;

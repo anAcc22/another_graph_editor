@@ -161,12 +161,23 @@ export function drawCircle(
   sel: boolean,
   nodeBorderWidthHalf: number,
   nodeRadius: number,
+  isTransparent: boolean,
 ) {
   ctx.beginPath();
 
+  if (isTransparent) {
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+  }
+
   ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
 
-  ctx.fill();
+  if (!isTransparent) {
+    ctx.fill();
+  }
+
   ctx.stroke();
 
   if (sel) {
@@ -188,12 +199,23 @@ export function drawHexagon(
   sel: boolean,
   nodeBorderWidthHalf: number,
   nodeRadius: number,
+  isTransparent: boolean,
 ) {
   ctx.beginPath();
 
   const length = nodeRadius - nodeBorderWidthHalf;
-
   let theta = Math.PI / 6;
+
+  if (isTransparent) {
+    ctx.globalCompositeOperation = "destination-out";
+    for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
+      const x = u.x + length * Math.cos(theta);
+      const y = u.y + length * Math.sin(theta);
+      ctx.lineTo(x, y);
+    }
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+  }
 
   for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
     const x = u.x + length * Math.cos(theta);
@@ -201,7 +223,10 @@ export function drawHexagon(
     ctx.lineTo(x, y);
   }
 
-  ctx.fill();
+  if (!isTransparent) {
+    ctx.fill();
+  }
+
   ctx.stroke();
 
   if (sel) {

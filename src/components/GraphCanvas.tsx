@@ -26,12 +26,13 @@ export function GraphCanvas({
   settings,
   setSettings,
 }: Props) {
-  let ref = useRef<HTMLCanvasElement>(null);
+  let refMain = useRef<HTMLCanvasElement>(null);
+  let refOverall = useRef<HTMLCanvasElement>(null);
 
   const [image, setImage] = useState<string>();
 
-  const resizeCanvas = (): void => {
-    let canvas = ref.current;
+  const resizeCanvasMain = (): void => {
+    let canvas = refMain.current;
 
     if (canvas === null) {
       console.log("Error: `canvas` is null!");
@@ -62,16 +63,8 @@ export function GraphCanvas({
     resizeGraph(rect.width - canvasBorderX, rect.height - canvasBorderY);
   };
 
-  useEffect(() => {
-    let font = new FontFace(
-      "JB",
-      "url(/another_graph_editor/JetBrainsMono-Bold.ttf)",
-    );
-
-    font.load();
-    document.fonts.add(font);
-
-    let canvas = ref.current;
+  const resizeCanvasOverall = (): void => {
+    let canvas = refOverall.current;
 
     if (canvas === null) {
       console.log("Error: `canvas` is null!");
@@ -85,13 +78,53 @@ export function GraphCanvas({
       return;
     }
 
-    resizeCanvas();
+    const pixelRatio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
 
-    animateGraph(canvas, ctx, setImage);
+    const width = pixelRatio * rect.width;
+    const height = pixelRatio * rect.height;
 
-    window.addEventListener("resize", resizeCanvas);
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx.scale(pixelRatio, pixelRatio);
+  };
+
+  useEffect(() => {
+    let font = new FontFace(
+      "JB",
+      "url(/another_graph_editor/JetBrainsMono-Bold.ttf)",
+    );
+
+    font.load();
+    document.fonts.add(font);
+
+    let canvasMain = refMain.current;
+    let canvasOverall = refOverall.current;
+
+    if (canvasMain === null || canvasOverall === null) {
+      console.log("Error: canvas is null!");
+      return;
+    }
+
+    let ctxMain = canvasMain.getContext("2d");
+    let ctxOverall = canvasOverall.getContext("2d");
+
+    if (ctxMain === null || ctxOverall === null) {
+      console.log("Error: canvas context is null!");
+      return;
+    }
+
+    resizeCanvasMain();
+    resizeCanvasOverall();
+
+    animateGraph(canvasMain, canvasOverall, ctxMain, ctxOverall, setImage);
+
+    window.addEventListener("resize", resizeCanvasMain);
+    window.addEventListener("resize", resizeCanvasOverall);
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("resize", resizeCanvasMain);
+      window.removeEventListener("resize", resizeCanvasOverall);
     };
   }, []);
 
@@ -105,7 +138,8 @@ export function GraphCanvas({
 
   useEffect(() => {
     updateSettings(settings);
-    resizeCanvas();
+    resizeCanvasMain();
+    resizeCanvasOverall();
   }, [settings]);
 
   return (
@@ -138,12 +172,20 @@ export function GraphCanvas({
             {settings.expandedCanvas ? "⇤" : "⇥"}
           </button>
         </div>
-        <canvas
-          ref={ref}
-          className="active:cursor-pointer h-full border-2 border-border
-            hover:border-border-hover rounded-lg bg-block shadow shadow-shadow
-            touch-none"
-        ></canvas>
+        <div className="h-full w-full relative">
+          <canvas
+            ref={refOverall}
+            className="active:cursor-pointer border-2 border-border
+              hover:border-border-hover rounded-lg bg-block shadow shadow-shadow
+              touch-none top-0 bottom-0 left-0 right-0 w-full h-full absolute"
+          ></canvas>
+          <canvas
+            ref={refMain}
+            className="active:cursor-pointer border-2 border-border
+              hover:border-border-hover rounded-lg bg-block shadow shadow-shadow
+              touch-none top-0 bottom-0 left-0 right-0 w-full h-full absolute"
+          ></canvas>
+        </div>
         <a
           download="graph.png"
           href={image}

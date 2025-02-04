@@ -646,6 +646,9 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
     ctx.lineCap = "round";
 
     ctx.strokeStyle = strokeColor;
+
+    let isTransparent = colorMap === undefined;
+
     ctx.fillStyle =
       fillColors[
         colorMap === undefined
@@ -654,6 +657,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
       ];
 
     if (nodeMap.get(nodes[i])!.markColor !== undefined) {
+      isTransparent = false;
       const idx = nodeMap.get(nodes[i])!.markColor!;
       const color = settings.darkMode
         ? FILL_PALETTE_DARK[idx]
@@ -668,9 +672,17 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
         node.selected,
         nodeBorderWidthHalf,
         nodeRadius,
+        isTransparent,
       );
     } else {
-      drawCircle(ctx, node.pos, node.selected, nodeBorderWidthHalf, nodeRadius);
+      drawCircle(
+        ctx,
+        node.pos,
+        node.selected,
+        nodeBorderWidthHalf,
+        nodeRadius,
+        isTransparent,
+      );
     }
 
     ctx.textBaseline = "middle";
@@ -827,7 +839,9 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
 
 export function animateGraph(
   canvas: HTMLCanvasElement,
+  canvasScreenshot: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
+  ctxScreenshot: CanvasRenderingContext2D,
   setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) {
   generateRandomCoords();
@@ -923,8 +937,10 @@ export function animateGraph(
       renderEdges(ctx);
       renderNodes(ctx);
 
-      if (currentTime % 30 === 0) {
-        setImage(canvas.toDataURL("image/png"));
+      if (currentTime % 80 === 0) {
+        ctxScreenshot.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
+        ctxScreenshot.drawImage(canvas, 0, 0);
+        setImage(canvasScreenshot.toDataURL("image/png"));
         currentTime = 1;
       } else {
         currentTime++;

@@ -412,7 +412,7 @@ export function GraphInput({
               type="checkbox"
               id={"directedCheckbox" + inputId}
               className="peer invisible"
-              checked={directed}
+              defaultChecked={directed}
             />
             <span
               className="absolute top-0 left-0 w-9 h-5 cursor-pointer

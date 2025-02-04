@@ -179,7 +179,6 @@ let inAnnotation = false;
 let annotationLastPos: Vector2D = { x: 0, y: 0 };
 
 let inErase = false;
-let eraseLastPos: Vector2D = { x: 0, y: 0 };
 
 let rainbowHue = 0;
 
@@ -777,8 +776,6 @@ function eraseAnnotation(
   ctxAnnotation.fill();
 
   ctxAnnotation.globalCompositeOperation = "source-over";
-
-  eraseLastPos = mousePos;
 }
 
 function drawAnnotation(
@@ -840,7 +837,6 @@ export function animateGraph(
     };
 
     annotationLastPos = mousePos;
-    eraseLastPos = mousePos;
 
     if (settings.drawMode === "pen") {
       inAnnotation = true;

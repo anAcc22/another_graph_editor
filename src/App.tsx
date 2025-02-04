@@ -96,6 +96,12 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>4 Feb 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Make node background <b>transparent</b> by default</li>
+              <li>Add <b>draw</b> and <b>erase</b> modes</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>9 Dec 2024</p>
             <ul className="list-disc list-inside">
               <li>Add toggle button to expand/shrink canvas</li>

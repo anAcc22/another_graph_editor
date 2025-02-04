@@ -24,6 +24,9 @@ import { buildMSTs } from "./graphMSTs";
 import { drawLine, drawArrow, drawBridge, drawEdgeLabel } from "./drawingTools";
 import { drawCircle, drawHexagon, drawOctagon } from "./drawingTools";
 
+import { FILL_PALETTE_LIGHT } from "./palettes";
+import { FILL_PALETTE_DARK } from "./palettes";
+
 interface Vector2D {
   x: number;
   y: number;
@@ -96,6 +99,9 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
 
 const FPS = 60;
 
+const ANNOTATION_WIDTH = 2;
+const ERASE_WIDTH = 50;
+
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
@@ -142,94 +148,6 @@ const FILL_COLORS_DARK = [
   "#58398f",
 ];
 
-const FILL_PALETTE_LIGHT = [
-  "",
-  "",
-  "#eeeeee",
-  "#eece7e",
-  "#e2b55e",
-  "#dede7e",
-  "#c2ce62",
-  "#bede7e",
-  "#adcd63",
-  "#8ede7e",
-  "#7dcd63",
-  "#8ece9e",
-  "#7bbe93",
-  "#8ecece",
-  "#7eb8b8",
-  "#8ebede",
-  "#7eaece",
-  "#8eaede",
-  "#7e98cd",
-  "#6e93de",
-  "#657ece",
-  "#7e90e5",
-  "#6e80d2",
-  "#8589e5",
-  "#7579d5",
-  "#9480e5",
-  "#8070d2",
-  "#a47de5",
-  "#946ad0",
-  "#b47dd5",
-  "#a46ac0",
-  "#c47dc5",
-  "#b46ab0",
-  "#c47da5",
-  "#b46a90",
-  "#c48d95",
-  "#b47a80",
-  "#d48d75",
-  "#c47a60",
-  "#e4ad72",
-  "#d49a70",
-];
-
-const FILL_PALETTE_DARK = [
-  "",
-  "",
-  "#333333",
-  "#947d12",
-  "#846a00",
-  "#727220",
-  "#525e02",
-  "#5e7e1e",
-  "#3e5e0e",
-  "#3e731e",
-  "#1e530e",
-  "#4e705e",
-  "#335344",
-  "#4e6c6c",
-  "#305555",
-  "#3e5e7c",
-  "#2e4a60",
-  "#2e4e70",
-  "#1f3f60",
-  "#0e3070",
-  "#00206e",
-  "#2e4095",
-  "#1e3085",
-  "#454995",
-  "#353985",
-  "#544095",
-  "#403082",
-  "#643d95",
-  "#542a80",
-  "#743d85",
-  "#602d70",
-  "#843d75",
-  "#702d60",
-  "#843d55",
-  "#702d40",
-  "#844d45",
-  "#703d30",
-  "#944d25",
-  "#803d10",
-  "#a46d22",
-  "#945a10",
-];
-
 const FILL_COLORS_LENGTH = 10;
 
 let currentTime = 0;
@@ -257,7 +175,16 @@ let mousePos: Vector2D = { x: 0, y: 0 };
 let oldDirected = false;
 let directed = false;
 
+let inAnnotation = false;
+let annotationLastPos: Vector2D = { x: 0, y: 0 };
+
+let inErase = false;
+let eraseLastPos: Vector2D = { x: 0, y: 0 };
+
+let rainbowHue = 0;
+
 let settings: Settings = {
+  drawMode: "node",
   expandedCanvas: false,
   markBorder: "double",
   markColor: 1,
@@ -837,14 +764,121 @@ function renderEdges(ctx: CanvasRenderingContext2D) {
   }
 }
 
+function eraseAnnotation(
+  ctxAnnotation: CanvasRenderingContext2D,
+  mousePos: Vector2D,
+) {
+  ctxAnnotation.lineCap = "round";
+
+  ctxAnnotation.globalCompositeOperation = "destination-out";
+
+  ctxAnnotation.beginPath();
+  ctxAnnotation.arc(mousePos.x, mousePos.y, ERASE_WIDTH / 2, 0, 2 * Math.PI);
+  ctxAnnotation.fill();
+
+  ctxAnnotation.globalCompositeOperation = "source-over";
+
+  eraseLastPos = mousePos;
+}
+
+function drawAnnotation(
+  ctxAnnotation: CanvasRenderingContext2D,
+  mousePos: Vector2D,
+) {
+  const idx = settings.markColor;
+
+  ctxAnnotation.lineCap = "round";
+  ctxAnnotation.lineWidth = ANNOTATION_WIDTH;
+
+  if (settings.darkMode) {
+    if (idx >= 3) {
+      ctxAnnotation.strokeStyle = FILL_PALETTE_LIGHT[idx];
+    } else if (idx == 2) {
+      ctxAnnotation.strokeStyle = `hsl(${rainbowHue}, 70%, 70%)`;
+      rainbowHue += Math.floor(Math.random() * 3) + 1;
+    } else {
+      ctxAnnotation.strokeStyle = EDGE_COLOR_DARK;
+    }
+  } else {
+    if (idx >= 3) {
+      ctxAnnotation.strokeStyle = FILL_PALETTE_DARK[idx];
+    } else if (idx == 2) {
+      ctxAnnotation.strokeStyle = `hsl(${rainbowHue}, 70%, 30%)`;
+      rainbowHue += Math.floor(Math.random() * 3) + 1;
+    } else {
+      ctxAnnotation.strokeStyle = EDGE_COLOR_LIGHT;
+    }
+  }
+
+  ctxAnnotation.beginPath();
+  ctxAnnotation.moveTo(annotationLastPos.x, annotationLastPos.y);
+  ctxAnnotation.lineTo(mousePos.x, mousePos.y);
+
+  ctxAnnotation.stroke();
+  ctxAnnotation.fill();
+
+  annotationLastPos = mousePos;
+}
+
 export function animateGraph(
   canvas: HTMLCanvasElement,
   canvasScreenshot: HTMLCanvasElement,
+  canvasAnnotation: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   ctxScreenshot: CanvasRenderingContext2D,
+  ctxAnnotation: CanvasRenderingContext2D,
   setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) {
   generateRandomCoords();
+
+  canvasAnnotation.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+
+    mousePos = {
+      x: event.offsetX,
+      y: event.offsetY,
+    };
+
+    annotationLastPos = mousePos;
+    eraseLastPos = mousePos;
+
+    if (settings.drawMode === "pen") {
+      inAnnotation = true;
+      inErase = false;
+      drawAnnotation(ctxAnnotation, mousePos);
+    } else if (settings.drawMode === "erase") {
+      inErase = true;
+      inAnnotation = false;
+      eraseAnnotation(ctxAnnotation, mousePos);
+    }
+  });
+
+  canvasAnnotation.addEventListener("pointerup", (event) => {
+    event.preventDefault();
+    inAnnotation = false;
+    inErase = false;
+  });
+
+  canvasAnnotation.addEventListener("pointermove", (event) => {
+    event.preventDefault();
+
+    mousePos = {
+      x: event.offsetX,
+      y: event.offsetY,
+    };
+
+    if (settings.drawMode === "pen") {
+      if (inAnnotation) drawAnnotation(ctxAnnotation, mousePos);
+    } else if (settings.drawMode === "erase") {
+      if (inErase) eraseAnnotation(ctxAnnotation, mousePos);
+    }
+  });
+
+  canvasAnnotation.addEventListener("pointerleave", (event) => {
+    event.preventDefault();
+    inAnnotation = false;
+    inErase = false;
+  });
 
   canvas.addEventListener("pointerdown", (event) => {
     event.preventDefault();
@@ -940,6 +974,7 @@ export function animateGraph(
       if (currentTime % 80 === 0) {
         ctxScreenshot.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
         ctxScreenshot.drawImage(canvas, 0, 0);
+        ctxScreenshot.drawImage(canvasAnnotation, 0, 0);
         setImage(canvasScreenshot.toDataURL("image/png"));
         currentTime = 1;
       } else {

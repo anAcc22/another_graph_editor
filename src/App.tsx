@@ -29,6 +29,7 @@ function App() {
   const [inputs, setInputs] = useState<number[]>([0]);
 
   const [settings, setSettings] = useState<Settings>({
+    drawMode: "node",
     expandedCanvas: false,
     markBorder: "double",
     markColor: 1,
@@ -97,9 +98,7 @@ function App() {
           >
             <p>9 Dec 2024</p>
             <ul className="list-disc list-inside">
-              <li>
-                Add toggle button to expand/shrink canvas
-              </li>
+              <li>Add toggle button to expand/shrink canvas</li>
             </ul>
             <hr className="border-dashed border-border" />
             <p>7 Dec 2024</p>

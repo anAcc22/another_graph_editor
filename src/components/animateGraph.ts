@@ -97,7 +97,7 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
-const FPS = 60;
+const FPS = 120;
 
 const ANNOTATION_WIDTH = 2;
 const ERASE_WIDTH = 50;
@@ -183,6 +183,7 @@ let inErase = false;
 let rainbowHue = 0;
 
 let settings: Settings = {
+  language: "en",
   drawMode: "node",
   expandedCanvas: false,
   markBorder: "double",

@@ -20,9 +20,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         }
       >
         <SettingsToggleSection
-          title={"Theme"}
-          leftLabel={"Light"}
-          rightLabel={"Dark"}
+          title={settings.language == "en" ? "Theme" : "色彩模式"}
+          leftLabel={settings.language == "en" ? "Light" : "白天"}
+          rightLabel={settings.language == "en" ? "Dark" : "黑夜"}
           toggleId={"settingsTheme"}
           settingsName={"darkMode"}
           settings={settings}
@@ -31,7 +31,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
 
         <hr className="border-dashed border-border" />
 
-        <h4 className="font-semibold">Node Radius</h4>
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Node Radius" : "结点半径"}
+        </h4>
         <input
           type="range"
           min={0}
@@ -58,7 +60,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           }}
         />
 
-        <h4 className="font-semibold">Font Size</h4>
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Font Size" : "字体大小"}
+        </h4>
         <input
           type="range"
           min={0}
@@ -85,7 +89,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           }}
         />
 
-        <h4 className="font-semibold">Line Thickness</h4>
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Line Thickness" : "线条粗细"}
+        </h4>
         <input
           type="range"
           min={0}
@@ -115,7 +121,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           }}
         />
 
-        <h4 className="font-semibold">Edge Length</h4>
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Edge Length" : "边缘长度"}
+        </h4>
         <input
           type="range"
           min={0}
@@ -142,7 +150,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           }}
         />
 
-        <h4 className="font-semibold">Edge Label Separation</h4>
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Edge Label Separation" : "边缘标签分隔"}
+        </h4>
         <input
           type="range"
           min={0}

@@ -1,4 +1,4 @@
-import { TestCases } from "../types";
+import { Settings, TestCases } from "../types";
 import { GraphInput } from "./GraphInput";
 import { InputTab } from "./InputTab";
 import { getDefaultGraph } from "./utils";
@@ -6,6 +6,7 @@ import { getDefaultGraph } from "./utils";
 import { useEffect } from "react";
 
 interface Props {
+  settings: Settings;
   tabs: number[];
   setTabs: React.Dispatch<React.SetStateAction<number[]>>;
   inputs: number[];
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export function InputTabs({
+  settings,
   tabs,
   setTabs,
   inputs,
@@ -94,6 +96,7 @@ export function InputTabs({
         <ul>
           {inputs.map((input) => (
             <GraphInput
+              settings={settings}
               key={input}
               testCases={testCases}
               setTestCases={setTestCases}

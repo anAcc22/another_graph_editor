@@ -2,11 +2,13 @@ import { parseGraphInputEdges } from "./parseGraphInput";
 import { parseGraphInputParentChild } from "./parseGraphInput";
 import { useState } from "react";
 
+import { Settings } from "../types";
 import { ParsedGraph } from "../types";
 import { TestCases } from "../types";
 import { padNode, sortNodes } from "./utils";
 
 interface Props {
+  settings: Settings;
   key: number;
   testCases: TestCases;
   setTestCases: React.Dispatch<React.SetStateAction<TestCases>>;
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export function GraphInput({
+  settings,
   testCases,
   setTestCases,
   inputId,
@@ -207,7 +210,9 @@ export function GraphInput({
             : "hidden"
         }
       >
-        <h4 className="text-base font-semibold">Current Nodes</h4>
+        <h4 className="text-base font-semibold">
+          {settings.language == "en" ? "Current Nodes" : "结点"}
+        </h4>
         <textarea
           wrap="off"
           rows={1}
@@ -229,7 +234,9 @@ export function GraphInput({
             text-current-nodes border-border w-auto no-scrollbar"
         ></textarea>
 
-        <h4 className="text-base font-semibold">Node Labels</h4>
+        <h4 className="text-base font-semibold">
+          {settings.language == "en" ? "Node Labels" : "结点标签"}
+        </h4>
         <textarea
           wrap="off"
           name="graphInputNodeLabelsEdges"
@@ -237,7 +244,11 @@ export function GraphInput({
           rows={1}
           onChange={processNodeLabels}
           onKeyDown={handleTextAreaKeyDown}
-          placeholder="TIP: '_' -> empty label"
+          placeholder={
+            settings.language == "en"
+              ? "TIP: '_' -> empty label"
+              : "提示：'_' -> 空标签"
+          }
           className={
             testCases.get(inputId)?.inputFormat === "edges"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
@@ -254,7 +265,11 @@ export function GraphInput({
           rows={1}
           onChange={processNodeLabels}
           onKeyDown={handleTextAreaKeyDown}
-          placeholder="TIP: '_' -> empty label"
+          placeholder={
+            settings.language == "en"
+              ? "TIP: '_' -> empty label"
+              : "提示：'_' -> 空标签"
+          }
           className={
             testCases.get(inputId)?.inputFormat === "parentChild"
               ? `bg-ovr font-semibold font-jetbrains resize-none border-2
@@ -272,7 +287,7 @@ export function GraphInput({
             <span>
               {testCases.get(inputId)?.inputFormat === "edges" ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
-                  Edges
+                  {settings.language == "en" ? "Edges" : "边集"}
                 </span>
               ) : (
                 <span
@@ -294,7 +309,7 @@ export function GraphInput({
                     checkbox.checked = false;
                   }}
                 >
-                  Edges
+                  {settings.language == "en" ? "Edges" : "边集"}
                 </span>
               )}
             </span>
@@ -302,7 +317,7 @@ export function GraphInput({
             <span>
               {testCases.get(inputId)?.inputFormat === "parentChild" ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
-                  Parent-Child
+                  {settings.language == "en" ? "Parent-Child" : "父亲-子结点"}
                 </span>
               ) : (
                 <span
@@ -324,7 +339,7 @@ export function GraphInput({
                     checkbox.checked = true;
                   }}
                 >
-                  Parent-Child
+                  {settings.language == "en" ? "Parent-Child" : "父亲-子结点"}
                 </span>
               )}
             </span>
@@ -367,7 +382,7 @@ export function GraphInput({
             <span>
               {!directed ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
-                  Undirected
+                  {settings.language == "en" ? "Undirected" : "无向"}
                 </span>
               ) : (
                 <span
@@ -380,7 +395,7 @@ export function GraphInput({
                     checkbox.checked = false;
                   }}
                 >
-                  Undirected
+                  {settings.language == "en" ? "Undirected" : "无向"}
                 </span>
               )}
             </span>
@@ -388,7 +403,7 @@ export function GraphInput({
             <span>
               {directed ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
-                  Directed
+                  {settings.language == "en" ? "Directed" : "有向"}
                 </span>
               ) : (
                 <span
@@ -401,7 +416,7 @@ export function GraphInput({
                     checkbox.checked = true;
                   }}
                 >
-                  Directed
+                  {settings.language == "en" ? "Directed" : "有向"}
                 </span>
               )}
             </span>
@@ -436,7 +451,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          Roots
+          {settings.language == "en" ? "Roots" : "树根"}
         </h4>
         <textarea
           wrap="off"
@@ -461,7 +476,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          Roots
+          {settings.language == "en" ? "Roots" : "树根"}
         </h4>
         <textarea
           wrap="off"
@@ -486,7 +501,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          Edges
+          {settings.language == "en" ? "Edges" : "边集"}
         </h4>
         <textarea
           wrap="off"
@@ -511,7 +526,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          Parent Array
+          {settings.language == "en" ? "Parent Array" : "父亲数组"}
         </h4>
         <textarea
           wrap="off"
@@ -536,7 +551,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          Child Array
+          {settings.language == "en" ? "Child Array" : "子结点数组"}
         </h4>
         <textarea
           wrap="off"
@@ -562,7 +577,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          Edge Labels
+          {settings.language == "en" ? "Edge Labels" : "边缘标签"}
         </h4>
         <textarea
           wrap="off"
@@ -601,21 +616,21 @@ export function GraphInput({
               processGraphInput();
             }}
           >
-            Clear
+            {settings.language == "en" ? "Clear" : "清除"}
           </button>
           {inputStatus ? (
             <span
               className="font-jetbrains bg-format-ok rounded-md text-right px-2
                 py-1 inline"
             >
-              Format: OK
+              {settings.language == "en" ? "Format: OK" : "格式：良好"}
             </span>
           ) : (
             <span
               className="font-jetbrains bg-format-bad rounded-md text-right px-2
                 py-1 inline"
             >
-              Format: BAD
+              {settings.language == "en" ? "Format: BAD" : "格式：糟糕"}
             </span>
           )}
         </div>

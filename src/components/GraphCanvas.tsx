@@ -202,7 +202,7 @@ export function GraphCanvas({
       >
         <div className="flex justify-between items-end font-jetbrains">
           <GraphPalette settings={settings} setSettings={setSettings} />
-          <div className="flex space-x-3">
+          <div className="flex space-x-3 mb-3">
             <button
               className={
                 settings.drawMode === "node"
@@ -217,7 +217,7 @@ export function GraphCanvas({
                     w-7 h-7 items-center justify-center active:bg-tab-active
                     pl-[3px] pb-1`
               }
-              title="Node"
+              title={settings.language == "en" ? "Node" : "结点"}
               onClick={() => {
                 setSettings({
                   ...settings,
@@ -241,7 +241,7 @@ export function GraphCanvas({
                     w-7 h-7 items-center justify-center active:bg-tab-active
                     pb-0.5`
               }
-              title="Pen"
+              title={settings.language == "en" ? "Pen" : "画笔"}
               onClick={() => {
                 setSettings({
                   ...settings,
@@ -265,7 +265,7 @@ export function GraphCanvas({
                     w-7 h-7 items-center justify-center active:bg-tab-active
                     pb-[5px]`
               }
-              title="Eraser"
+              title={settings.language == "en" ? "Eraser" : "橡皮擦"}
               onClick={() => {
                 setSettings({
                   ...settings,
@@ -281,7 +281,11 @@ export function GraphCanvas({
                 text-lg hover:border-border-hover rounded-md w-7 h-7
                 items-center justify-center active:bg-tab-active pl-[1px]
                 pb-[1px]"
-              title="Clear ALL Annotations"
+              title={
+                settings.language == "en"
+                  ? "Clear ALL Annotations"
+                  : "清除所有图纸"
+              }
               onClick={() => {
                 let canvas = refAnnotation.current;
 
@@ -312,8 +316,12 @@ export function GraphCanvas({
                 ease-in-out hover:rounded-3xl border-2 border-border text-center
                 text-lg hover:border-border-hover hover:bg-bg-tab-hover
                 rounded-md w-7 h-7 items-center justify-center
-                active:bg-tab-active mb-3 pb-0.5"
-              title="Expand/Contract Canvas"
+                active:bg-tab-active pb-0.5"
+              title={
+                settings.language == "en"
+                  ? "Expand/Contract Canvas"
+                  : "展开/收缩画布"
+              }
               onClick={() => {
                 setSettings({
                   ...settings,
@@ -361,12 +369,12 @@ export function GraphCanvas({
         <a
           download="graph.png"
           href={image}
-          className="font-jetbrains text-sm w-36 mt-3 text-center border-2
+          className="font-jetbrains text-sm mt-3 text-center border-2
             border-border rounded-lg px-2 py-1 justify-between items-center
             hover:border-border-hover hover:cursor-pointer ml-auto
             active:bg-tab-active"
         >
-          Download (PNG)
+          {settings.language == "en" ? "Download (PNG)" : "下载 (PNG)"}
         </a>
       </div>
     </div>

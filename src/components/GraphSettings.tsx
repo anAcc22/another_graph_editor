@@ -32,7 +32,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
               setSettings({ ...settings, settingsFormat: "general" });
             }}
           >
-            General
+            {settings.language == "en" ? "General" : "总体设置"}
           </button>
           <button
             className={
@@ -48,7 +48,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
               setSettings({ ...settings, settingsFormat: "appearance" });
             }}
           >
-            Appearance
+            {settings.language == "en" ? "Appearance" : "外貌设置"}
           </button>
         </div>
       </div>

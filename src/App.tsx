@@ -29,6 +29,10 @@ function App() {
   const [inputs, setInputs] = useState<number[]>([0]);
 
   const [settings, setSettings] = useState<Settings>({
+    language:
+      localStorage.getItem("language") !== null
+        ? (localStorage.getItem("language")! as "en" | "cn")
+        : "en",
     drawMode: "node",
     expandedCanvas: false,
     markBorder: "double",
@@ -88,18 +92,27 @@ function App() {
           className="font-jetbrains text-base sm:top-2 lg:top-2 sm:left-2
             lg:left-2 absolute space-x-2 flex border-2 border-border rounded-lg
             px-2 py-1 justify-between items-center hover:border-border-hover
-            z-20 bg-block group"
+            z-20 bg-block group h-9"
         >
-          Changelog
+          {settings.language == "en" ? "Changelog" : "更新记录"}
           <div
             className="absolute border-2 text-sm px-2 py-1 border-border-hover
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>8 Feb 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Add Chinese translations</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>4 Feb 2025</p>
             <ul className="list-disc list-inside">
-              <li>Make node background <b>transparent</b> by default</li>
-              <li>Add <b>draw</b> and <b>erase</b> modes</li>
+              <li>
+                Make node background <b>transparent</b> by default
+              </li>
+              <li>
+                Add <b>draw</b> and <b>erase</b> modes
+              </li>
             </ul>
             <hr className="border-dashed border-border" />
             <p>9 Dec 2024</p>
@@ -148,30 +161,63 @@ function App() {
           </div>
         </div>
 
-        <a
-          className="font-jetbrains text-base sm:top-2 lg:top-2 sm:right-2
-            lg:right-2 absolute space-x-2 flex border-2 border-border rounded-lg
-            px-2 py-1 justify-between items-center hover:border-border-hover
-            z-20 bg-block"
-          href="https://github.com/anAcc22/another_graph_editor"
+        <div
+          className="sm:top-2 lg:top-2 sm:right-2 lg:right-2 absolute flex
+            space-x-3 font-jetbrains text-base"
         >
-          {settings.darkMode ? (
-            <img
-              width={18}
-              src="github-mark/github-mark-white.svg"
-              alt="Github Logo"
-            />
-          ) : (
-            <img
-              width={18}
-              src="github-mark/github-mark.svg"
-              alt="Github Logo"
-            />
-          )}
-          <div className="ml-2">Github</div>
-        </a>
+          <div
+            className="flex space-x-2 border-2 border-border rounded-lg
+              justify-between items-center z-20 px-2 h-9"
+          >
+            <button
+              className={
+                settings.language == "en" ? "text-selected" : "text-text"
+              }
+              onClick={() => {
+                setSettings({ ...settings, language: "en" });
+                localStorage.setItem("language", "en");
+              }}
+            >
+              EN
+            </button>
+            <div>|</div>
+            <button
+              className={
+                settings.language == "cn" ? "text-selected" : "text-text"
+              }
+              onClick={() => {
+                setSettings({ ...settings, language: "cn" });
+                localStorage.setItem("language", "cn");
+              }}
+            >
+              中文
+            </button>
+          </div>
+          <a
+            className="space-x-2 flex border-2 border-border rounded-lg px-2
+              py-1 justify-between items-center hover:border-border-hover z-20
+              bg-block h-9"
+            href="https://github.com/anAcc22/another_graph_editor"
+          >
+            {settings.darkMode ? (
+              <img
+                width={18}
+                src="github-mark/github-mark-white.svg"
+                alt="Github Logo"
+              />
+            ) : (
+              <img
+                width={18}
+                src="github-mark/github-mark.svg"
+                alt="Github Logo"
+              />
+            )}
+            <div className="ml-2">Github</div>
+          </a>
+        </div>
 
         <InputTabs
+          settings={settings}
           tabs={tabs}
           setTabs={setTabs}
           inputs={inputs}

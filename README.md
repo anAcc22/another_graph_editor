@@ -1,5 +1,9 @@
 # Another Graph Editor
 
+<p align="center">
+  <a href="README_zh.md">简体中文</a> | English
+</p>
+
 A graph editor inspired by [CS Academy's graph editor](https://csacademy.com/app/graph_editor/),
 designed with competitive programming in mind.
 

@@ -1,10 +1,8 @@
 # 另一个图形编辑器
 
-<div style="text-align: center;">
-  <a href="README_zh.md">简体中文</a> | <a href="README.md">English</a>
-</div>
-
-
+<p align="center">
+  简体中文 | <a href="README.md">English</a>
+</p>
 
 这是一个受 [CS Academy 图形编辑器](https://csacademy.com/app/graph_editor/) 启发的图形编辑器，专为竞赛编程设计。
 

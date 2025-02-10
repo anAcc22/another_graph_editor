@@ -20,9 +20,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         }
       >
         <SettingsToggleSection
-          title={settings.language == "en" ? "Theme" : "色彩模式"}
-          leftLabel={settings.language == "en" ? "Light" : "白天"}
-          rightLabel={settings.language == "en" ? "Dark" : "黑夜"}
+          title={settings.language == "en" ? "Theme" : "主题"}
+          leftLabel={settings.language == "en" ? "Light" : "亮"}
+          rightLabel={settings.language == "en" ? "Dark" : "暗"}
           toggleId={"settingsTheme"}
           settingsName={"darkMode"}
           settings={settings}
@@ -122,7 +122,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Edge Length" : "边缘长度"}
+          {settings.language == "en" ? "Edge Length" : "边的长度"}
         </h4>
         <input
           type="range"
@@ -151,7 +151,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Edge Label Separation" : "边缘标签分隔"}
+          {settings.language == "en" ? "Edge Label Separation" : "边标签分隔"}
         </h4>
         <input
           type="range"

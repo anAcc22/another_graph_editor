@@ -89,33 +89,30 @@ export function GraphCanvas({
     canvas.height = height;
 
     ctx.scale(pixelRatio, pixelRatio);
-  };
 
-  const resizeCanvasAnnotation = (): void => {
-    let canvas = refAnnotation.current;
+    canvas = refAnnotation.current;
 
     if (canvas === null) {
       console.log("Error: `canvas` is null!");
       return;
     }
 
-    let ctx = canvas.getContext("2d");
+    ctx = canvas.getContext("2d");
 
     if (ctx === null) {
       console.log("Error: `ctx` is null!");
       return;
     }
 
-    const pixelRatio = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-
-    const width = pixelRatio * rect.width;
-    const height = pixelRatio * rect.height;
-
     canvas.width = width;
     canvas.height = height;
 
     ctx.scale(pixelRatio, pixelRatio);
+  };
+
+  const resizeCanvas = (): void => {
+    resizeCanvasMain();
+    resizeCanvasOverall();
   };
 
   useEffect(() => {
@@ -149,9 +146,7 @@ export function GraphCanvas({
       return;
     }
 
-    resizeCanvasMain();
-    resizeCanvasOverall();
-    resizeCanvasAnnotation();
+    resizeCanvas();
 
     animateGraph(
       canvasMain,
@@ -163,13 +158,9 @@ export function GraphCanvas({
       setImage,
     );
 
-    window.addEventListener("resize", resizeCanvasMain);
-    window.addEventListener("resize", resizeCanvasOverall);
-    window.addEventListener("resize", resizeCanvasAnnotation);
+    window.addEventListener("resize", resizeCanvas);
     return () => {
-      window.removeEventListener("resize", resizeCanvasMain);
-      window.removeEventListener("resize", resizeCanvasOverall);
-      window.removeEventListener("resize", resizeCanvasAnnotation);
+      window.removeEventListener("resize", resizeCanvas);
     };
   }, []);
 
@@ -183,9 +174,12 @@ export function GraphCanvas({
 
   useEffect(() => {
     updateSettings(settings);
+  }, [settings]);
+
+  useEffect(() => {
     resizeCanvasMain();
     resizeCanvasOverall();
-  }, [settings]);
+  }, [settings.expandedCanvas]);
 
   return (
     <div className="flex h-screen">

@@ -451,7 +451,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          {settings.language == "en" ? "Roots" : "树根"}
+          {settings.language == "en" ? "Roots" : "根"}
         </h4>
         <textarea
           wrap="off"
@@ -476,7 +476,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          {settings.language == "en" ? "Roots" : "树根"}
+          {settings.language == "en" ? "Roots" : "根"}
         </h4>
         <textarea
           wrap="off"
@@ -577,7 +577,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          {settings.language == "en" ? "Edge Labels" : "边缘标签"}
+          {settings.language == "en" ? "Edge Labels" : "边标签"}
         </h4>
         <textarea
           wrap="off"

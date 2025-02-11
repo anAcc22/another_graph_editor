@@ -104,10 +104,14 @@ export function GraphCanvas({
       return;
     }
 
+    const annotations = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
     canvas.width = width;
     canvas.height = height;
 
     ctx.scale(pixelRatio, pixelRatio);
+
+    ctx.putImageData(annotations, 0, 0);
   };
 
   const resizeCanvas = (): void => {

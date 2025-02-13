@@ -633,6 +633,49 @@ export function GraphInput({
               {settings.language == "en" ? "Format: BAD" : "格式：糟糕"}
             </span>
           )}
+          <button
+            className="bg-randomize hover:bg-randomize-hover
+              active:bg-randomize-active inline rounded-md px-2 py-1"
+            onClick={() => {
+              const inputFormat = testCases.get(inputId)!.inputFormat;
+              const us = [],
+                vs = [];
+              const n = 2 + Math.floor(Math.random() * 9);
+              for (let i = 0; i < n; i++) {
+                let u = 0,
+                  v = 0;
+                while (u == v) {
+                  u = 1 + Math.floor(Math.random() * 9);
+                  v = 1 + Math.floor(Math.random() * 9);
+                }
+                us.push(u);
+                vs.push(v);
+              }
+              if (inputFormat === "edges") {
+                let edges = document.getElementById(
+                  "graphInputEdges" + inputId,
+                ) as HTMLTextAreaElement;
+                let s = "";
+                for (let i = 0; i < n; i++) {
+                  s += us[i].toString() + " " + vs[i].toString();
+                  if (i != n - 1) s += "\n";
+                }
+                edges.value = s;
+              } else {
+                let ps = document.getElementById(
+                  "graphInputParent" + inputId,
+                ) as HTMLTextAreaElement;
+                let cs = document.getElementById(
+                  "graphInputChild" + inputId,
+                ) as HTMLTextAreaElement;
+                ps.value = us.join(" ");
+                cs.value = vs.join(" ");
+              }
+              processGraphInput();
+            }}
+          >
+            {settings.language == "en" ? "Randomize" : "随机"}
+          </button>
         </div>
       </li>
     </>

@@ -211,7 +211,7 @@ export function GraphInput({
         }
       >
         <h4 className="text-base font-semibold">
-          {settings.language == "en" ? "Current Nodes" : "结点"}
+          {settings.language == "en" ? "Current Nodes" : "节点"}
         </h4>
         <textarea
           wrap="off"
@@ -235,7 +235,7 @@ export function GraphInput({
         ></textarea>
 
         <h4 className="text-base font-semibold">
-          {settings.language == "en" ? "Node Labels" : "结点标签"}
+          {settings.language == "en" ? "Node Labels" : "节点标签"}
         </h4>
         <textarea
           wrap="off"
@@ -317,7 +317,7 @@ export function GraphInput({
             <span>
               {testCases.get(inputId)?.inputFormat === "parentChild" ? (
                 <span className="text-selected p-0 hover:cursor-pointer">
-                  {settings.language == "en" ? "Parent-Child" : "父亲-子结点"}
+                  {settings.language == "en" ? "Parent-Child" : "父亲-子节点"}
                 </span>
               ) : (
                 <span
@@ -339,7 +339,7 @@ export function GraphInput({
                     checkbox.checked = true;
                   }}
                 >
-                  {settings.language == "en" ? "Parent-Child" : "父亲-子结点"}
+                  {settings.language == "en" ? "Parent-Child" : "父亲-子节点"}
                 </span>
               )}
             </span>
@@ -526,7 +526,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          {settings.language == "en" ? "Parent Array" : "父亲数组"}
+          {settings.language == "en" ? "Parent Array" : "父节点数组"}
         </h4>
         <textarea
           wrap="off"
@@ -551,7 +551,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          {settings.language == "en" ? "Child Array" : "子结点数组"}
+          {settings.language == "en" ? "Child Array" : "子节点数组"}
         </h4>
         <textarea
           wrap="off"
@@ -630,7 +630,7 @@ export function GraphInput({
               className="font-jetbrains bg-format-bad rounded-md text-right px-2
                 py-1 inline"
             >
-              {settings.language == "en" ? "Format: BAD" : "格式：糟糕"}
+              {settings.language == "en" ? "Format: BAD" : "格式：错误"}
             </span>
           )}
           <button

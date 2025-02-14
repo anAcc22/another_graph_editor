@@ -55,9 +55,9 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
         </div>
 
         <SettingsToggleSection
-          title={settings.language == "en" ? "Components" : "连通块"}
+          title={settings.language == "en" ? "Components" : "连通分量"}
           leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-          rightLabel={settings.language == "en" ? "Show" : "展览"}
+          rightLabel={settings.language == "en" ? "Show" : "展示"}
           toggleId={"settingsComponents"}
           settingsName={"showComponents"}
           settings={settings}
@@ -72,7 +72,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
                 : "割点和桥"
             }
             leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展览"}
+            rightLabel={settings.language == "en" ? "Show" : "展示"}
             toggleId={"settingsBridges"}
             settingsName={"showBridges"}
             settings={settings}
@@ -87,10 +87,10 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             title={
               settings.language == "en"
                 ? "Minimum Spanning Tree(s)"
-                : "最小生成树"
+                : "最小生成树（森林）"
             }
             leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展览"}
+            rightLabel={settings.language == "en" ? "Show" : "展示"}
             toggleId={"settingsShowMSTs"}
             settingsName={"showMSTs"}
             settings={settings}
@@ -101,10 +101,10 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             title={
               settings.language == "en"
                 ? "Minimum Spanning Tree(s)"
-                : "最小生成树"
+                : "最小生成树（森林）"
             }
             leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展览"}
+            rightLabel={settings.language == "en" ? "Show" : "展示"}
             toggleId={"settingsShowMSTs"}
             settingsName={"showMSTs"}
             settings={settings}
@@ -164,7 +164,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           title={
             settings.language == "en"
               ? "Mark/Unmark Nodes on Click"
-              : "点击时标记结点"
+              : "点击时标记节点"
           }
           leftLabel={settings.language == "en" ? "Off" : "关闭"}
           rightLabel={settings.language == "en" ? "On" : "开启"}

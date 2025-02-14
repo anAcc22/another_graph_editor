@@ -151,7 +151,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Edge Label Separation" : "边标签分隔"}
+          {settings.language == "en" ? "Edge Label Separation" : "边和标签的距离"}
         </h4>
         <input
           type="range"

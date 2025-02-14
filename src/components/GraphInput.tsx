@@ -526,7 +526,7 @@ export function GraphInput({
               : "hidden"
           }
         >
-          {settings.language == "en" ? "Parent Array" : "父亲数组"}
+          {settings.language == "en" ? "Parent Array" : "父节点数组"}
         </h4>
         <textarea
           wrap="off"
@@ -630,7 +630,7 @@ export function GraphInput({
               className="font-jetbrains bg-format-bad rounded-md text-right px-2
                 py-1 inline"
             >
-              {settings.language == "en" ? "Format: BAD" : "格式：糟糕"}
+              {settings.language == "en" ? "Format: BAD" : "格式：错误"}
             </span>
           )}
           <button

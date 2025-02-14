@@ -164,7 +164,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           title={
             settings.language == "en"
               ? "Mark/Unmark Nodes on Click"
-              : "点击时标记结点"
+              : "点击时标记节点"
           }
           leftLabel={settings.language == "en" ? "Off" : "关闭"}
           rightLabel={settings.language == "en" ? "On" : "开启"}

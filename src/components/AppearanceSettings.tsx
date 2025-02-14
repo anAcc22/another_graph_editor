@@ -32,7 +32,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         <hr className="border-dashed border-border" />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Node Radius" : "结点半径"}
+          {settings.language == "en" ? "Node Radius" : "节点半径"}
         </h4>
         <input
           type="range"

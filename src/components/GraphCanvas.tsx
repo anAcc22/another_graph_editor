@@ -215,7 +215,7 @@ export function GraphCanvas({
                     w-7 h-7 items-center justify-center active:bg-tab-active
                     pl-[3px] pb-1`
               }
-              title={settings.language == "en" ? "Node" : "结点"}
+              title={settings.language == "en" ? "Node" : "节点"}
               onClick={() => {
                 setSettings({
                   ...settings,

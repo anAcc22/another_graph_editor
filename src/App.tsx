@@ -82,10 +82,8 @@ function App() {
       <div
         className={
           settings.darkMode
-            ? `dark bg-ovr text-text absolute w-full overflow-scroll
-              min-h-[1000px]`
-            : `light bg-ovr text-text absolute w-full overflow-scroll
-              min-h-[1000px]`
+            ? "dark bg-ovr text-text absolute w-full overflow-scroll"
+            : "light bg-ovr text-text absolute w-full overflow-scroll"
         }
       >
         <div
@@ -100,6 +98,12 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>24 Feb 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Use SVG icons instead</li>
+              <li>Adjust layout positioning</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>8 Feb 2025</p>
             <ul className="list-disc list-inside">
               <li>Add Chinese translations</li>

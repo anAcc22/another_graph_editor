@@ -30,19 +30,19 @@ export async function loadFontAsBase64(fontPath: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          const base64String = reader.result.split(',')[1];
+        if (typeof reader.result === "string") {
+          const base64String = reader.result.split(",")[1];
           resolve(base64String);
         } else {
-          reject(new Error('Not a String'));
+          reject(new Error("Not a String"));
         }
       };
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
   } catch (error) {
-    console.error('Failed to load font:', error);
-    return '';
+    console.error("Failed to load font:", error);
+    return "";
   }
 }
 
@@ -102,7 +102,9 @@ export function GraphCanvas({
     }
 
     if (SVGRenderer.fontBase64 === "") {
-      SVGRenderer.fontBase64 = await loadFontAsBase64('/another_graph_editor/JetBrainsMono-Bold.ttf');
+      SVGRenderer.fontBase64 = await loadFontAsBase64(
+        "/another_graph_editor/JetBrainsMono-Bold.ttf",
+      );
     }
 
     const pixelRatio = window.devicePixelRatio || 1;
@@ -515,25 +517,32 @@ export function GraphCanvas({
             }
           ></canvas>
         </div>
-        <div className="flex justify-between">
-          <a
-            onClick={downloadImage}
+        <div className="flex justify-end">
+          <div
             className="font-jetbrains text-sm mt-3 text-center border-2
-              border-border rounded-lg px-2 py-1 justify-between items-center
-              hover:border-border-hover hover:cursor-pointer
-              active:bg-tab-active"
+              border-border rounded-lg px-2 py-1.5 justify-between items-center
+              hover:border-border-hover"
           >
-            {settings.language == "en" ? "Download (PNG)" : "下载 (PNG)"}
-          </a>
-          <a
-            onClick={downloadSVG}
-            className="font-jetbrains text-sm mt-3 text-center border-2
-              border-border rounded-lg px-2 py-1 justify-between items-center
-              hover:border-border-hover hover:cursor-pointer
-              active:bg-tab-active"
-          >
-            {settings.language == "en" ? "Download (SVG)" : "下载 (SVG)"}
-          </a>
+            <div className="inline">
+              {settings.language == "en" ? "Download" : "下载"}
+            </div>
+            <a
+              onClick={downloadImage}
+              className="text-center inline justify-between items-center ml-2
+                bg-clear-normal px-1 py-0.5 rounded-md hover:bg-clear-hover
+                hover:cursor-pointer active:bg-clear-active"
+            >
+              PNG
+            </a>
+            <a
+              onClick={downloadSVG}
+              className="text-center inline justify-between items-center ml-2
+                bg-randomize px-1 py-0.5 rounded-md hover:bg-randomize-hover
+                hover:cursor-pointer active:bg-randomize-active"
+            >
+              SVG
+            </a>
+          </div>
         </div>
       </div>
     </div>

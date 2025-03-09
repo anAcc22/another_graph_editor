@@ -23,6 +23,29 @@ interface Props {
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 }
 
+export async function loadFontAsBase64(fontPath: string): Promise<string> {
+  try {
+    const response = await fetch(fontPath);
+    const blob = await response.blob();
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          const base64String = reader.result.split(',')[1];
+          resolve(base64String);
+        } else {
+          reject(new Error('Not a String'));
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Failed to load font:', error);
+    return '';
+  }
+}
+
 export function GraphCanvas({
   testCases,
   directed,
@@ -71,11 +94,15 @@ export function GraphCanvas({
     a.remove();
   };
 
-  const downloadSVG = (): void => {
+  const downloadSVG = async (): Promise<void> => {
     let canvasMain = refMain.current;
     if (!canvasMain) {
       console.log("Error: canvas is null!");
       return;
+    }
+
+    if (SVGRenderer.fontBase64 === "") {
+      SVGRenderer.fontBase64 = await loadFontAsBase64('/another_graph_editor/JetBrainsMono-Bold.ttf');
     }
 
     const pixelRatio = window.devicePixelRatio || 1;

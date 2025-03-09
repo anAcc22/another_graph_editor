@@ -1,7 +1,6 @@
 import { TestCases } from "../types";
 import { Settings } from "../types";
 import { useRef } from "react";
-import { useState } from "react";
 import { useEffect } from "react";
 
 import { GraphPalette } from "./GraphPalette";
@@ -12,6 +11,11 @@ import { animateGraph } from "./animateGraph";
 
 import { resizeGraph } from "./animateGraph";
 import { updateGraph } from "./animateGraph";
+import { renderGraphToRenderer } from "./animateGraph";
+
+import { SVGRenderer } from "./drawingTools";
+import { CanvasRenderer } from "./drawingTools";
+
 
 interface Props {
   testCases: TestCases;
@@ -27,10 +31,73 @@ export function GraphCanvas({
   setSettings,
 }: Props) {
   let refMain = useRef<HTMLCanvasElement>(null);
-  let refOverall = useRef<HTMLCanvasElement>(null);
   let refAnnotation = useRef<HTMLCanvasElement>(null);
 
-  const [image, setImage] = useState<string>();
+  const downloadImage = (): void => {
+    let canvasMain = refMain.current;
+    let canvasAnnotation = refAnnotation.current;
+
+    if (canvasMain === null) {
+      console.log("Error: `canvas(Main)` is null!");
+      return;
+    }
+    if (canvasAnnotation === null) {
+      console.log("Error: `canvas(Annotation)` is null!");
+      return;
+    }
+
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+
+    if (ctx === null) {
+      console.log("Error: `ctx` is null!");
+      return;
+    }
+
+    canvas.width = canvasMain.width;
+    canvas.height = canvasMain.height;
+
+    ctx.drawImage(canvasMain, 0, 0);
+    ctx.drawImage(canvasAnnotation, 0, 0);
+
+    let dataURL = canvas.toDataURL("image/png");
+
+    const a = document.createElement("a");
+    a.href = dataURL;
+    a.download = "graph" + Date.now() + ".png";
+    a.click();
+
+    URL.revokeObjectURL(dataURL);
+    canvas.remove();
+    a.remove();
+  };
+
+  const downloadSVG = (): void => {
+    let canvasMain = refMain.current;
+    if (!canvasMain) {
+      console.log("Error: canvas is null!");
+      return;
+    }
+
+    const pixelRatio = window.devicePixelRatio || 1;
+
+    // 创建SVG渲染器
+    const svgRenderer = new SVGRenderer(canvasMain.width / pixelRatio, canvasMain.height / pixelRatio);
+    
+    renderGraphToRenderer(svgRenderer);
+    
+    const svgContent = svgRenderer.getImage();
+    const blob = new Blob([svgContent], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "graph" + Date.now() + ".svg";
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    a.remove();
+  };
 
   const resizeCanvasMain = (): void => {
     let canvas = refMain.current;
@@ -65,7 +132,7 @@ export function GraphCanvas({
   };
 
   const resizeCanvasOverall = (): void => {
-    let canvas = refOverall.current;
+    let canvas = refAnnotation.current;
 
     if (canvas === null) {
       console.log("Error: `canvas` is null!");
@@ -73,36 +140,18 @@ export function GraphCanvas({
     }
 
     let ctx = canvas.getContext("2d");
-
+    
     if (ctx === null) {
       console.log("Error: `ctx` is null!");
       return;
     }
 
     const pixelRatio = window.devicePixelRatio || 1;
+
     const rect = canvas.getBoundingClientRect();
 
     const width = pixelRatio * rect.width;
     const height = pixelRatio * rect.height;
-
-    canvas.width = width;
-    canvas.height = height;
-
-    ctx.scale(pixelRatio, pixelRatio);
-
-    canvas = refAnnotation.current;
-
-    if (canvas === null) {
-      console.log("Error: `canvas` is null!");
-      return;
-    }
-
-    ctx = canvas.getContext("2d");
-
-    if (ctx === null) {
-      console.log("Error: `ctx` is null!");
-      return;
-    }
 
     const annotations = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
@@ -129,23 +178,21 @@ export function GraphCanvas({
     document.fonts.add(font);
 
     let canvasMain = refMain.current;
-    let canvasOverall = refOverall.current;
+    // let canvasOverall = refOverall.current;
     let canvasAnnotation = refAnnotation.current;
 
     if (
       canvasMain === null ||
-      canvasOverall === null ||
       canvasAnnotation === null
     ) {
       console.log("Error: canvas is null!");
       return;
     }
 
-    let ctxMain = canvasMain.getContext("2d");
-    let ctxOverall = canvasOverall.getContext("2d");
+    let ctxMain = new CanvasRenderer(canvasMain);
     let ctxAnnotation = canvasAnnotation.getContext("2d");
 
-    if (ctxMain === null || ctxOverall === null || ctxAnnotation === null) {
+    if (ctxMain === null || ctxAnnotation === null) {
       console.log("Error: canvas context is null!");
       return;
     }
@@ -154,12 +201,9 @@ export function GraphCanvas({
 
     animateGraph(
       canvasMain,
-      canvasOverall,
       canvasAnnotation,
       ctxMain,
-      ctxOverall,
       ctxAnnotation,
-      setImage,
     );
 
     window.addEventListener("resize", resizeCanvas);
@@ -425,12 +469,6 @@ export function GraphCanvas({
         </div>
         <div className="h-full w-full relative">
           <canvas
-            ref={refOverall}
-            className="active:cursor-pointer border-2 border-border
-              hover:border-border-hover rounded-lg shadow shadow-shadow
-              touch-none top-0 bottom-0 left-0 right-0 w-full h-full absolute"
-          ></canvas>
-          <canvas
             ref={refMain}
             className="active:cursor-pointer border-2 border-border
               hover:border-border-hover rounded-lg bg-block shadow shadow-shadow
@@ -456,16 +494,26 @@ export function GraphCanvas({
             }
           ></canvas>
         </div>
-        <a
-          download="graph.png"
-          href={image}
-          className="font-jetbrains text-sm mt-3 text-center border-2
-            border-border rounded-lg px-2 py-1 justify-between items-center
-            hover:border-border-hover hover:cursor-pointer ml-auto
-            active:bg-tab-active"
-        >
-          {settings.language == "en" ? "Download (PNG)" : "下载 (PNG)"}
-        </a>
+        <div className="flex space-x-2">
+          <a
+            onClick={downloadImage}
+            className="font-jetbrains text-sm mt-3 text-center border-2
+              border-border rounded-lg px-2 py-1 justify-between items-center
+              hover:border-border-hover hover:cursor-pointer
+              active:bg-tab-active"
+          >
+            {settings.language == "en" ? "Download (PNG)" : "下载 (PNG)"}
+          </a>
+          <a
+            onClick={downloadSVG}
+            className="font-jetbrains text-sm mt-3 text-center border-2
+              border-border rounded-lg px-2 py-1 justify-between items-center
+              hover:border-border-hover hover:cursor-pointer
+              active:bg-tab-active"
+          >
+            {settings.language == "en" ? "Download (SVG)" : "下载 (SVG)"}
+          </a>
+        </div>
       </div>
     </div>
   );

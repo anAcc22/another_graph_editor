@@ -23,6 +23,7 @@ import { buildMSTs } from "./graphMSTs";
 
 import { drawLine, drawArrow, drawBridge, drawEdgeLabel } from "./drawingTools";
 import { drawCircle, drawHexagon, drawOctagon } from "./drawingTools";
+import { GraphRenderer } from "./drawingTools";
 
 import { FILL_PALETTE_LIGHT } from "./palettes";
 import { FILL_PALETTE_DARK } from "./palettes";
@@ -150,7 +151,6 @@ const FILL_COLORS_DARK = [
 
 const FILL_COLORS_LENGTH = 10;
 
-let currentTime = 0;
 let prevMS = performance.now();
 
 let nodeRadius = 16;
@@ -561,7 +561,7 @@ function resetMisplacedNodes() {
   });
 }
 
-function renderNodes(ctx: CanvasRenderingContext2D) {
+function renderNodes(ctx: GraphRenderer) {
   for (let i = 0; i < nodes.length; i++) {
     const u = nodes[i];
 
@@ -640,7 +640,7 @@ function renderNodes(ctx: CanvasRenderingContext2D) {
   }
 }
 
-function renderEdges(ctx: CanvasRenderingContext2D) {
+function renderEdges(ctx: GraphRenderer) {
   let renderedEdges = [...edges];
 
   if (!settings.multiedgeMode) {
@@ -818,14 +818,16 @@ function drawAnnotation(
   annotationLastPos = mousePos;
 }
 
+export function renderGraphToRenderer(renderer: GraphRenderer) {
+  renderEdges(renderer);
+  renderNodes(renderer);
+}
+
 export function animateGraph(
   canvas: HTMLCanvasElement,
-  canvasScreenshot: HTMLCanvasElement,
   canvasAnnotation: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D,
-  ctxScreenshot: CanvasRenderingContext2D,
+  ctx: GraphRenderer,
   ctxAnnotation: CanvasRenderingContext2D,
-  setImage: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) {
   generateRandomCoords();
 
@@ -965,18 +967,7 @@ export function animateGraph(
         };
       });
 
-      renderEdges(ctx);
-      renderNodes(ctx);
-
-      if (currentTime % 80 === 0) {
-        ctxScreenshot.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
-        ctxScreenshot.drawImage(canvas, 0, 0);
-        ctxScreenshot.drawImage(canvasAnnotation, 0, 0);
-        setImage(canvasScreenshot.toDataURL("image/png"));
-        currentTime = 1;
-      } else {
-        currentTime++;
-      }
+      renderGraphToRenderer(ctx);
 
       if (!settings.lockMode) {
         updateVelocities();

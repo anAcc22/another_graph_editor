@@ -183,6 +183,7 @@ export class SVGRenderer implements GraphRenderer {
 
   // 暂存路径
   private currentPath: string[] = [];
+  private currentPathClosed: boolean = false;
 
   // 样式
   lineWidth: number = 1;
@@ -203,6 +204,7 @@ export class SVGRenderer implements GraphRenderer {
   clearRect(): void {
     this.defs = [];
     this.currentPath = [];
+    this.currentPathClosed = false;
   }
 
   setLineDash(segments: number[]): void {
@@ -211,10 +213,13 @@ export class SVGRenderer implements GraphRenderer {
 
   beginPath(): void {
     this.currentPath = [];
+    this.currentPathClosed = false;
   }
 
   closePath(): void {
+    if (this.currentPathClosed) return;
     this.currentPath.push("Z");
+    this.currentPathClosed = true;
   }
 
   moveTo(x: number, y: number): void {
@@ -266,8 +271,8 @@ export class SVGRenderer implements GraphRenderer {
   fill(): void {
     if (this.currentPath.length === 0) return;
 
-    const path = this.currentPath.join(" ");
-    // const dashArray = this.lineDash.length ? `stroke-dasharray="${this.lineDash.join(',')}"` : "";
+    let path = this.currentPath.join(" ");
+    if (!this.currentPathClosed) path += " Z";
 
     this.defs.push(
       `<path d="${path}" fill="${this.fillStyle}" stroke="none" />`,
@@ -528,27 +533,38 @@ export function drawHexagon(
   nodeRadius: number,
   isTransparent: boolean,
 ) {
-  ctx.beginPath();
-
   const length = nodeRadius - nodeBorderWidthHalf;
   let theta = Math.PI / 6;
 
   if (isTransparent) {
+    ctx.beginPath();
     ctx.globalCompositeOperation = "destination-out";
     for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
       const x = u.x + length * Math.cos(theta);
       const y = u.y + length * Math.sin(theta);
-      ctx.lineTo(x, y);
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
     }
+    ctx.closePath();
     ctx.fill();
     ctx.globalCompositeOperation = "source-over";
   }
 
+  ctx.beginPath();
+
   for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
     const x = u.x + length * Math.cos(theta);
     const y = u.y + length * Math.sin(theta);
-    ctx.lineTo(x, y);
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
   }
+  ctx.closePath();
 
   if (!isTransparent) {
     ctx.fill();
@@ -566,9 +582,14 @@ export function drawHexagon(
     for (let i = 0; i < 7; i++, theta += Math.PI / 3) {
       const x = u.x + length * Math.cos(theta);
       const y = u.y + length * Math.sin(theta);
-      ctx.lineTo(x, y);
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
     }
 
+    ctx.closePath();
     ctx.stroke();
   }
 }
@@ -606,9 +627,14 @@ export function drawOctagon(
   for (let i = 0; i < 9; i++, theta += Math.PI / 4) {
     const nx = x + (length - nodeBorderWidthHalf) * Math.cos(theta);
     const ny = y + (length - nodeBorderWidthHalf) * Math.sin(theta);
-    ctx.lineTo(nx, ny);
+    if (i === 0) {
+      ctx.moveTo(nx, ny);
+    } else {
+      ctx.lineTo(nx, ny);
+    }
   }
 
+  ctx.closePath();
   ctx.stroke();
   ctx.setLineDash([]);
 

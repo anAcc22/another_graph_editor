@@ -302,7 +302,7 @@ Error generating stack: `+l.message+`
                     absolute`:`cursor-crosshair border-2 border-border
                     hover:border-border-hover rounded-lg shadow shadow-shadow
                     touch-none top-0 bottom-0 left-0 right-0 w-full h-full
-                    absolute`})]}),g.jsxs("div",{className:"flex space-x-2",children:[g.jsx("a",{onClick:o,className:`font-jetbrains text-sm mt-3 text-center border-2
+                    absolute`})]}),g.jsxs("div",{className:"flex justify-between",children:[g.jsx("a",{onClick:o,className:`font-jetbrains text-sm mt-3 text-center border-2
               border-border rounded-lg px-2 py-1 justify-between items-center
               hover:border-border-hover hover:cursor-pointer
               active:bg-tab-active`,children:t.language=="en"?"Download (PNG)":"下载 (PNG)"}),g.jsx("a",{onClick:i,className:`font-jetbrains text-sm mt-3 text-center border-2

@@ -179,11 +179,13 @@ export class SVGRenderer implements GraphRenderer {
   // SVG属性
   private width: number;
   private height: number;
-  private defs: string[] = [];
+  private currentContent: string = "";
 
   // 暂存路径
   private currentPath: string[] = [];
   private currentPathClosed: boolean = false;
+
+  private counter: number = 10000;
 
   // 样式
   lineWidth: number = 1;
@@ -202,7 +204,7 @@ export class SVGRenderer implements GraphRenderer {
   }
 
   clearRect(): void {
-    this.defs = [];
+    this.currentContent = "";
     this.currentPath = [];
     this.currentPathClosed = false;
   }
@@ -274,9 +276,14 @@ export class SVGRenderer implements GraphRenderer {
     let path = this.currentPath.join(" ");
     if (!this.currentPathClosed) path += " Z";
 
-    this.defs.push(
-      `<path d="${path}" fill="${this.fillStyle}" stroke="none" />`,
-    );
+    // SVG 不太支持 destination-out 这种绘制方式，因此进行特判
+    if (this.globalCompositeOperation == "destination-out") {
+      this.counter ++;
+      this.currentContent = `<mask id="mask-${this.counter}"><rect x="0" y="0" width="100%" height="100%" fill="#FFFFFF" /><path d="${path}" fill="#000000" stroke="none" /></mask>\n<g mask="url(#mask-${this.counter})">\n` +
+        this.currentContent + `</g>\n`;
+    } else {
+      this.currentContent += `<path d="${path}" fill="${this.fillStyle}" stroke="none" />\n`;
+    }
   }
 
   stroke(): void {
@@ -287,9 +294,7 @@ export class SVGRenderer implements GraphRenderer {
       ? `stroke-dasharray="${this.lineDash.join(",")}"`
       : "";
 
-    this.defs.push(
-      `<path d="${path}" fill="none" stroke="${this.strokeStyle}" stroke-width="${this.lineWidth}" ${dashArray} />`,
-    );
+    this.currentContent += `<path d="${path}" fill="none" stroke="${this.strokeStyle}" stroke-width="${this.lineWidth}" ${dashArray} />\n`;
   }
 
   fillText(text: string, x: number, y: number): void {
@@ -304,7 +309,7 @@ export class SVGRenderer implements GraphRenderer {
     if (this.textBaseline === "bottom") dominantBaseline = "text-after-edge";
 
     const style = `font: ${this.font}; fill: ${this.fillStyle}; text-anchor: ${anchor}; dominant-baseline: ${dominantBaseline};`;
-    this.defs.push(`<text x="${x}" y="${y}" style="${style}">${text}</text>`);
+    this.currentContent += `<text x="${x}" y="${y}" style="${style}">${text}</text>\n`;
   }
 
   getImage(): string {
@@ -320,11 +325,9 @@ export class SVGRenderer implements GraphRenderer {
   </defs>
 `;
 
-    for (const i of this.defs) {
-      svgContent += `  ${i}\n`;
-    }
+    svgContent += this.currentContent;
 
-    svgContent += "</svg>";
+    svgContent += "</svg>\n";
     return svgContent;
   }
 }

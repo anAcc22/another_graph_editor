@@ -16,7 +16,6 @@ import { renderGraphToRenderer } from "./animateGraph";
 import { SVGRenderer } from "./drawingTools";
 import { CanvasRenderer } from "./drawingTools";
 
-
 interface Props {
   testCases: TestCases;
   directed: boolean;
@@ -82,19 +81,22 @@ export function GraphCanvas({
     const pixelRatio = window.devicePixelRatio || 1;
 
     // 创建SVG渲染器
-    const svgRenderer = new SVGRenderer(canvasMain.width / pixelRatio, canvasMain.height / pixelRatio);
-    
+    const svgRenderer = new SVGRenderer(
+      canvasMain.width / pixelRatio,
+      canvasMain.height / pixelRatio,
+    );
+
     renderGraphToRenderer(svgRenderer);
-    
+
     const svgContent = svgRenderer.getImage();
     const blob = new Blob([svgContent], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
-    
+
     const a = document.createElement("a");
     a.href = url;
     a.download = "graph" + Date.now() + ".svg";
     a.click();
-    
+
     URL.revokeObjectURL(url);
     a.remove();
   };
@@ -140,7 +142,7 @@ export function GraphCanvas({
     }
 
     let ctx = canvas.getContext("2d");
-    
+
     if (ctx === null) {
       console.log("Error: `ctx` is null!");
       return;
@@ -181,10 +183,7 @@ export function GraphCanvas({
     // let canvasOverall = refOverall.current;
     let canvasAnnotation = refAnnotation.current;
 
-    if (
-      canvasMain === null ||
-      canvasAnnotation === null
-    ) {
+    if (canvasMain === null || canvasAnnotation === null) {
       console.log("Error: canvas is null!");
       return;
     }
@@ -199,12 +198,7 @@ export function GraphCanvas({
 
     resizeCanvas();
 
-    animateGraph(
-      canvasMain,
-      canvasAnnotation,
-      ctxMain,
-      ctxAnnotation,
-    );
+    animateGraph(canvasMain, canvasAnnotation, ctxMain, ctxAnnotation);
 
     window.addEventListener("resize", resizeCanvas);
     return () => {
@@ -494,7 +488,7 @@ export function GraphCanvas({
             }
           ></canvas>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex justify-between">
           <a
             onClick={downloadImage}
             className="font-jetbrains text-sm mt-3 text-center border-2

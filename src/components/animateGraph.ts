@@ -297,13 +297,53 @@ function updateEdges(graphEdges: string[]): void {
 }
 
 function updateVelocities() {
+  const bucketSize = Math.sqrt(canvasWidth * canvasHeight / Math.max(nodes.length, 1));
+  const buckets = new Map<number, Set<string>>();
+  for (const node of nodes) {
+    const bucketX = Math.floor(nodeMap.get(node)!.pos.x / bucketSize);
+    const bucketY = Math.floor(nodeMap.get(node)!.pos.y / bucketSize);
+    const bucketInd = bucketX * 1000000 + bucketY;
+    if (!buckets.has(bucketInd)) {
+      buckets.set(bucketInd, new Set<string>());
+    }
+    buckets.get(bucketInd)!.add(node);
+  }
+  const nodesToCheck = new Map<string, Set<string>>();
+  for (const node of nodes) {
+    nodesToCheck.set(node, new Set<string>());
+  }
+  for (const node of nodes) {
+    const i = Math.floor(nodeMap.get(node)!.pos.x / bucketSize);
+    const j = Math.floor(nodeMap.get(node)!.pos.y / bucketSize);
+    const curNodes = nodesToCheck.get(node)!;
+    for (let dist = 0; dist <= 5 && curNodes.size < 50; ++dist) {
+      for (let di = -dist; di <= dist; ++di) {
+        const djabs = dist - Math.abs(di);
+        for (const dj of [-djabs, djabs]) {
+          const bucket = buckets.get((i + di) * 1000000 + j + dj);
+          if (bucket === undefined) {
+            continue;
+          }
+          for (const v of bucket) {
+            if (v !== node) {
+              curNodes.add(v);
+            }
+          }
+        }
+      }
+    }
+    for (const v of fullAdjSet.get(node)!) {
+      curNodes.add(v);
+    }
+  }
+
   for (const u of nodes) {
     if (nodesToConceal.has(u)) continue;
     if (nodeMap.get(u)!.selected && settings.fixedMode) continue;
 
     const uPos = nodeMap.get(u)!.pos;
 
-    for (const v of fullAdjSet.get(u)!) {
+    for (const v of nodesToCheck.get(u)!) {
       if (nodesToConceal.has(v)) continue;
       const vPos = nodeMap.get(v)!.pos;
 
@@ -311,9 +351,13 @@ function updateVelocities() {
 
       let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 
-      aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
-      if (dist >= nodeDist) {
-        aMag *= -1;
+      const isEdge = adjSet.get(u)!.has(v) || adjSet.get(v)!.has(u);
+
+      if (isEdge) {
+        aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
+        if (dist >= nodeDist) {
+          aMag *= -1;
+        }
       }
 
       const ax = vPos.x - uPos.x;

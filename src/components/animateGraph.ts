@@ -1,4 +1,4 @@
-import { TestCases } from "../types";
+import { PositionMap, TestCases } from "../types";
 import { Settings } from "../types";
 import {
   ColorMap,
@@ -16,6 +16,7 @@ import { buildSCComponents } from "./graphComponents";
 
 import { buildTreeLayers } from "./graphTreeLayers";
 import { buildBipartite } from "./graphBipartite";
+import { buildGraphGrid } from "./graphGrid";
 
 import { buildBridges } from "./graphBridges";
 
@@ -201,6 +202,7 @@ let settings: Settings = {
   showMSTs: false,
   treeMode: false,
   bipartiteMode: false,
+  gridMode: false,
   markedNodes: false,
   lockMode: false,
   fixedMode: false,
@@ -229,6 +231,7 @@ let adj = new Map<string, string[]>();
 let rev = new Map<string, string[]>();
 
 let adjSet = new Map<string, Set<string>>(); // PERF: used to compute `isEdge`
+let fullAdjSet = new Map<string, Set<string>>();
 
 let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
@@ -239,6 +242,8 @@ let mstMap: MSTMap | undefined = undefined;
 
 let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
+
+let positionMap: PositionMap | undefined = undefined;
 
 function updateNodes(graphNodes: string[]): void {
   let deletedNodes: string[] = [];
@@ -298,34 +303,28 @@ function updateVelocities() {
 
     const uPos = nodeMap.get(u)!.pos;
 
-    for (const v of nodes) {
+    for (const v of fullAdjSet.get(u)!) {
       if (nodesToConceal.has(v)) continue;
-      if (v !== u) {
-        const vPos = nodeMap.get(v)!.pos;
+      const vPos = nodeMap.get(v)!.pos;
 
-        const dist = Math.max(euclidDist(uPos, vPos), 10);
+      const dist = Math.max(euclidDist(uPos, vPos), 10);
 
-        let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
+      let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
 
-        let isEdge = adjSet.get(u)!.has(v) || adjSet.get(v)!.has(u);
-
-        if (isEdge) {
-          aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
-          if (dist >= nodeDist) {
-            aMag *= -1;
-          }
-        }
-
-        const ax = vPos.x - uPos.x;
-        const ay = vPos.y - uPos.y;
-
-        const uVel = nodeMap.get(u)!.vel;
-
-        nodeMap.get(u)!.vel = {
-          x: clamp((uVel.x - aMag * ax) * (1 - NODE_FRICTION), -100, 100),
-          y: clamp((uVel.y - aMag * ay) * (1 - NODE_FRICTION), -100, 100),
-        };
+      aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
+      if (dist >= nodeDist) {
+        aMag *= -1;
       }
+
+      const ax = vPos.x - uPos.x;
+      const ay = vPos.y - uPos.y;
+
+      const uVel = nodeMap.get(u)!.vel;
+
+      nodeMap.get(u)!.vel = {
+        x: clamp((uVel.x - aMag * ax) * (1 - NODE_FRICTION), -100, 100),
+        y: clamp((uVel.y - aMag * ay) * (1 - NODE_FRICTION), -100, 100),
+      };
     }
 
     const axSign = canvasWidth / 2 - uPos.x >= 0 ? 1 : -1;
@@ -376,6 +375,34 @@ function updateVelocities() {
         x: nodeMap.get(u)!.vel.x,
         y: clamp((nodeMap.get(u)!.vel.y + ay) * (1 - NODE_FRICTION), -100, 100),
       };
+    } else if (positionMap !== undefined) {
+      const cellSide = (nodeDist * 4) / 5;
+      const xSize = positionMap.gridWidth * cellSide > canvasWidth - 2 * CANVAS_FIELD_DIST
+        ? (canvasWidth - 2 * CANVAS_FIELD_DIST) / positionMap.gridWidth
+        : cellSide;
+      const ySize = positionMap.gridHeight * cellSide > canvasHeight - 2 * CANVAS_FIELD_DIST
+        ? (canvasHeight - 2 * CANVAS_FIELD_DIST) / positionMap.gridHeight
+        : cellSide;
+
+      const xTarget = positionMap.positions.get(u)![0] * xSize + CANVAS_FIELD_DIST;
+      const yTarget = positionMap.positions.get(u)![1] * ySize + CANVAS_FIELD_DIST;
+
+      const x = nodeMap.get(u)!.pos.x;
+      const y = nodeMap.get(u)!.pos.y;
+
+      let ax = Math.pow(Math.abs(x - xTarget), 1.75) / 100;
+      if (x > xTarget) {
+        ax *= -1;
+      }
+      let ay = Math.pow(Math.abs(y - yTarget), 1.75) / 100;
+      if (y > yTarget) {
+        ay *= -1;
+      }
+
+      nodeMap.get(u)!.vel = {
+        x: clamp((nodeMap.get(u)!.vel.x + ax) * (1 - NODE_FRICTION), -100, 100),
+        y: clamp((nodeMap.get(u)!.vel.y + ay) * (1 - NODE_FRICTION), -100, 100),
+      };
     }
 
     const uVel = nodeMap.get(u)!.vel;
@@ -418,6 +445,7 @@ function buildSettings(): void {
   cutMap = undefined;
   bridgeMap = undefined;
   mstMap = undefined;
+  positionMap = undefined;
 
   if (settings.bipartiteMode) {
     let isBipartite: boolean;
@@ -439,6 +467,9 @@ function buildSettings(): void {
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
+    }
+    if (settings.gridMode) {
+      positionMap = buildGraphGrid(nodes, fullAdjSet, canvasWidth / canvasHeight);
     }
     if (settings.showBridges) {
       [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
@@ -528,6 +559,20 @@ export function updateGraph(testCases: TestCases) {
   adj.forEach((vs, u) => {
     adjSet.set(u, new Set<string>(vs));
   });
+
+  fullAdjSet = new Map<string, Set<string>>();
+  for (const u of nodes) {
+    fullAdjSet.set(u, new Set<string>());
+  }
+  for (const u of nodes) {
+    for (const v of adjSet.get(u)!) {
+      if (u === v) {
+        continue;
+      }
+      fullAdjSet.get(u)!.add(v);
+      fullAdjSet.get(v)!.add(u);
+    }
+  }
 
   nodeLabels = new Map<string, string>(rawNodeLabels);
   edgeLabels = new Map<string, string>(rawEdgeLabels);

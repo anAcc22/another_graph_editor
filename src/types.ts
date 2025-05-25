@@ -41,6 +41,7 @@ export interface Settings {
   showMSTs: boolean;
   treeMode: boolean;
   bipartiteMode: boolean;
+  gridMode: boolean,
   lockMode: boolean;
   markedNodes: boolean;
   fixedMode: boolean;
@@ -67,5 +68,12 @@ export type BackedgeMap = Map<string, boolean>;
 export type BridgeMap = Map<string, boolean>;
 
 export type MSTMap = Map<string, boolean>;
+
+export type Position = [number, number];
+export interface PositionMap {
+  positions: Map<string, Position>;
+  gridWidth: number;
+  gridHeight: number;
+}
 
 export type MarkBorder = "single" | "double";

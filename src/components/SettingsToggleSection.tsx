@@ -10,6 +10,31 @@ interface Props {
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 }
 
+function fixSettingsModes(newSettings: Settings, settingsName: string) {
+  if (
+    newSettings.bipartiteMode &&
+    settingsName === "bipartiteMode"
+  ) {
+    newSettings["treeMode"] = false;
+    newSettings["gridMode"] = false;
+    newSettings["showComponents"] = false;
+  }
+  if (newSettings.treeMode && settingsName === "treeMode") {
+    newSettings["bipartiteMode"] = false;
+    newSettings["gridMode"] = false;
+  }
+  if (
+    newSettings.showComponents &&
+    settingsName === "showComponents"
+  ) {
+    newSettings["bipartiteMode"] = false;
+  }
+  if (newSettings.gridMode && settingsName === "gridMode") {
+    newSettings["treeMode"] = false;
+    newSettings["bipartiteMode"] = false;
+  }
+}
+
 export function SettingsToggleSection({
   title,
   leftLabel,
@@ -38,22 +63,7 @@ export function SettingsToggleSection({
                       ...settings,
                       [settingsName]: false,
                     };
-                    if (
-                      newSettings.bipartiteMode &&
-                      settingsName === "bipartiteMode"
-                    ) {
-                      newSettings["treeMode"] = false;
-                      newSettings["showComponents"] = false;
-                    }
-                    if (newSettings.treeMode && settingsName === "treeMode") {
-                      newSettings["bipartiteMode"] = false;
-                    }
-                    if (
-                      newSettings.showComponents &&
-                      settingsName === "showComponents"
-                    ) {
-                      newSettings["bipartiteMode"] = false;
-                    }
+                    fixSettingsModes(newSettings, settingsName);
                     if (settingsName === "darkMode") {
                       localStorage.setItem(
                         "darkMode",
@@ -93,22 +103,7 @@ export function SettingsToggleSection({
                       ...settings,
                       [settingsName]: true,
                     };
-                    if (
-                      newSettings.bipartiteMode &&
-                      settingsName === "bipartiteMode"
-                    ) {
-                      newSettings["treeMode"] = false;
-                      newSettings["showComponents"] = false;
-                    }
-                    if (newSettings.treeMode && settingsName === "treeMode") {
-                      newSettings["bipartiteMode"] = false;
-                    }
-                    if (
-                      newSettings.showComponents &&
-                      settingsName === "showComponents"
-                    ) {
-                      newSettings["bipartiteMode"] = false;
-                    }
+                    fixSettingsModes(newSettings, settingsName);
                     if (settingsName === "darkMode") {
                       localStorage.setItem(
                         "darkMode",
@@ -142,22 +137,7 @@ export function SettingsToggleSection({
                   ...settings,
                   [settingsName]: !settings[settingsName],
                 };
-                if (
-                  newSettings.bipartiteMode &&
-                  settingsName === "bipartiteMode"
-                ) {
-                  newSettings["treeMode"] = false;
-                  newSettings["showComponents"] = false;
-                }
-                if (newSettings.treeMode && settingsName === "treeMode") {
-                  newSettings["bipartiteMode"] = false;
-                }
-                if (
-                  newSettings.showComponents &&
-                  settingsName === "showComponents"
-                ) {
-                  newSettings["bipartiteMode"] = false;
-                }
+                fixSettingsModes(newSettings, settingsName);
                 if (settingsName === "darkMode") {
                   localStorage.setItem(
                     "darkMode",

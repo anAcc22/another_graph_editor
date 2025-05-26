@@ -75,6 +75,7 @@ function App() {
     fixedMode: false,
     multiedgeMode: true,
     settingsFormat: "general",
+    gridMode: false,
   });
 
   return (

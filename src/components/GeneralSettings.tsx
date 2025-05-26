@@ -151,7 +151,7 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
         )}
 
         <SettingsToggleSection
-          title={settings.language == "en" ? "Grid Mode" : "help idk chinese"}
+          title={settings.language == "en" ? "Grid Mode" : "方格模式"}
           leftLabel={settings.language == "en" ? "Off" : "关闭"}
           rightLabel={settings.language == "en" ? "On" : "开启"}
           toggleId={"gridMode"}

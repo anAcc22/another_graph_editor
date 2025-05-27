@@ -23,6 +23,20 @@ interface Props {
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 }
 
+function oversampleCanvas(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  factor: number,
+) {
+  const width = canvas.width;
+  const height = canvas.height;
+  canvas.width = width * factor;
+  canvas.height = height * factor;
+  ctx.scale(factor, factor);
+}
+
+const OVERSAMPLE_FACTOR = 2.0;
+
 export async function loadFontAsBase64(fontPath: string): Promise<string> {
   try {
     const response = await fetch(fontPath);
@@ -109,7 +123,6 @@ export function GraphCanvas({
 
     const pixelRatio = window.devicePixelRatio || 1;
 
-    // 创建SVG渲染器
     const svgRenderer = new SVGRenderer(
       canvasMain.width / pixelRatio,
       canvasMain.height / pixelRatio,
@@ -159,6 +172,8 @@ export function GraphCanvas({
 
     ctx.scale(pixelRatio, pixelRatio);
 
+    oversampleCanvas(canvas, ctx, OVERSAMPLE_FACTOR);
+
     resizeGraph(rect.width - canvasBorderX, rect.height - canvasBorderY);
   };
 
@@ -190,6 +205,8 @@ export function GraphCanvas({
     canvas.height = height;
 
     ctx.scale(pixelRatio, pixelRatio);
+
+    oversampleCanvas(canvas, ctx, OVERSAMPLE_FACTOR);
 
     ctx.putImageData(annotations, 0, 0);
   };

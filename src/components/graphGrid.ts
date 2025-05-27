@@ -138,7 +138,6 @@ export function buildGraphGrid(
     const startTime = performance.now();
     for (let it = 0; it < nodes.length * nodes.length * 10; ++it) {
       if ((performance.now() - startTime) / 1000 > TIME_LIMIT_SECONDS) {
-        console.log("Iters:", it);
         break;
       }
       const u = genRandom(adj.length);

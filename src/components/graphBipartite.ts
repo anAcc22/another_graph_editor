@@ -19,7 +19,6 @@ export function buildBipartite(
       adjFull.set(v, [...adjFull.get(v)!, u]);
     }
   }
-  console.log(adjFull);
 
   let okay = true;
 

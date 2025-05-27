@@ -875,6 +875,7 @@ function drawAnnotation(
   const idx = settings.markColor;
 
   ctxAnnotation.lineCap = "round";
+  ctxAnnotation.lineJoin = "round";
   ctxAnnotation.lineWidth = ANNOTATION_WIDTH;
 
   if (settings.darkMode) {

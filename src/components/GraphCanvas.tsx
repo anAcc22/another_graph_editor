@@ -523,11 +523,11 @@ export function GraphCanvas({
                   shadow shadow-shadow touch-none top-0 bottom-0 left-0 right-0
                   w-full h-full absolute`
                 : settings.drawMode === "pen"
-                  ? `cursor-cell border-2 border-border
+                  ? `border-2 border-border
                     hover:border-border-hover rounded-lg shadow shadow-shadow
                     touch-none top-0 bottom-0 left-0 right-0 w-full h-full
                     absolute`
-                  : `cursor-crosshair border-2 border-border
+                  : `cursor-cell border-2 border-border
                     hover:border-border-hover rounded-lg shadow shadow-shadow
                     touch-none top-0 bottom-0 left-0 right-0 w-full h-full
                     absolute`

@@ -172,8 +172,6 @@ export function GraphCanvas({
 
     ctx.scale(pixelRatio, pixelRatio);
 
-    oversampleCanvas(canvas, ctx, OVERSAMPLE_FACTOR);
-
     resizeGraph(rect.width - canvasBorderX, rect.height - canvasBorderY);
   };
 
@@ -206,8 +204,6 @@ export function GraphCanvas({
 
     ctx.scale(pixelRatio, pixelRatio);
 
-    oversampleCanvas(canvas, ctx, OVERSAMPLE_FACTOR);
-
     ctx.putImageData(annotations, 0, 0);
   };
 
@@ -226,7 +222,6 @@ export function GraphCanvas({
     document.fonts.add(font);
 
     let canvasMain = refMain.current;
-    // let canvasOverall = refOverall.current;
     let canvasAnnotation = refAnnotation.current;
 
     if (canvasMain === null || canvasAnnotation === null) {
@@ -234,17 +229,22 @@ export function GraphCanvas({
       return;
     }
 
-    let ctxMain = new CanvasRenderer(canvasMain);
+    let mainRenderer = new CanvasRenderer(canvasMain);
+
+    let ctxMain = canvasMain.getContext("2d");
     let ctxAnnotation = canvasAnnotation.getContext("2d");
 
-    if (ctxMain === null || ctxAnnotation === null) {
+    if (mainRenderer === null || ctxMain === null || ctxAnnotation === null) {
       console.log("Error: canvas context is null!");
       return;
     }
 
     resizeCanvas();
 
-    animateGraph(canvasMain, canvasAnnotation, ctxMain, ctxAnnotation);
+    animateGraph(canvasMain, canvasAnnotation, mainRenderer, ctxAnnotation);
+
+    oversampleCanvas(canvasMain, ctxMain, OVERSAMPLE_FACTOR);
+    oversampleCanvas(canvasAnnotation, ctxAnnotation, OVERSAMPLE_FACTOR);
 
     window.addEventListener("resize", resizeCanvas);
     return () => {

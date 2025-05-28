@@ -99,7 +99,7 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
-const FPS = 120;
+const FPS = 90;
 
 const ANNOTATION_WIDTH = 2;
 const ERASE_WIDTH = 50;
@@ -177,6 +177,9 @@ let oldDirected = false;
 let directed = false;
 
 let inAnnotation = false;
+let toAnnotate = 0;
+
+let annotationSecondLastPos: Vector2D = { x: 0, y: 0 };
 let annotationLastPos: Vector2D = { x: 0, y: 0 };
 
 let inErase = false;
@@ -297,7 +300,9 @@ function updateEdges(graphEdges: string[]): void {
 }
 
 function updateVelocities() {
-  const bucketSize = Math.sqrt(canvasWidth * canvasHeight / Math.max(nodes.length, 1));
+  const bucketSize = Math.sqrt(
+    (canvasWidth * canvasHeight) / Math.max(nodes.length, 1),
+  );
   const buckets = new Map<number, Set<string>>();
   for (const node of nodes) {
     const bucketX = Math.floor(nodeMap.get(node)!.pos.x / bucketSize);
@@ -421,15 +426,19 @@ function updateVelocities() {
       };
     } else if (positionMap !== undefined) {
       const cellSide = (nodeDist * 4) / 5;
-      const xSize = positionMap.gridWidth * cellSide > canvasWidth - 2 * CANVAS_FIELD_DIST
-        ? (canvasWidth - 2 * CANVAS_FIELD_DIST) / positionMap.gridWidth
-        : cellSide;
-      const ySize = positionMap.gridHeight * cellSide > canvasHeight - 2 * CANVAS_FIELD_DIST
-        ? (canvasHeight - 2 * CANVAS_FIELD_DIST) / positionMap.gridHeight
-        : cellSide;
+      const xSize =
+        positionMap.gridWidth * cellSide > canvasWidth - 2 * CANVAS_FIELD_DIST
+          ? (canvasWidth - 2 * CANVAS_FIELD_DIST) / positionMap.gridWidth
+          : cellSide;
+      const ySize =
+        positionMap.gridHeight * cellSide > canvasHeight - 2 * CANVAS_FIELD_DIST
+          ? (canvasHeight - 2 * CANVAS_FIELD_DIST) / positionMap.gridHeight
+          : cellSide;
 
-      const xTarget = positionMap.positions.get(u)![0] * xSize + CANVAS_FIELD_DIST;
-      const yTarget = positionMap.positions.get(u)![1] * ySize + CANVAS_FIELD_DIST;
+      const xTarget =
+        positionMap.positions.get(u)![0] * xSize + CANVAS_FIELD_DIST;
+      const yTarget =
+        positionMap.positions.get(u)![1] * ySize + CANVAS_FIELD_DIST;
 
       const x = nodeMap.get(u)!.pos.x;
       const y = nodeMap.get(u)!.pos.y;
@@ -513,7 +522,11 @@ function buildSettings(): void {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
     }
     if (settings.gridMode) {
-      positionMap = buildGraphGrid(nodes, fullAdjSet, canvasWidth / canvasHeight);
+      positionMap = buildGraphGrid(
+        nodes,
+        fullAdjSet,
+        canvasWidth / canvasHeight,
+      );
     }
     if (settings.showBridges) {
       [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
@@ -898,14 +911,31 @@ function drawAnnotation(
     }
   }
 
-  ctxAnnotation.beginPath();
-  ctxAnnotation.moveTo(annotationLastPos.x, annotationLastPos.y);
-  ctxAnnotation.lineTo(mousePos.x, mousePos.y);
+  ctxAnnotation.fillStyle = ctxAnnotation.strokeStyle;
 
-  ctxAnnotation.stroke();
-  ctxAnnotation.fill();
+  if (toAnnotate % 2 == 0) {
+    if (toAnnotate == 0) {
+      ctxAnnotation.beginPath();
+      ctxAnnotation.moveTo(
+        annotationSecondLastPos.x,
+        annotationSecondLastPos.y,
+      );
+      ctxAnnotation.quadraticCurveTo(
+        annotationLastPos.x,
+        annotationLastPos.y,
+        mousePos.x,
+        mousePos.y,
+      );
 
-  annotationLastPos = mousePos;
+      ctxAnnotation.stroke();
+      ctxAnnotation.fill();
+    }
+    annotationSecondLastPos = annotationLastPos;
+    annotationLastPos = mousePos;
+  }
+
+  toAnnotate++;
+  toAnnotate %= 4;
 }
 
 export function renderGraphToRenderer(renderer: GraphRenderer) {
@@ -929,11 +959,13 @@ export function animateGraph(
       y: event.offsetY,
     };
 
+    annotationSecondLastPos = mousePos;
     annotationLastPos = mousePos;
 
     if (settings.drawMode === "pen") {
       inAnnotation = true;
       inErase = false;
+      toAnnotate = 0;
       drawAnnotation(ctxAnnotation, mousePos);
     } else if (settings.drawMode === "erase") {
       inErase = true;

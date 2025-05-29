@@ -518,7 +518,7 @@ export function GraphCanvas({
             ref={refAnnotation}
             className={
               settings.drawMode === "node"
-                ? `active:cursor-pointer border-0 border-border
+                ? `active:cursor-pointer border-2 border-transparent
                   pointer-events-none hover:border-border-hover rounded-lg
                   shadow shadow-shadow touch-none top-0 bottom-0 left-0 right-0
                   w-full h-full absolute`

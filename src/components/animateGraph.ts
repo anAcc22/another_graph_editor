@@ -28,13 +28,14 @@ import { GraphRenderer } from "./drawingTools";
 
 import { FILL_PALETTE_LIGHT } from "./palettes";
 import { FILL_PALETTE_DARK } from "./palettes";
+import { Bounds, buildTestcaseBoundingBoxes } from "./testcaseBoundingBoxes";
 
 interface Vector2D {
   x: number;
   y: number;
 }
 
-class Node {
+export class Node {
   pos: Vector2D;
   vel: Vector2D = { x: 0, y: 0 };
   markColor: number | undefined;
@@ -215,7 +216,7 @@ let settings: Settings = {
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
 
 let nodes: string[] = [];
-let nodesToConceal = new Set<String>();
+let nodesToConceal = new Set<string>();
 let nodeMap = new Map<string, Node>();
 
 let nodeDist: number = 40;
@@ -247,6 +248,7 @@ let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
 let positionMap: PositionMap | undefined = undefined;
+let testcaseBoundingBoxes: Map<number, Bounds> | undefined = undefined;
 
 function updateNodes(graphNodes: string[]): void {
   let deletedNodes: string[] = [];
@@ -993,11 +995,63 @@ function renderPenIndicator(renderer: GraphRenderer) {
   renderer.stroke();
 }
 
+function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
+  if (testcaseBoundingBoxes === undefined) return;
+
+  testcaseBoundingBoxes.forEach((bounds: Bounds, caseNumber: number) => {
+    renderer.lineCap = "round";
+    renderer.lineWidth = 2.0;
+    renderer.strokeStyle = settings.darkMode
+      ? FILL_COLORS_DARK[(caseNumber + 1) % FILL_COLORS_DARK.length]
+      : FILL_COLORS_LIGHT[(caseNumber + 1) % FILL_COLORS_LIGHT.length];
+
+    const PAD = 20;
+    renderer.setLineDash([2, 4]);
+
+    renderer.textBaseline = "middle";
+    renderer.textAlign = "left";
+
+    renderer.font = `${settings.fontSize}px JB`;
+    renderer.fillStyle = textColor;
+    renderer.fillText(
+      "#" + caseNumber.toString(),
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMin - settings.nodeRadius - PAD - settings.fontSize,
+    );
+
+    renderer.beginPath();
+    renderer.moveTo(
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMin - settings.nodeRadius - PAD,
+    );
+    renderer.lineTo(
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMax + settings.nodeRadius + PAD,
+    );
+    renderer.lineTo(
+      bounds.xMax + settings.nodeRadius + PAD,
+      bounds.yMax + settings.nodeRadius + PAD,
+    );
+    renderer.lineTo(
+      bounds.xMax + settings.nodeRadius + PAD,
+      bounds.yMin - settings.nodeRadius - PAD,
+    );
+    renderer.lineTo(
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMin - settings.nodeRadius - PAD,
+    );
+    renderer.stroke();
+
+    renderer.setLineDash([]);
+  });
+}
+
 export function renderGraphToRenderer(renderer: GraphRenderer) {
   renderEdges(renderer);
   renderNodes(renderer);
   renderEraseIndicator(renderer);
   renderPenIndicator(renderer);
+  renderTestcaseBoundingBoxes(renderer);
 }
 
 export function animateGraph(
@@ -1145,6 +1199,11 @@ export function animateGraph(
           y: clamp(mousePos.y, nodeRadius, canvasHeight - nodeRadius),
         };
       });
+
+      testcaseBoundingBoxes = buildTestcaseBoundingBoxes(
+        nodeMap,
+        nodesToConceal,
+      );
 
       renderGraphToRenderer(ctx);
 

@@ -21,6 +21,10 @@ export function stripNode(u: string) {
   return u;
 }
 
+export function getTestCase(u: string) {
+  return u.length - stripNode(u).length + 1;
+}
+
 export function sortNodes(nodes: string[]) {
   nodes = nodes.map((u) => stripNode(u));
 

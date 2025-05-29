@@ -193,8 +193,8 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         <input
           type="range"
           min={0}
-          max={75}
-          step={5}
+          max={90}
+          step={6}
           value={settings.penThickness - 1}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
@@ -222,8 +222,8 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         <input
           type="range"
           min={0}
-          max={75}
-          step={5}
+          max={90}
+          step={6}
           value={settings.penTransparency}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize

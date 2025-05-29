@@ -969,6 +969,8 @@ function renderEraseIndicator(renderer: GraphRenderer) {
     2 * Math.PI + curMS,
   );
   renderer.stroke();
+
+  renderer.setLineDash([]);
 }
 
 function renderPenIndicator(renderer: GraphRenderer) {
@@ -979,8 +981,6 @@ function renderPenIndicator(renderer: GraphRenderer) {
   renderer.strokeStyle = settings.darkMode
     ? NODE_LABEL_OUTLINE_LIGHT
     : NODE_LABEL_OUTLINE_DARK;
-
-  renderer.setLineDash([]);
 
   renderer.beginPath();
   renderer.arc(

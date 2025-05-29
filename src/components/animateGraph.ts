@@ -101,9 +101,6 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
 
 const FPS = 90;
 
-const ANNOTATION_WIDTH = 2;
-const ERASE_WIDTH = 75;
-
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
@@ -183,7 +180,6 @@ let annotationSecondLastPos: Vector2D = { x: 0, y: 0 };
 let annotationLastPos: Vector2D = { x: 0, y: 0 };
 
 let inErase = false;
-let erasePos: Vector2D = { x: 0, y: 0 };
 
 let rainbowHue = 0;
 
@@ -201,6 +197,9 @@ let settings: Settings = {
   nodeBorderWidthHalf: 15,
   edgeLength: 10,
   edgeLabelSeparation: 10,
+  penThickness: 1,
+  penTransparency: 0,
+  eraserRadius: 20,
   showComponents: false,
   showBridges: false,
   showMSTs: false,
@@ -873,10 +872,18 @@ function eraseAnnotation(
 ) {
   ctxAnnotation.lineCap = "round";
 
+  ctxAnnotation.globalAlpha = 1.0;
+
   ctxAnnotation.globalCompositeOperation = "destination-out";
 
   ctxAnnotation.beginPath();
-  ctxAnnotation.arc(mousePos.x, mousePos.y, ERASE_WIDTH / 2, 0, 2 * Math.PI);
+  ctxAnnotation.arc(
+    mousePos.x,
+    mousePos.y,
+    settings.eraserRadius,
+    0,
+    2 * Math.PI,
+  );
   ctxAnnotation.fill();
 
   ctxAnnotation.globalCompositeOperation = "source-over";
@@ -888,9 +895,11 @@ function drawAnnotation(
 ) {
   const idx = settings.markColor;
 
+  ctxAnnotation.globalAlpha = 1.0 - settings.penTransparency / 100;
+
   ctxAnnotation.lineCap = "round";
   ctxAnnotation.lineJoin = "round";
-  ctxAnnotation.lineWidth = ANNOTATION_WIDTH;
+  ctxAnnotation.lineWidth = settings.penThickness;
 
   if (settings.darkMode) {
     if (idx >= 3) {
@@ -942,31 +951,44 @@ function drawAnnotation(
 function renderEraseIndicator(renderer: GraphRenderer) {
   if (settings.drawMode !== "erase") return;
 
-  const xOk =
-    erasePos.x >= ERASE_WIDTH / 2 &&
-    erasePos.x + ERASE_WIDTH / 2 <= canvasWidth;
-  const yOk =
-    erasePos.y >= ERASE_WIDTH / 2 &&
-    erasePos.y + ERASE_WIDTH / 2 <= canvasWidth;
-
-  if (!xOk || !yOk) return;
-
   let curMS = performance.now() / 350;
   if (!inErase) curMS = 0;
 
   renderer.lineCap = "round";
-  renderer.lineWidth = ANNOTATION_WIDTH;
+  renderer.lineWidth = 2.0;
   renderer.strokeStyle = settings.darkMode ? NODE_LABEL_LIGHT : NODE_LABEL_DARK;
 
   renderer.setLineDash([2, 10]);
 
   renderer.beginPath();
   renderer.arc(
-    erasePos.x,
-    erasePos.y,
-    ERASE_WIDTH / 2,
+    mousePos.x,
+    mousePos.y,
+    settings.eraserRadius,
     0 + curMS,
     2 * Math.PI + curMS,
+  );
+  renderer.stroke();
+}
+
+function renderPenIndicator(renderer: GraphRenderer) {
+  if (settings.drawMode !== "pen") return;
+
+  renderer.lineCap = "round";
+  renderer.lineWidth = 2.0;
+  renderer.strokeStyle = settings.darkMode
+    ? NODE_LABEL_OUTLINE_LIGHT
+    : NODE_LABEL_OUTLINE_DARK;
+
+  renderer.setLineDash([]);
+
+  renderer.beginPath();
+  renderer.arc(
+    mousePos.x,
+    mousePos.y,
+    settings.penThickness / 2.0,
+    0,
+    2 * Math.PI,
   );
   renderer.stroke();
 }
@@ -975,6 +997,7 @@ export function renderGraphToRenderer(renderer: GraphRenderer) {
   renderEdges(renderer);
   renderNodes(renderer);
   renderEraseIndicator(renderer);
+  renderPenIndicator(renderer);
 }
 
 export function animateGraph(
@@ -992,7 +1015,6 @@ export function animateGraph(
       x: event.offsetX,
       y: event.offsetY,
     };
-    erasePos = mousePos;
 
     annotationSecondLastPos = mousePos;
     annotationLastPos = mousePos;
@@ -1022,7 +1044,6 @@ export function animateGraph(
       x: event.offsetX,
       y: event.offsetY,
     };
-    erasePos = mousePos;
 
     if (settings.drawMode === "pen") {
       if (inAnnotation) drawAnnotation(ctxAnnotation, mousePos);

@@ -4,6 +4,7 @@ import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
 import { Settings } from "./types";
+import { SettingsFormat } from "./types";
 import { TestCase, TestCases } from "./types";
 
 import { getDefaultGraph } from "./components/utils";
@@ -62,6 +63,18 @@ function App() {
       localStorage.getItem("edgeLabelSeparation") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLabelSeparation")!)
         : 10,
+    penThickness:
+      localStorage.getItem("penThickness") !== null
+        ? Number.parseFloat(localStorage.getItem("penThickness")!)
+        : 1,
+    penTransparency:
+      localStorage.getItem("penTransparency") !== null
+        ? Number.parseFloat(localStorage.getItem("penTransparency")!)
+        : 0,
+    eraserRadius:
+      localStorage.getItem("eraserRadius") !== null
+        ? Number.parseFloat(localStorage.getItem("eraserRadius")!)
+        : 20,
     showComponents: false,
     showBridges: false,
     showMSTs: false,
@@ -74,7 +87,10 @@ function App() {
         : false,
     fixedMode: false,
     multiedgeMode: true,
-    settingsFormat: "general",
+    settingsFormat:
+      localStorage.getItem("settingsFormat") !== null
+        ? (localStorage.getItem("settingsFormat") as SettingsFormat)
+        : "general",
     gridMode: false,
   });
 

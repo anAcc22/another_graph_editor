@@ -36,6 +36,9 @@ export interface Settings {
   nodeBorderWidthHalf: number;
   edgeLength: number;
   edgeLabelSeparation: number;
+  penThickness: number;
+  penTransparency: number;
+  eraserRadius: number;
   showComponents: boolean;
   showBridges: boolean;
   showMSTs: boolean;

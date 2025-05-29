@@ -29,6 +29,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
             }
             onClick={() => {
               setSettings({ ...settings, settingsFormat: "general" });
+              localStorage.setItem("settingsFormat", "general");
             }}
           >
             {settings.language == "en" ? "General" : "功能设置"}
@@ -45,6 +46,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
             }
             onClick={() => {
               setSettings({ ...settings, settingsFormat: "appearance" });
+              localStorage.setItem("settingsFormat", "appearance");
             }}
           >
             {settings.language == "en" ? "Appearance" : "外观设置"}

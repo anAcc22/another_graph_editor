@@ -518,15 +518,14 @@ export function GraphCanvas({
             ref={refAnnotation}
             className={
               settings.drawMode === "node"
-                ? `active:cursor-pointer border-2 border-border
+                ? `active:cursor-pointer border-0 border-border
                   pointer-events-none hover:border-border-hover rounded-lg
                   shadow shadow-shadow touch-none top-0 bottom-0 left-0 right-0
                   w-full h-full absolute`
                 : settings.drawMode === "pen"
-                  ? `border-2 border-border
-                    hover:border-border-hover rounded-lg shadow shadow-shadow
-                    touch-none top-0 bottom-0 left-0 right-0 w-full h-full
-                    absolute`
+                  ? `border-2 border-border hover:border-border-hover rounded-lg
+                    shadow shadow-shadow touch-none top-0 bottom-0 left-0
+                    right-0 w-full h-full absolute`
                   : `cursor-cell border-2 border-border
                     hover:border-border-hover rounded-lg shadow shadow-shadow
                     touch-none top-0 bottom-0 left-0 right-0 w-full h-full

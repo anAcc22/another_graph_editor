@@ -29,6 +29,20 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           setSettings={setSettings}
         />
 
+        <SettingsToggleSection
+          title={
+            settings.language == "en"
+              ? "Testcase Bounding Boxes"
+              : "Testcase Bounding Boxes"
+          }
+          leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
+          rightLabel={settings.language == "en" ? "Show" : "展示"}
+          toggleId={"settingsBoundingBoxes"}
+          settingsName={"testCaseBoundingBoxes"}
+          settings={settings}
+          setSettings={setSettings}
+        />
+
         <hr className="border-dashed border-border" />
 
         <h4 className="font-semibold">

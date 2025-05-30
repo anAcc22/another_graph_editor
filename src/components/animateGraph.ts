@@ -201,6 +201,7 @@ let settings: Settings = {
   penThickness: 1,
   penTransparency: 0,
   eraserRadius: 20,
+  testCaseBoundingBoxes: true,
   showComponents: false,
   showBridges: false,
   showMSTs: false,
@@ -1004,7 +1005,7 @@ function renderPenIndicator(renderer: GraphRenderer) {
 }
 
 function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
-  if (testCaseBoundingBoxes === undefined) return;
+  if (testCaseBoundingBoxes === undefined || !settings.testCaseBoundingBoxes) return;
 
   testCaseBoundingBoxes.forEach((bounds: Bounds, caseNumber: number) => {
     const fixedCaseNumber = testCaseMap.get(caseNumber)!;

@@ -39,6 +39,7 @@ export interface Settings {
   penThickness: number;
   penTransparency: number;
   eraserRadius: number;
+  testCaseBoundingBoxes: boolean;
   showComponents: boolean;
   showBridges: boolean;
   showMSTs: boolean;

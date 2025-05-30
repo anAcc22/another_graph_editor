@@ -75,6 +75,7 @@ function App() {
       localStorage.getItem("eraserRadius") !== null
         ? Number.parseFloat(localStorage.getItem("eraserRadius")!)
         : 20,
+    testCaseBoundingBoxes: true,
     showComponents: false,
     showBridges: false,
     showMSTs: false,

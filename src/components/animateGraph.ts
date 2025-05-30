@@ -28,7 +28,7 @@ import { GraphRenderer } from "./drawingTools";
 
 import { FILL_PALETTE_LIGHT } from "./palettes";
 import { FILL_PALETTE_DARK } from "./palettes";
-import { Bounds, buildTestcaseBoundingBoxes } from "./testcaseBoundingBoxes";
+import { Bounds, buildTestCaseBoundingBoxes } from "./testCaseBoundingBoxes";
 
 interface Vector2D {
   x: number;
@@ -218,6 +218,7 @@ let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
 let nodes: string[] = [];
 let nodesToConceal = new Set<string>();
 let nodeMap = new Map<string, Node>();
+let testCaseMap = new Map<number, number>();
 
 let nodeDist: number = 40;
 
@@ -248,7 +249,7 @@ let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
 let positionMap: PositionMap | undefined = undefined;
-let testcaseBoundingBoxes: Map<number, Bounds> | undefined = undefined;
+let testCaseBoundingBoxes: Map<number, Bounds> | undefined = undefined;
 
 function updateNodes(graphNodes: string[]): void {
   let deletedNodes: string[] = [];
@@ -640,6 +641,13 @@ export function updateGraph(testCases: TestCases) {
   [isBipartite] = buildBipartite(nodes, adj);
   localStorage.setItem("isBipartite", isBipartite.toString());
 
+  let curIdx = 0;
+  testCaseMap.clear();
+
+  testCases.forEach((_, rawNumber) => {
+    testCaseMap.set(rawNumber, curIdx++);
+  });
+
   buildSettings();
 }
 
@@ -996,14 +1004,16 @@ function renderPenIndicator(renderer: GraphRenderer) {
 }
 
 function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
-  if (testcaseBoundingBoxes === undefined) return;
+  if (testCaseBoundingBoxes === undefined) return;
 
-  testcaseBoundingBoxes.forEach((bounds: Bounds, _caseNumber: number) => {
+  testCaseBoundingBoxes.forEach((bounds: Bounds, caseNumber: number) => {
+    const fixedCaseNumber = testCaseMap.get(caseNumber)!;
+
     renderer.lineCap = "round";
     renderer.lineWidth = 2.0;
     renderer.strokeStyle = settings.darkMode
-      ? FILL_COLORS_DARK[bounds.fixedCaseNumber % FILL_COLORS_LENGTH]
-      : FILL_COLORS_LIGHT[bounds.fixedCaseNumber % FILL_COLORS_LENGTH];
+      ? FILL_COLORS_DARK[fixedCaseNumber % FILL_COLORS_LENGTH]
+      : FILL_COLORS_LIGHT[fixedCaseNumber % FILL_COLORS_LENGTH];
 
     const PAD = 20;
     renderer.setLineDash([2, 4]);
@@ -1014,7 +1024,7 @@ function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
     renderer.font = `${settings.fontSize}px JB`;
     renderer.fillStyle = textColor;
     renderer.fillText(
-      "#" + (bounds.fixedCaseNumber + 1).toString(),
+      "#" + (fixedCaseNumber + 1).toString(),
       bounds.xMin - settings.nodeRadius - PAD,
       bounds.yMin - settings.nodeRadius - PAD - settings.fontSize,
     );
@@ -1200,7 +1210,7 @@ export function animateGraph(
         };
       });
 
-      testcaseBoundingBoxes = buildTestcaseBoundingBoxes(
+      testCaseBoundingBoxes = buildTestCaseBoundingBoxes(
         nodeMap,
         nodesToConceal,
       );

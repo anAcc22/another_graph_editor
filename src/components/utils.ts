@@ -22,7 +22,7 @@ export function stripNode(u: string) {
 }
 
 export function getTestCase(u: string) {
-  return u.length - stripNode(u).length + 1;
+  return u.length - stripNode(u).length;
 }
 
 export function sortNodes(nodes: string[]) {

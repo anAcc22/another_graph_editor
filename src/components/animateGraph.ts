@@ -123,7 +123,7 @@ const NODE_FRICTION = 0.05;
 const CANVAS_FIELD_DIST = 50;
 
 const FILL_COLORS_LIGHT = [
-  "#dedede",
+  "#9ece7e",
   "#dd7878",
   "#7287ed",
   "#dfae5d",
@@ -136,12 +136,12 @@ const FILL_COLORS_LIGHT = [
 ];
 
 const FILL_COLORS_DARK = [
-  "#232323",
+  "#536333",
   "#7d3838",
   "#42479d",
   "#7f5e0d",
   "#40603b",
-  "#8c3a28",
+  "#8c4a28",
   "#104f85",
   "#176249",
   "#7a366b",
@@ -998,12 +998,12 @@ function renderPenIndicator(renderer: GraphRenderer) {
 function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
   if (testcaseBoundingBoxes === undefined) return;
 
-  testcaseBoundingBoxes.forEach((bounds: Bounds, caseNumber: number) => {
+  testcaseBoundingBoxes.forEach((bounds: Bounds, _caseNumber: number) => {
     renderer.lineCap = "round";
     renderer.lineWidth = 2.0;
     renderer.strokeStyle = settings.darkMode
-      ? FILL_COLORS_DARK[(caseNumber + 1) % FILL_COLORS_DARK.length]
-      : FILL_COLORS_LIGHT[(caseNumber + 1) % FILL_COLORS_LIGHT.length];
+      ? FILL_COLORS_DARK[bounds.fixedCaseNumber % FILL_COLORS_LENGTH]
+      : FILL_COLORS_LIGHT[bounds.fixedCaseNumber % FILL_COLORS_LENGTH];
 
     const PAD = 20;
     renderer.setLineDash([2, 4]);
@@ -1014,7 +1014,7 @@ function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
     renderer.font = `${settings.fontSize}px JB`;
     renderer.fillStyle = textColor;
     renderer.fillText(
-      "#" + caseNumber.toString(),
+      "#" + (bounds.fixedCaseNumber + 1).toString(),
       bounds.xMin - settings.nodeRadius - PAD,
       bounds.yMin - settings.nodeRadius - PAD - settings.fontSize,
     );

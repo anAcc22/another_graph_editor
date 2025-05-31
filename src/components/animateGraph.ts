@@ -674,7 +674,7 @@ function resetMisplacedNodes() {
   });
 }
 
-function renderNodes(ctx: GraphRenderer) {
+function renderNodes(renderer: GraphRenderer) {
   for (let i = 0; i < nodes.length; i++) {
     const u = nodes[i];
 
@@ -682,14 +682,14 @@ function renderNodes(ctx: GraphRenderer) {
 
     const node = nodeMap.get(u)!;
 
-    ctx.lineWidth = 2 * nodeBorderWidthHalf;
-    ctx.lineCap = "round";
+    renderer.lineWidth = 2 * nodeBorderWidthHalf;
+    renderer.lineCap = "round";
 
-    ctx.strokeStyle = strokeColor;
+    renderer.strokeStyle = strokeColor;
 
     let isTransparent = colorMap === undefined;
 
-    ctx.fillStyle =
+    renderer.fillStyle =
       fillColors[
       colorMap === undefined
         ? 0
@@ -702,12 +702,12 @@ function renderNodes(ctx: GraphRenderer) {
       const color = settings.darkMode
         ? FILL_PALETTE_DARK[idx]
         : FILL_PALETTE_LIGHT[idx];
-      ctx.fillStyle = color;
+      renderer.fillStyle = color;
     }
 
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
       drawHexagon(
-        ctx,
+        renderer,
         node.pos,
         node.selected,
         nodeBorderWidthHalf,
@@ -716,7 +716,7 @@ function renderNodes(ctx: GraphRenderer) {
       );
     } else {
       drawCircle(
-        ctx,
+        renderer,
         node.pos,
         node.selected,
         nodeBorderWidthHalf,
@@ -725,14 +725,14 @@ function renderNodes(ctx: GraphRenderer) {
       );
     }
 
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
+    renderer.textBaseline = "middle";
+    renderer.textAlign = "center";
 
     const s = stripNode(u);
 
-    ctx.font = `${settings.fontSize + 2}px JB`;
-    ctx.fillStyle = textColor;
-    ctx.fillText(
+    renderer.font = `${settings.fontSize + 2}px JB`;
+    renderer.fillStyle = textColor;
+    renderer.fillText(
       isInteger(s) ? (parseInt(s, 10) + labelOffset).toString() : s,
       node!.pos.x,
       node!.pos.y + TEXT_Y_OFFSET,
@@ -740,7 +740,7 @@ function renderNodes(ctx: GraphRenderer) {
 
     if (nodeLabels.has(nodes[i])) {
       drawOctagon(
-        ctx,
+        renderer,
         node.pos,
         nodeLabels.get(nodes[i])!,
         settings,
@@ -753,7 +753,7 @@ function renderNodes(ctx: GraphRenderer) {
   }
 }
 
-function renderEdges(ctx: GraphRenderer) {
+function renderEdges(renderer: GraphRenderer) {
   let renderedEdges = [...edges];
 
   if (!settings.multiedgeMode) {
@@ -788,10 +788,10 @@ function renderEdges(ctx: GraphRenderer) {
       backedgeMap !== undefined &&
       (edr !== 0 || backedgeMap.get(eBase))
     ) {
-      ctx.setLineDash([2, 10]);
+      renderer.setLineDash([2, 10]);
     }
 
-    ctx.strokeStyle = strokeColor;
+    renderer.strokeStyle = strokeColor;
 
     let thickness = nodeBorderWidthHalf;
 
@@ -810,16 +810,16 @@ function renderEdges(ctx: GraphRenderer) {
       edrMax === 0 &&
       bridgeMap.get(eBase)
     ) {
-      drawBridge(ctx, pt1, pt2, thickness, nodeRadius, edgeColor);
+      drawBridge(renderer, pt1, pt2, thickness, nodeRadius, edgeColor);
     } else {
-      drawLine(ctx, pt1, pt2, edr, thickness, edgeColor);
+      drawLine(renderer, pt1, pt2, edr, thickness, edgeColor);
     }
 
-    ctx.setLineDash([]);
+    renderer.setLineDash([]);
 
     if (directed) {
       drawArrow(
-        ctx,
+        renderer,
         pt1,
         pt2,
         edr,
@@ -836,7 +836,7 @@ function renderEdges(ctx: GraphRenderer) {
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
         drawEdgeLabel(
-          ctx,
+          renderer,
           pt1,
           pt2,
           edr,
@@ -849,7 +849,7 @@ function renderEdges(ctx: GraphRenderer) {
       } else {
         if (e < eRev) {
           drawEdgeLabel(
-            ctx,
+            renderer,
             pt1,
             pt2,
             edr,
@@ -861,7 +861,7 @@ function renderEdges(ctx: GraphRenderer) {
           );
         } else {
           drawEdgeLabel(
-            ctx,
+            renderer,
             pt1,
             pt2,
             edr,
@@ -1074,7 +1074,7 @@ export function renderGraphToRenderer(renderer: GraphRenderer) {
 export function animateGraph(
   canvas: HTMLCanvasElement,
   canvasAnnotation: HTMLCanvasElement,
-  ctx: GraphRenderer,
+  mainRenderer: GraphRenderer,
   indicatorRenderer: GraphRenderer,
   ctxAnnotation: CanvasRenderingContext2D,
 ) {
@@ -1202,7 +1202,7 @@ export function animateGraph(
     setTimeout(() => {
       requestAnimationFrame(animate);
 
-      ctx.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
+      mainRenderer.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
       indicatorRenderer.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
 
       resetMisplacedNodes();
@@ -1224,7 +1224,7 @@ export function animateGraph(
         nodesToConceal,
       );
 
-      renderGraphToRenderer(ctx);
+      renderGraphToRenderer(mainRenderer);
       renderEraseIndicator(indicatorRenderer);
       renderPenIndicator(indicatorRenderer);
 

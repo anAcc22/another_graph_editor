@@ -1005,7 +1005,8 @@ function renderPenIndicator(renderer: GraphRenderer) {
 }
 
 function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
-  if (testCaseBoundingBoxes === undefined || !settings.testCaseBoundingBoxes) return;
+  if (testCaseBoundingBoxes === undefined || !settings.testCaseBoundingBoxes)
+    return;
 
   testCaseBoundingBoxes.forEach((bounds: Bounds, caseNumber: number) => {
     const fixedCaseNumber = testCaseMap.get(caseNumber)!;
@@ -1016,7 +1017,7 @@ function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
       ? FILL_COLORS_DARK[fixedCaseNumber % FILL_COLORS_LENGTH]
       : FILL_COLORS_LIGHT[fixedCaseNumber % FILL_COLORS_LENGTH];
 
-    const PAD = 20;
+    const PAD = 52;
     renderer.setLineDash([2, 4]);
 
     renderer.textBaseline = "middle";
@@ -1024,10 +1025,17 @@ function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
 
     renderer.font = `${settings.fontSize}px JB`;
     renderer.fillStyle = textColor;
+
+    let yPrint = bounds.yMax + settings.nodeRadius + PAD + settings.fontSize;
+
+    if (bounds.yMin - settings.nodeRadius - PAD - settings.fontSize >= 10) {
+      yPrint = bounds.yMin - settings.nodeRadius - PAD - settings.fontSize;
+    }
+
     renderer.fillText(
       "#" + (fixedCaseNumber + 1).toString(),
       bounds.xMin - settings.nodeRadius - PAD,
-      bounds.yMin - settings.nodeRadius - PAD - settings.fontSize,
+      yPrint,
     );
 
     renderer.beginPath();

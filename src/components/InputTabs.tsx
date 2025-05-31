@@ -1,7 +1,7 @@
 import { Settings, TestCases } from "../types";
 import { GraphInput } from "./GraphInput";
 import { InputTab } from "./InputTab";
-import { getDefaultGraph } from "./utils";
+import { createTestCase } from "./createTestCase";
 
 import { useEffect } from "react";
 
@@ -72,26 +72,19 @@ export function InputTabs({
                 w-7 h-7 inline-flex items-center justify-center border-2
                 border-format-ok-border active:bg-format-ok-active font-semibold"
               onClick={() => {
-                const newTabId = testCaseNumber + 1;
-                setTestCaseNumber((testCaseNumber) => testCaseNumber + 1);
-                setTestCases((testCases) => {
-                  const newTestCases = new Map(testCases);
-                  newTestCases.set(newTabId, {
-                    graphEdges: getDefaultGraph(),
-                    graphParChild: getDefaultGraph(),
-                    inputFormat: "edges",
-                  });
-                  return newTestCases;
-                });
-                setTabs((tabs) => [...tabs, newTabId]);
-                setCurrentId(newTabId);
-                setTimeout(() => {
-                  let edges = document.getElementById(
-                    "graphInputEdges" + newTabId,
-                  ) as HTMLTextAreaElement;
-                  if (edges === null) return;
-                  edges.value = "1 2\n2 3\n3 1\n";
-                }, 50);
+                createTestCase(
+                  testCaseNumber,
+                  setTestCaseNumber,
+                  setTestCases,
+                  setTabs,
+                  setCurrentId,
+                  {
+                    edges: "1 2\n2 3\n2 4",
+                    roots: "1",
+                    nodeLabels: "1 2 3 4",
+                  },
+                  undefined,
+                );
               }}
             >
               +

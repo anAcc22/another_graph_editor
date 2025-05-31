@@ -613,7 +613,7 @@ export function drawOctagon(
   let x = u.x;
   let y = u.y;
 
-  if (Math.abs(u.y - nodeRadius - 2 * length) <= 5) {
+  if (u.y - nodeRadius - 2 * length <= 5) {
     y += nodeRadius + length;
   } else {
     y -= nodeRadius + length;

@@ -398,8 +398,8 @@ export function GraphCanvas({
               className="inline-flex transition-[border] duration-500
                 ease-in-out hover:rounded-3xl border-2 border-border text-center
                 text-lg hover:border-border-hover rounded-md w-7 h-7
-                items-center justify-center active:bg-tab-active pl-[1px]
-                pb-[1px]"
+                items-center justify-center active:bg-tab-active pl-[0.45px]
+                pt-[0.1px]"
               title={
                 settings.language == "en"
                   ? "Clear ALL Annotations"

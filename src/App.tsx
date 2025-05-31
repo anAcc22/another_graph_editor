@@ -100,8 +100,10 @@ function App() {
       <div
         className={
           settings.darkMode
-            ? "dark bg-ovr text-text absolute w-full overflow-scroll no-scrollbar"
-            : "light bg-ovr text-text absolute w-full overflow-scroll no-scrollbar"
+            ? `dark bg-ovr text-text absolute w-full overflow-scroll
+              no-scrollbar`
+            : `light bg-ovr text-text absolute w-full overflow-scroll
+              no-scrollbar`
         }
       >
         <div

@@ -210,7 +210,7 @@ export function GraphInput({
           inputId === currentId
             ? `font-jetbrains flex flex-col border-2 rounded-lg bg-block
               shadow-shadow shadow border-border p-3 space-y-3 list-none
-              hover:border-border-hover`
+              hover:border-border-hover mb-12`
             : "hidden"
         }
       >

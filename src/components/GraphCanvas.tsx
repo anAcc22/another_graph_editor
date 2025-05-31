@@ -454,9 +454,9 @@ export function GraphCanvas({
               </svg>
             </button>
 
-            <div className="hidden lg:inline-flex"></div>
-            <div className="hidden lg:inline-flex"></div>
-            <div className="hidden lg:inline-flex"></div>
+            <div className="hidden xl:inline-flex"></div>
+            <div className="hidden xl:inline-flex"></div>
+            <div className="hidden xl:inline-flex"></div>
 
             <button
               className="hidden lg:inline-flex transition duration-500

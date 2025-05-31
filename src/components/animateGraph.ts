@@ -691,9 +691,9 @@ function renderNodes(ctx: GraphRenderer) {
 
     ctx.fillStyle =
       fillColors[
-        colorMap === undefined
-          ? 0
-          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
+      colorMap === undefined
+        ? 0
+        : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
       ];
 
     if (nodeMap.get(nodes[i])!.markColor !== undefined) {
@@ -1068,8 +1068,6 @@ function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
 export function renderGraphToRenderer(renderer: GraphRenderer) {
   renderEdges(renderer);
   renderNodes(renderer);
-  renderEraseIndicator(renderer);
-  renderPenIndicator(renderer);
   renderTestcaseBoundingBoxes(renderer);
 }
 
@@ -1077,6 +1075,7 @@ export function animateGraph(
   canvas: HTMLCanvasElement,
   canvasAnnotation: HTMLCanvasElement,
   ctx: GraphRenderer,
+  indicatorRenderer: GraphRenderer,
   ctxAnnotation: CanvasRenderingContext2D,
 ) {
   generateRandomCoords();
@@ -1204,6 +1203,7 @@ export function animateGraph(
       requestAnimationFrame(animate);
 
       ctx.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
+      indicatorRenderer.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
 
       resetMisplacedNodes();
 
@@ -1225,6 +1225,8 @@ export function animateGraph(
       );
 
       renderGraphToRenderer(ctx);
+      renderEraseIndicator(indicatorRenderer);
+      renderPenIndicator(indicatorRenderer);
 
       if (!settings.lockMode) {
         updateVelocities();

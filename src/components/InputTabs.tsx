@@ -85,6 +85,13 @@ export function InputTabs({
                 });
                 setTabs((tabs) => [...tabs, newTabId]);
                 setCurrentId(newTabId);
+                setTimeout(() => {
+                  let edges = document.getElementById(
+                    "graphInputEdges" + newTabId,
+                  ) as HTMLTextAreaElement;
+                  if (edges === null) return;
+                  edges.value = "1 2\n2 3\n3 1\n";
+                }, 50);
               }}
             >
               +

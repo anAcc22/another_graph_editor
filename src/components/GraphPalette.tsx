@@ -18,7 +18,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 1 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 3 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-yellow rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -34,7 +34,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 5 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 7 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-lime rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -50,7 +50,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 9 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 11 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-wood rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -66,7 +66,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 13 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 15 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-azure rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -82,7 +82,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 17 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 19 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-blue rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -98,7 +98,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 21 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 23 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-purple rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -114,7 +114,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 25 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 27 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-grape rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -130,7 +130,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 29 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 31 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-sakura rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -146,7 +146,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 33 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 35 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-raw rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -162,7 +162,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 37 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 39 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-moon rounded-full transtion
             ease-in-out hover:scale-150 duration-100
@@ -179,7 +179,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 2 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 4 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-yellow-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -195,7 +195,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 6 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 8 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-lime-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -211,7 +211,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 10 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 12 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-wood-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -227,7 +227,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 14 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 16 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-azure-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -243,7 +243,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 18 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 20 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-blue-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -259,7 +259,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 22 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 24 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-purple-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -275,7 +275,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 26 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 28 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-grape-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -291,7 +291,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 30 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 32 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-sakura-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -307,7 +307,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 34 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 36 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-raw-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100
@@ -323,7 +323,7 @@ export function GraphPalette({ settings, setSettings }: Props) {
           onClick={() => setSettings({ ...settings, markColor: 38 })}
         ></div>
         <div
-          className={`border-[2px] sm:hidden xl:block
+          className={`border-[2px] hidden xl:block
             ${settings.markColor === 40 ? "hover:border-text" : "hover:border-border-hover"}
             h-4 w-4 hover:drop-shadow-sm bg-palette-moon-dull rounded-full
             transtion ease-in-out hover:scale-150 duration-100

@@ -1,6 +1,6 @@
 import { parseGraphInputEdges } from "./parseGraphInput";
 import { parseGraphInputParentChild } from "./parseGraphInput";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Settings } from "../types";
 import { ParsedGraph } from "../types";
@@ -122,6 +122,10 @@ export function GraphInput({
       }
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => processGraphInput(), 100);
+  }, []);
 
   const processNodeLabels = () => {
     if (testCases.get(inputId) === undefined) return;
@@ -623,14 +627,14 @@ export function GraphInput({
               className="font-jetbrains bg-format-ok rounded-md text-right px-2
                 py-1 inline"
             >
-              {settings.language == "en" ? "Format: OK" : "格式：良好"}
+              {settings.language == "en" ? "Format ✓" : "格式 ✓"}
             </span>
           ) : (
             <span
               className="font-jetbrains bg-format-bad rounded-md text-right px-2
                 py-1 inline"
             >
-              {settings.language == "en" ? "Format: BAD" : "格式：错误"}
+              {settings.language == "en" ? "Format 𝗫" : "格式 𝗫"}
             </span>
           )}
           <button
@@ -674,7 +678,7 @@ export function GraphInput({
               processGraphInput();
             }}
           >
-            {settings.language == "en" ? "Randomize" : "随机"}
+            {settings.language == "en" ? "Random" : "随机"}
           </button>
         </div>
       </li>

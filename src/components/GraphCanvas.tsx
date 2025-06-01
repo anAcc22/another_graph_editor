@@ -254,7 +254,11 @@ export function GraphCanvas({
     let canvasAnnotation = refAnnotation.current;
     let canvasIndicator = refIndicator.current;
 
-    if (canvasMain === null || canvasAnnotation === null || canvasIndicator === null) {
+    if (
+      canvasMain === null ||
+      canvasAnnotation === null ||
+      canvasIndicator === null
+    ) {
       console.log("Error: canvas is null!");
       return;
     }
@@ -266,14 +270,25 @@ export function GraphCanvas({
     let ctxAnnotation = canvasAnnotation.getContext("2d");
     let ctxIndicator = canvasIndicator.getContext("2d");
 
-    if (mainRenderer === null || ctxMain === null || ctxAnnotation === null || ctxIndicator === null) {
+    if (
+      mainRenderer === null ||
+      ctxMain === null ||
+      ctxAnnotation === null ||
+      ctxIndicator === null
+    ) {
       console.log("Error: canvas context is null!");
       return;
     }
 
     resizeCanvas();
 
-    animateGraph(canvasMain, canvasAnnotation, mainRenderer, indicatorRenderer, ctxAnnotation);
+    animateGraph(
+      canvasMain,
+      canvasAnnotation,
+      mainRenderer,
+      indicatorRenderer,
+      ctxAnnotation,
+    );
 
     oversampleCanvas(canvasMain, ctxMain, OVERSAMPLE_FACTOR);
     oversampleCanvas(canvasAnnotation, ctxAnnotation, OVERSAMPLE_FACTOR);
@@ -566,10 +581,12 @@ export function GraphCanvas({
                     absolute`
             }
           ></canvas>
-          <canvas ref={refIndicator}
-            className="border-2 border-border hover:border-border-hover rounded-lg
-                    shadow shadow-shadow touch-none top-0 bottom-0 left-0
-                    right-0 w-full h-full absolute pointer-events-none"></canvas>
+          <canvas
+            ref={refIndicator}
+            className="border-2 border-transparent hover:border-border-hover
+              rounded-lg shadow shadow-shadow touch-none top-0 bottom-0 left-0
+              right-0 w-full h-full absolute pointer-events-none"
+          ></canvas>
         </div>
         <div className="flex justify-end">
           <div

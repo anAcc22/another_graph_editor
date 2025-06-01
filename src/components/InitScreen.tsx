@@ -109,8 +109,11 @@ export function InitScreen({
               wrap="off"
               name="initPreview"
               id={"initPreview"}
-              rows={initPreviewMap.get(selected)?.split("\n").length}
-              value={initPreviewMap.get(selected) ?? ""}
+              rows={
+                initPreviewMap.get([selected, indexing].join(" "))?.split("\n")
+                  .length
+              }
+              value={initPreviewMap.get([selected, indexing].join(" ")) ?? ""}
               readOnly
               className="bg-ovr font-semibold font-jetbrains resize-none
                 border-2 rounded-md px-2 py-1 border-single focus:outline-none

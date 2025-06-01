@@ -3,7 +3,7 @@ import { EdgesParams, ParChildParams } from "./createTestCase";
 import { TestCase, TestCases } from "../types";
 
 export const initNameMap = new Map<string, string>();
-export const initPreviewMap = new Map<number, string>();
+export const initPreviewMap = new Map<string, string>();
 export const initBuildMap = new Map<
   number,
   (
@@ -19,7 +19,8 @@ export const initBuildMap = new Map<
 
 initNameMap.set(0 + "en", "[single] basic (edges)");
 initNameMap.set(0 + "cn", "[single] basic (edges)");
-initPreviewMap.set(0, "n [...]\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
+initPreviewMap.set("0 0", "n [...]\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
+initPreviewMap.set("0 1", "n [...]\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initBuildMap.set(
   0,
   (
@@ -62,7 +63,8 @@ initBuildMap.set(
 
 initNameMap.set(1 + "en", "[single] array (edges)");
 initNameMap.set(1 + "cn", "[single] array (edges)");
-initPreviewMap.set(1, "n [...]\na₁ ... aₙ\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
+initPreviewMap.set("1 0", "n [...]\na₀ ... aₙ₋₁\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
+initPreviewMap.set("1 1", "n [...]\na₁ ... aₙ\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initBuildMap.set(
   1,
   (
@@ -106,7 +108,8 @@ initBuildMap.set(
 
 initNameMap.set(2 + "en", "[single] basic (parent-child)");
 initNameMap.set(2 + "cn", "[single] basic (parent-child)");
-initPreviewMap.set(2, "n [...]\np₂ ... pₙ");
+initPreviewMap.set("2 0", "n [...]\np₁ ... pₙ₋₁");
+initPreviewMap.set("2 1", "n [...]\np₂ ... pₙ");
 initBuildMap.set(
   2,
   (
@@ -153,7 +156,8 @@ initBuildMap.set(
 
 initNameMap.set(3 + "en", "[single] array (parent-child)");
 initNameMap.set(3 + "cn", "[single] array (parent-child)");
-initPreviewMap.set(3, "n [...]\na₁ ... aₙ\np₂ ... pₙ");
+initPreviewMap.set("3 0", "n [...]\na₀ ... aₙ₋₁\np₁ ... pₙ₋₁");
+initPreviewMap.set("3 1", "n [...]\na₁ ... aₙ\np₂ ... pₙ");
 initBuildMap.set(
   3,
   (
@@ -202,7 +206,11 @@ initBuildMap.set(
 initNameMap.set(4 + "en", "[multiple] basic (edges)");
 initNameMap.set(4 + "cn", "[multiple] basic (edges)");
 initPreviewMap.set(
-  4,
+  "4 0",
+  "t\nn₁ m₁ [...]\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
+);
+initPreviewMap.set(
+  "4 1",
   "t\nn₁ m₁ [...]\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
 );
 initBuildMap.set(
@@ -259,7 +267,11 @@ initBuildMap.set(
 initNameMap.set(5 + "en", "[multiple] array (edges)");
 initNameMap.set(5 + "cn", "[multiple] array (edges)");
 initPreviewMap.set(
-  5,
+  "5 0",
+  "t\nn₁ m₁ [...]\na₀ ... a_{n₁-1}\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\na₀ ... a_{nₜ-1}\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
+);
+initPreviewMap.set(
+  "5 1",
   "t\nn₁ m₁ [...]\na₁ ... a_{n₁}\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\na₁ ... a_{nₜ}\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
 );
 initBuildMap.set(
@@ -317,7 +329,11 @@ initBuildMap.set(
 initNameMap.set(6 + "en", "[multiple] tree (edges)");
 initNameMap.set(6 + "cn", "[multiple] tree (edges)");
 initPreviewMap.set(
-  6,
+  "6 0",
+  "t\nn₁ [...]\nu₁ v₁ [w]\n...\nu_{n₁-1} v_{n₁-1} [w]\n...\nnₜ [...]\nu₁ v₁ [w]\n...\nu_{nₜ-1} v_{nₜ-1} [w]",
+);
+initPreviewMap.set(
+  "6 1",
   "t\nn₁ [...]\nu₁ v₁ [w]\n...\nu_{n₁-1} v_{n₁-1} [w]\n...\nnₜ [...]\nu₁ v₁ [w]\n...\nu_{nₜ-1} v_{nₜ-1} [w]",
 );
 initBuildMap.set(
@@ -374,7 +390,11 @@ initBuildMap.set(
 initNameMap.set(7 + "en", "[multiple] tree w/ array (edges)");
 initNameMap.set(7 + "cn", "[multiple] tree w/ array (edges)");
 initPreviewMap.set(
-  7,
+  "7 0",
+  "t\nn₁ [...]\na₀ ... a_{n₁-1}\nu₁ v₁ [w]\n...\nu_{n₁-1} v_{n₁-1} [w]\n...\nnₜ [...]\na₀ ... a_{nₜ-1}\nu₁ v₁ [w]\n...\nu_{nₜ-1} v_{nₜ-1} [w]",
+);
+initPreviewMap.set(
+  "7 1",
   "t\nn₁ [...]\na₁ ... a_{n₁}\nu₁ v₁ [w]\n...\nu_{n₁-1} v_{n₁-1} [w]\n...\nnₜ [...]\na₁ ... a_{nₜ}\nu₁ v₁ [w]\n...\nu_{nₜ-1} v_{nₜ-1} [w]",
 );
 initBuildMap.set(
@@ -432,7 +452,11 @@ initBuildMap.set(
 initNameMap.set(8 + "en", "[multiple] basic (parent-child)");
 initNameMap.set(8 + "cn", "[multiple] basic (parent-child)");
 initPreviewMap.set(
-  8,
+  "8 0",
+  "t\nn₁ [...]\np₁ ... p_{n₁-1}\n...\nnₜ [...]\np₁ ... p_{nₜ-1}",
+);
+initPreviewMap.set(
+  "8 1",
   "t\nn₁ [...]\np₂ ... p_{n₁}\n...\nnₜ [...]\np₂ ... p_{nₜ}",
 );
 initBuildMap.set(
@@ -492,7 +516,11 @@ initBuildMap.set(
 initNameMap.set(9 + "en", "[multiple] array (parent-child)");
 initNameMap.set(9 + "cn", "[multiple] basic (parent-child)");
 initPreviewMap.set(
-  9,
+  "9 0",
+  "t\nn₁ [...]\na₀ ... a_{n₁-1}\np₁ ... p_{n₁-1}\n...\nnₜ [...]\na₀ ... a_{nₜ-1}\np₁ ... p_{nₜ-1}",
+);
+initPreviewMap.set(
+  "9 1",
   "t\nn₁ [...]\na₁ ... a_{n₁}\np₂ ... p_{n₁}\n...\nnₜ [...]\na₁ ... a_{nₜ}\np₂ ... p_{nₜ}",
 );
 initBuildMap.set(

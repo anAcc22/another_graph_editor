@@ -106,14 +106,14 @@ const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_LABEL_LIGHT = "hsl(30, 50%, 40%)";
-const NODE_LABEL_LIGHT = "hsl(10, 50%, 40%)";
+const NODE_LABEL_LIGHT = "hsl(30, 80%, 50%)";
 const NODE_LABEL_OUTLINE_LIGHT = "hsl(10, 2%, 70%)";
 
 const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_LABEL_DARK = "hsl(30, 70%, 60%)";
-const NODE_LABEL_DARK = "hsl(10, 70%, 60%)";
+const NODE_LABEL_DARK = "hsl(30, 100%, 50%)";
 const NODE_LABEL_OUTLINE_DARK = "hsl(10, 2%, 30%)";
 
 const TEXT_Y_OFFSET = 1;
@@ -691,9 +691,9 @@ function renderNodes(renderer: GraphRenderer) {
 
     renderer.fillStyle =
       fillColors[
-      colorMap === undefined
-        ? 0
-        : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
+        colorMap === undefined
+          ? 0
+          : colorMap.get(nodes[i])! % FILL_COLORS_LENGTH
       ];
 
     if (nodeMap.get(nodes[i])!.markColor !== undefined) {
@@ -737,6 +737,12 @@ function renderNodes(renderer: GraphRenderer) {
       node!.pos.x,
       node!.pos.y + TEXT_Y_OFFSET,
     );
+  }
+  for (let i = 0; i < nodes.length; i++) {
+    const u = nodes[i];
+
+    if (nodesToConceal.has(u)) continue;
+    const node = nodeMap.get(u)!;
 
     if (nodeLabels.has(nodes[i])) {
       drawOctagon(

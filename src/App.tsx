@@ -3,6 +3,8 @@ import { InputTabs } from "./components/InputTabs";
 import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
+import { InitScreen } from "./components/InitScreen";
+
 import { Settings } from "./types";
 import { SettingsFormat } from "./types";
 import { TestCase, TestCases } from "./types";
@@ -94,6 +96,8 @@ function App() {
         : "general",
     gridMode: false,
   });
+
+  const [init, setInit] = useState<boolean>(false);
 
   return (
     <>
@@ -240,6 +244,20 @@ function App() {
           </a>
         </div>
 
+        {init ? (
+          <InitScreen
+            settings={settings}
+            setInit={setInit}
+            testCaseNumber={testCaseNumber}
+            setTestCaseNumber={setTestCaseNumber}
+            setTestCases={setTestCases}
+            setTabs={setTabs}
+            setCurrentId={setCurrentId}
+          />
+        ) : (
+          <></>
+        )}
+
         <InputTabs
           settings={settings}
           tabs={tabs}
@@ -254,6 +272,7 @@ function App() {
           setCurrentId={setCurrentId}
           directed={directed}
           setDirected={setDirected}
+          setInit={setInit}
         />
 
         <div className="relative z-0">

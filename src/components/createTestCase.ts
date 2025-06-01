@@ -1,13 +1,13 @@
 import { TestCases } from "../types";
 import { getDefaultGraph } from "./utils";
 
-interface EdgesParams {
+export interface EdgesParams {
   nodeLabels: string;
   roots: string;
   edges: string;
 }
 
-interface ParChildParams {
+export interface ParChildParams {
   nodeLabels: string;
   roots: string;
   parent: string;

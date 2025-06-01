@@ -24,6 +24,8 @@ export default {
         "29/40": "72.5%",
         "5/200": "2.5%",
         100: "25rem",
+        120: "30rem",
+        150: "37.5rem",
         200: "50rem",
       },
       fontFamily: {
@@ -38,6 +40,7 @@ export default {
           name: "light",
           extend: {
             colors: {
+              "ovr-darkened": "hsl(0, 0%, 90%)",
               ovr: "hsl(0, 0%, 98%)",
               text: "hsl(0, 0%, 18%)",
               placeholder: "hsl(0, 0%, 58%)",
@@ -116,6 +119,7 @@ export default {
           name: "dark",
           extend: {
             colors: {
+              "ovr-darkened": "hsl(0, 0%, 6%)",
               ovr: "hsl(0, 0%, 14%)",
               text: "hsl(0, 0%, 88%)",
               placeholder: "hsl(0, 0%, 48%)",

@@ -77,7 +77,7 @@ function App() {
     eraserRadius:
       localStorage.getItem("eraserRadius") !== null
         ? Number.parseFloat(localStorage.getItem("eraserRadius")!)
-        : 20,
+        : 10,
     testCaseBoundingBoxes: true,
     showComponents: false,
     showBridges: false,
@@ -261,10 +261,7 @@ function App() {
         )}
 
         {randomizer ? (
-          <RandomizerScreen
-            settings={settings}
-            setRandomizer={setRandomizer}
-          />
+          <RandomizerScreen settings={settings} setRandomizer={setRandomizer} />
         ) : (
           <></>
         )}

@@ -270,7 +270,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           min={0}
           max={90}
           step={6}
-          value={settings.eraserRadius - 20}
+          value={settings.eraserRadius - 10}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
             self-center rounded-full cursor-ew-resize
             [&::-webkit-slider-thumb]:appearance-none
@@ -282,7 +282,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
             [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4
             [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full"
           onChange={(e) => {
-            const newEraserRadius = 20 + Number.parseInt(e.target.value);
+            const newEraserRadius = 10 + Number.parseInt(e.target.value);
             setSettings({
               ...settings,
               eraserRadius: newEraserRadius,

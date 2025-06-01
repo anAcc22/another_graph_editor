@@ -32,7 +32,7 @@ export function createTestCase(
     newTestCases.set(newTabId, {
       graphEdges: getDefaultGraph(),
       graphParChild: getDefaultGraph(),
-      inputFormat: "edges",
+      inputFormat: edges ? "edges" : "parentChild",
     });
     return newTestCases;
   });

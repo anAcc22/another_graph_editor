@@ -3,6 +3,7 @@ import { Settings, TestCases } from "../types";
 
 import { initPreviewMap } from "./presets";
 import { initNameMap } from "./presets";
+import { initBuildMap } from "./presets";
 
 interface Props {
   settings: Settings;
@@ -54,6 +55,7 @@ export function InitScreen({
             <div className="flex-col space-y-3">
               {idxs.map((idx: number) => (
                 <button
+                  key={idx}
                   className={
                     idx === selected
                       ? "w-full bg-clear-hover px-2 py-1 rounded-md"
@@ -128,7 +130,24 @@ export function InitScreen({
                   rounded-md px-2 py-1 inline-flex items-center justify-center
                   hover:bg-format-ok-border hover:bg-opacity-20
                   active:bg-opacity-50 font-semibold text-format-ok-border`}
-                onClick={() => setInit(false)}
+                onClick={() => {
+                  let initInput = (
+                    document.getElementById("initInput") as HTMLTextAreaElement
+                  ).value
+                    .split("\n")
+                    .map((row) => row.trim())
+                    .filter((row) => row.length >= 1)
+                    .map((row) => row.split(/\s+/));
+                  initBuildMap.get(selected)!(
+                    initInput,
+                    testCaseNumber,
+                    setTestCaseNumber,
+                    setTestCases,
+                    setTabs,
+                    setCurrentId,
+                  );
+                  setInit(false);
+                }}
               >
                 {settings.language == "en" ? "Confirm" : "Confirm"}
               </button>

@@ -9,7 +9,7 @@ export default {
 
       lg: "1200px",
 
-      xl: "1420px",
+      xl: "1480px",
     },
     extend: {
       spacing: {

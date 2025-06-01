@@ -81,7 +81,11 @@ export function InputTabs({
                     setTestCases,
                     setTabs,
                     setCurrentId,
-                    undefined,
+                    {
+                      nodeLabels: "",
+                      roots: "",
+                      edges: "",
+                    },
                     undefined,
                   );
                 }}

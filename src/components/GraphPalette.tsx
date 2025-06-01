@@ -10,324 +10,492 @@ export function GraphPalette({ settings, setSettings }: Props) {
     <div className="flex-col space-y-1.5 mb-3">
       <div className="flex space-x-1.5">
         <div
-          className={`border-[2px] border-text
-            ${settings.markColor === 1 ? "hover:border-text" : "hover:border-border-hover"}
-            hover:border-border-hover h-4 hover:drop-shadow-sm w-4 rounded-full
-            transtion ease-in-out hover:scale-150 duration-100 ${
-            settings.markColor === 1 ? "border-solid" : "border-dotted" }`}
+          className={
+            settings.markColor === 1
+              ? `h-4 w-4 hover:drop-shadow-sm rounded-full outline bg-text
+                outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-text`
+              : `h-4 w-4 hover:drop-shadow-sm rounded-full transition
+                ease-in-out hover:scale-150 duration-100 hover:border-text
+                border-dotted border-text border-2`
+          }
           onClick={() => setSettings({ ...settings, markColor: 1 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 3 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-yellow rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 3 ? "border-solid border-text" : "border-palette-yellow"}`}
+          className={
+            settings.markColor === 3
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-yellow rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-yellow`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-yellow rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 3 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 5 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-lemon rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 5 ? "border-solid border-text" : "border-palette-lemon"}`}
+          className={
+            settings.markColor === 5
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-lemon`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 5 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 7 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-lime rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 7 ? "border-solid border-text" : "border-palette-lime"}`}
+          className={
+            settings.markColor === 7
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-lime rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-lime`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-lime rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 7 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 9 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-green rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 9 ? "border-solid border-text" : "border-palette-green"}`}
+          className={
+            settings.markColor === 9
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-green rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-green`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-green rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 9 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 11 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-wood rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 11 ? "border-solid border-text" : "border-palette-wood"}`}
+          className={
+            settings.markColor === 11
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-wood rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-wood`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-wood rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 11 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 13 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-teal rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 13 ? "border-solid border-text" : "border-palette-teal"}`}
+          className={
+            settings.markColor === 13
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-teal rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-teal`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-teal rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 13 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 15 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-azure rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 15 ? "border-solid border-text" : "border-palette-azure"}`}
+          className={
+            settings.markColor === 15
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-azure rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-azure`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-azure rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 15 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 17 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 17 ? "border-solid border-text" : "border-palette-sea"}`}
+          className={
+            settings.markColor === 17
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-sea`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 17 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 19 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-blue rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 19 ? "border-solid border-text" : "border-palette-blue"}`}
+          className={
+            settings.markColor === 19
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-blue rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-blue`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-blue rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 19 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 21 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-flower rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 21 ? "border-solid border-text" : "border-palette-flower"}`}
+          className={
+            settings.markColor === 21
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flower rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-flower`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-flower rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 21 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 23 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-purple rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 23 ? "border-solid border-text" : "border-palette-purple"}`}
+          className={
+            settings.markColor === 23
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-purple rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-purple`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-purple rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 23 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 25 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-violet rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 25 ? "border-solid border-text" : "border-palette-violet"}`}
+          className={
+            settings.markColor === 25
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-violet rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-violet`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-violet rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 25 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 27 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-grape rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 27 ? "border-solid border-text" : "border-palette-grape"}`}
+          className={
+            settings.markColor === 27
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-grape rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-grape`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-grape rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 27 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 29 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-pink rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 29 ? "border-solid border-text" : "border-palette-pink"}`}
+          className={
+            settings.markColor === 29
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-pink rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-pink`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-pink rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 29 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 31 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-sakura rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 31 ? "border-solid border-text" : "border-palette-sakura"}`}
+          className={
+            settings.markColor === 31
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sakura rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-sakura`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-sakura rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 31 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 33 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-flesh rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 33 ? "border-solid border-text" : "border-palette-flesh"}`}
+          className={
+            settings.markColor === 33
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-flesh`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 33 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 35 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-raw rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 35 ? "border-solid border-text" : "border-palette-raw"}`}
+          className={
+            settings.markColor === 35
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-raw rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-raw`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-raw rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 35 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 37 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-orange rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 37 ? "border-solid border-text" : "border-palette-orange"}`}
+          className={
+            settings.markColor === 37
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-orange rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-orange`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-orange rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 37 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 39 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-moon rounded-full transtion
-            ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 39 ? "border-solid border-text" : "border-palette-moon"}`}
+          className={
+            settings.markColor === 39
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-moon rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-moon`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-moon rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 39 })}
         ></div>
       </div>
 
       <div className="flex space-x-1.5">
         <div
-          className={`border-[2px] border-format-bad h-4 hover:drop-shadow-sm
-            w-4 rounded-full transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 2 ? "border-solid" : "border-dotted"}`}
+          className={
+            settings.markColor === 2
+              ? `h-4 w-4 hover:drop-shadow-sm rounded-full outline bg-format-bad
+                outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-format-bad`
+              : `h-4 w-4 hover:drop-shadow-sm rounded-full transition
+                ease-in-out hover:scale-150 duration-100 hover:border-format-bad
+                border-dotted border-format-bad border-2`
+          }
           onClick={() => setSettings({ ...settings, markColor: 2 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 4 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-yellow-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 4 ? "border-solid border-text" : "border-palette-yellow-dull"}`}
+          className={
+            settings.markColor === 4
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-yellow-dull
+                rounded-full outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-yellow-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-yellow-dull
+                rounded-full transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 4 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 6 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-lemon-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 6 ? "border-solid border-text" : "border-palette-lemon-dull"}`}
+          className={
+            settings.markColor === 6
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-lemon-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 6 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 8 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-lime-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 8 ? "border-solid border-text" : "border-palette-lime-dull"}`}
+          className={
+            settings.markColor === 8
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-lime-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-lime-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-lime-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 8 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 10 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-green-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 10 ? "border-solid border-text" : "border-palette-green-dull"}`}
+          className={
+            settings.markColor === 10
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-green-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-green-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-green-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 10 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 12 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-wood-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 12 ? "border-solid border-text" : "border-palette-wood-dull"}`}
+          className={
+            settings.markColor === 12
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-wood-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-wood-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-wood-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 12 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 14 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-teal-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 14 ? "border-solid border-text" : "border-palette-teal-dull"}`}
+          className={
+            settings.markColor === 14
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-teal-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-teal-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-teal-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 14 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 16 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-azure-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 16 ? "border-solid border-text" : "border-palette-azure-dull"}`}
+          className={
+            settings.markColor === 16
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-azure-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-azure-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-azure-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 16 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 18 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-sea-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 18 ? "border-solid border-text" : "border-palette-sea-dull"}`}
+          className={
+            settings.markColor === 18
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sea-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-sea-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-sea-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 18 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 20 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-blue-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 20 ? "border-solid border-text" : "border-palette-blue-dull"}`}
+          className={
+            settings.markColor === 20
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-blue-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-blue-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-blue-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 20 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 22 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 22 ? "border-solid border-text" : "border-palette-flower-dull"}`}
+          className={
+            settings.markColor === 22
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull
+                rounded-full outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-flower-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull
+                rounded-full transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 22 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 24 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-purple-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 24 ? "border-solid border-text" : "border-palette-purple-dull"}`}
+          className={
+            settings.markColor === 24
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-purple-dull
+                rounded-full outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-purple-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-purple-dull
+                rounded-full transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 24 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 26 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 26 ? "border-solid border-text" : "border-palette-violet-dull"}`}
+          className={
+            settings.markColor === 26
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull
+                rounded-full outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-violet-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull
+                rounded-full transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 26 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 28 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-grape-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 28 ? "border-solid border-text" : "border-palette-grape-dull"}`}
+          className={
+            settings.markColor === 28
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-grape-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-grape-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-grape-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 28 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 30 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-pink-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 30 ? "border-solid border-text" : "border-palette-pink-dull"}`}
+          className={
+            settings.markColor === 30
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-pink-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-pink-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-pink-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 30 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 32 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-sakura-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 32 ? "border-solid border-text" : "border-palette-sakura-dull"}`}
+          className={
+            settings.markColor === 32
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sakura-dull
+                rounded-full outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-sakura-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-sakura-dull
+                rounded-full transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 32 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 34 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-flesh-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 34 ? "border-solid border-text" : "border-palette-flesh-dull"}`}
+          className={
+            settings.markColor === 34
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-flesh-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 34 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 36 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-raw-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 36 ? "border-solid border-text" : "border-palette-raw-dull"}`}
+          className={
+            settings.markColor === 36
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-raw-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-raw-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-raw-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 36 })}
         ></div>
         <div
-          className={`border-[2px]
-            ${settings.markColor === 38 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 38 ? "border-solid border-text" : "border-palette-orange-dull"}`}
+          className={
+            settings.markColor === 38
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull
+                rounded-full outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-orange-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull
+                rounded-full transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 38 })}
         ></div>
         <div
-          className={`border-[2px] hidden xl:block
-            ${settings.markColor === 40 ? "hover:border-text" : "hover:border-border-hover"}
-            h-4 w-4 hover:drop-shadow-sm bg-palette-moon-dull rounded-full
-            transtion ease-in-out hover:scale-150 duration-100
-            ${settings.markColor === 40 ? "border-solid border-text" : "border-palette-moon-dull"}`}
+          className={
+            settings.markColor === 40
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-moon-dull rounded-full
+                outline outline-2 outline-offset-2 transition ease-in-out
+                hover:scale-150 duration-100 outline-palette-moon-dull`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-moon-dull rounded-full
+                transition ease-in-out hover:scale-150 duration-100
+                hover:border-text`
+          }
           onClick={() => setSettings({ ...settings, markColor: 40 })}
         ></div>
       </div>

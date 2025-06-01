@@ -37,11 +37,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 5
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-lemon`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-lemon`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 5 })}
         ></div>
@@ -61,11 +61,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 9
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-green rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-green`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-green`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-green rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 9 })}
         ></div>
@@ -85,11 +85,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 13
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-teal rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-teal`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-teal`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-teal rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 13 })}
         ></div>
@@ -108,11 +108,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
         <div
           className={
             settings.markColor === 17
-              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-sea`
-              : `h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full
-                transition ease-in-out hover:scale-150 duration-100
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full hidden
+                xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-sea`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-sea rounded-full hidden
+                xl:block transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 17 })}
@@ -133,11 +133,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 21
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flower rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-flower`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-flower`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-flower rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 21 })}
         ></div>
@@ -157,11 +157,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 25
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-violet rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-violet`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-violet`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-violet rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 25 })}
         ></div>
@@ -181,11 +181,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 29
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-pink rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-pink`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-pink`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-pink rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 29 })}
         ></div>
@@ -205,11 +205,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 33
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-flesh`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-flesh`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 33 })}
         ></div>
@@ -229,11 +229,11 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 37
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-orange rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-orange`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100 outline-palette-orange`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-orange rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 37 })}
         ></div>
@@ -281,11 +281,12 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 6
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon-dull rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-lemon-dull`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-lemon-dull`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-lemon-dull rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 6 })}
         ></div>
@@ -305,11 +306,12 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 10
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-green-dull rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-green-dull`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-green-dull`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-green-dull rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 10 })}
         ></div>
@@ -329,11 +331,12 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 14
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-teal-dull rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-teal-dull`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-teal-dull`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-teal-dull rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 14 })}
         ></div>
@@ -353,11 +356,12 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 18
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-sea-dull rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-sea-dull`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-sea-dull`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-sea-dull rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 18 })}
         ></div>
@@ -376,13 +380,13 @@ export function GraphPalette({ settings, setSettings }: Props) {
         <div
           className={
             settings.markColor === 22
-              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull
-                rounded-full outline outline-2 outline-offset-2 transition
-                ease-in-out hover:scale-150 duration-100
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull hidden
+                xl:block rounded-full outline outline-2 outline-offset-2
+                transition ease-in-out hover:scale-150 duration-100
                 outline-palette-flower-dull`
-              : `h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull
-                rounded-full transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-flower-dull hidden
+                xl:block rounded-full transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 22 })}
         ></div>
@@ -402,13 +406,13 @@ export function GraphPalette({ settings, setSettings }: Props) {
         <div
           className={
             settings.markColor === 26
-              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull
-                rounded-full outline outline-2 outline-offset-2 transition
-                ease-in-out hover:scale-150 duration-100
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull hidden
+                xl:block rounded-full outline outline-2 outline-offset-2
+                transition ease-in-out hover:scale-150 duration-100
                 outline-palette-violet-dull`
-              : `h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull
-                rounded-full transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-violet-dull hidden
+                xl:block rounded-full transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 26 })}
         ></div>
@@ -428,11 +432,12 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 30
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-pink-dull rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-pink-dull`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-pink-dull`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-pink-dull rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 30 })}
         ></div>
@@ -453,11 +458,12 @@ export function GraphPalette({ settings, setSettings }: Props) {
           className={
             settings.markColor === 34
               ? `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh-dull rounded-full
-                outline outline-2 outline-offset-2 transition ease-in-out
-                hover:scale-150 duration-100 outline-palette-flesh-dull`
+                hidden xl:block outline outline-2 outline-offset-2 transition
+                ease-in-out hover:scale-150 duration-100
+                outline-palette-flesh-dull`
               : `h-4 w-4 hover:drop-shadow-sm bg-palette-flesh-dull rounded-full
-                transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+                hidden xl:block transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 34 })}
         ></div>
@@ -476,13 +482,13 @@ export function GraphPalette({ settings, setSettings }: Props) {
         <div
           className={
             settings.markColor === 38
-              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull
-                rounded-full outline outline-2 outline-offset-2 transition
-                ease-in-out hover:scale-150 duration-100
+              ? `h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull hidden
+                xl:block rounded-full outline outline-2 outline-offset-2
+                transition ease-in-out hover:scale-150 duration-100
                 outline-palette-orange-dull`
-              : `h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull
-                rounded-full transition ease-in-out hover:scale-150 duration-100
-                hover:border-text`
+              : `h-4 w-4 hover:drop-shadow-sm bg-palette-orange-dull hidden
+                xl:block rounded-full transition ease-in-out hover:scale-150
+                duration-100 hover:border-text`
           }
           onClick={() => setSettings({ ...settings, markColor: 38 })}
         ></div>

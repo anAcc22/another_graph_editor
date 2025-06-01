@@ -58,9 +58,9 @@ export function InitScreen({
                 <button
                   className={
                     indexing === 0
-                      ? "px-2 bg-clear-hover rounded-md"
-                      : `px-2 bg-ovr-darkened bg-opacity-50 rounded-md
-                        hover:bg-clear-hover hover:bg-opacity-50`
+                      ? "px-2 bg-clear-hover rounded-l-md"
+                      : `px-2 bg-ovr-darkened bg-opacity-50
+                        hover:bg-clear-hover hover:bg-opacity-50 rounded-l-md`
                   }
                   onClick={() => setIndexing(0)}
                 >
@@ -69,8 +69,8 @@ export function InitScreen({
                 <button
                   className={
                     indexing === 1
-                      ? "px-2 bg-clear-hover rounded-md"
-                      : `px-2 bg-ovr-darkened bg-opacity-50 rounded-md
+                      ? "px-2 bg-clear-hover rounded-r-md"
+                      : `px-2 bg-ovr-darkened bg-opacity-50 rounded-r-md
                         hover:bg-clear-hover hover:bg-opacity-50`
                   }
                   onClick={() => setIndexing(1)}

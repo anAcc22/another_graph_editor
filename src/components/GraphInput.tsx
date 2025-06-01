@@ -16,6 +16,7 @@ interface Props {
   currentId: number;
   directed: boolean;
   setDirected: React.Dispatch<React.SetStateAction<boolean>>;
+  setRandomizer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function GraphInput({
@@ -26,6 +27,7 @@ export function GraphInput({
   currentId,
   directed,
   setDirected,
+  setRandomizer,
 }: Props) {
   const [inputStatus, setInputStatus] = useState<boolean>(true);
 
@@ -691,6 +693,7 @@ export function GraphInput({
               xmlns="http://www.w3.org/2000/svg"
               className="hover:cursor-pointer stroke-text hover:opacity-50
                 active:stroke-randomize"
+              onClick={() => setRandomizer(true)}
             >
               <path
                 fill-rule="evenodd"

@@ -4,6 +4,7 @@ import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
 import { InitScreen } from "./components/InitScreen";
+import { RandomizerScreen } from "./components/RandomizerScreen";
 
 import { Settings } from "./types";
 import { SettingsFormat } from "./types";
@@ -98,6 +99,7 @@ function App() {
   });
 
   const [init, setInit] = useState<boolean>(false);
+  const [randomizer, setRandomizer] = useState<boolean>(false);
 
   return (
     <>
@@ -258,6 +260,15 @@ function App() {
           <></>
         )}
 
+        {randomizer ? (
+          <RandomizerScreen
+            settings={settings}
+            setRandomizer={setRandomizer}
+          />
+        ) : (
+          <></>
+        )}
+
         <InputTabs
           settings={settings}
           tabs={tabs}
@@ -273,6 +284,7 @@ function App() {
           directed={directed}
           setDirected={setDirected}
           setInit={setInit}
+          setRandomizer={setRandomizer}
         />
 
         <div className="relative z-0">

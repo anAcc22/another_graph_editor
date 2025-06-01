@@ -20,6 +20,7 @@ interface Props {
   directed: boolean;
   setDirected: React.Dispatch<React.SetStateAction<boolean>>;
   setInit: React.Dispatch<React.SetStateAction<boolean>>;
+  setRandomizer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function InputTabs({
@@ -37,6 +38,7 @@ export function InputTabs({
   directed,
   setDirected,
   setInit,
+  setRandomizer
 }: Props) {
   useEffect(() => {
     const newInputs: number[] = [];
@@ -117,6 +119,7 @@ export function InputTabs({
               currentId={currentId}
               directed={directed}
               setDirected={setDirected}
+              setRandomizer={setRandomizer}
             />
           ))}
         </ul>

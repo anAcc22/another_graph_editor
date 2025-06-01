@@ -1,0 +1,72 @@
+import { Settings } from "../types";
+import { useState } from "react";
+
+interface Props {
+  settings: Settings;
+  setRandomizer: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function RandomizerScreen({ settings, setRandomizer }: Props) {
+  const [indexing, setIndexing] = useState<number>(1);
+
+  return (
+    <>
+      <div
+        className="absolute w-full h-full bg-ovr-darkened bg-opacity-80 z-50
+          flex font-jetbrains"
+      >
+        <div
+          className={`font-jetbrains flex flex-col border-2 rounded-lg bg-block
+            shadow-shadow shadow border-border hover:border-border-hover p-3
+            space-y-3 w-150 m-auto`}
+        >
+          <div className="flex justify-between items-center">
+            <h4 className="text-base font-semibold">
+              {settings.language == "en"
+                ? "Randomizer Configuration"
+                : "Randomizer Configuration"}
+            </h4>
+            <div>
+              <button
+                className={
+                  indexing === 0
+                    ? "px-2 bg-clear-hover rounded-l-md"
+                    : `px-2 bg-ovr-darkened bg-opacity-50 hover:bg-clear-hover
+                      hover:bg-opacity-50 rounded-l-md`
+                }
+                onClick={() => setIndexing(0)}
+              >
+                0-indexed
+              </button>
+              <button
+                className={
+                  indexing === 1
+                    ? "px-2 bg-clear-hover rounded-r-md"
+                    : `px-2 bg-ovr-darkened bg-opacity-50 rounded-r-md
+                      hover:bg-clear-hover hover:bg-opacity-50`
+                }
+                onClick={() => setIndexing(1)}
+              >
+                1-indexed
+              </button>
+            </div>
+          </div>
+
+          <div className="flex justify-around">
+            <button
+              className={`h-7 border-2 border-format-ok-border bg-block
+                rounded-md px-2 py-1 inline-flex items-center justify-center
+                hover:bg-format-ok-border hover:bg-opacity-20
+                active:bg-opacity-50 font-semibold text-format-ok-border`}
+              onClick={() => {
+                setRandomizer(false);
+              }}
+            >
+              {settings.language == "en" ? "Confirm" : "Confirm"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

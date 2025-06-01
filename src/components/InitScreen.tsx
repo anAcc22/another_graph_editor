@@ -32,6 +32,7 @@ export function InitScreen({
   setCurrentId,
 }: Props) {
   const [selected, setSelected] = useState<number>(0);
+  const [indexing, setIndexing] = useState<number>(1);
 
   return (
     <>
@@ -49,9 +50,35 @@ export function InitScreen({
               hover:border-border-hover p-3 space-y-3 w-100 max-h-200
               overflow-scroll no-scrollbar`}
           >
-            <h4 className="text-base font-semibold">
-              {settings.language == "en" ? "Presets" : "Presets"}
-            </h4>
+            <div className="flex justify-between items-center">
+              <h4 className="text-base font-semibold">
+                {settings.language == "en" ? "Presets" : "Presets"}
+              </h4>
+              <div>
+                <button
+                  className={
+                    indexing === 0
+                      ? "px-2 bg-clear-hover rounded-md"
+                      : `px-2 bg-ovr-darkened bg-opacity-50 rounded-md
+                        hover:bg-clear-hover hover:bg-opacity-50`
+                  }
+                  onClick={() => setIndexing(0)}
+                >
+                  0-indexed
+                </button>
+                <button
+                  className={
+                    indexing === 1
+                      ? "px-2 bg-clear-hover rounded-md"
+                      : `px-2 bg-ovr-darkened bg-opacity-50 rounded-md
+                        hover:bg-clear-hover hover:bg-opacity-50`
+                  }
+                  onClick={() => setIndexing(1)}
+                >
+                  1-indexed
+                </button>
+              </div>
+            </div>
             <div className="flex-col space-y-3">
               {idxs.map((idx: number) => (
                 <button
@@ -59,8 +86,8 @@ export function InitScreen({
                   className={
                     idx === selected
                       ? "w-full bg-clear-hover px-2 py-1 rounded-md"
-                      : `w-full bg-ovr px-2 py-1 rounded-md hover:bg-clear-hover
-                        hover:bg-opacity-20`
+                      : `w-full bg-ovr-darkened bg-opacity-50 px-2 py-1
+                        rounded-md hover:bg-clear-hover hover:bg-opacity-50`
                   }
                   onClick={() => setSelected(idx)}
                 >
@@ -73,7 +100,7 @@ export function InitScreen({
           <div
             className={`font-jetbrains flex flex-col border-2 rounded-lg
               bg-block shadow-shadow shadow border-border
-              hover:border-border-hover p-3 space-y-3 w-100`}
+              hover:border-border-hover p-3 space-y-3 w-80`}
           >
             <h4 className="text-base font-semibold">
               {settings.language == "en" ? "Preview" : "Preview"}
@@ -94,7 +121,7 @@ export function InitScreen({
           <div
             className={`font-jetbrains flex flex-col border-2 rounded-lg
               bg-block shadow-shadow shadow border-border
-              hover:border-border-hover p-3 space-y-3 w-100`}
+              hover:border-border-hover p-3 space-y-3 w-80`}
           >
             <h4 className="text-base font-semibold">
               {settings.language == "en" ? "Input" : "Input"}
@@ -111,8 +138,8 @@ export function InitScreen({
             ></textarea>
             <div className="text-format-bad-border text-sm">
               {settings.language == "en"
-                ? "WARN: This will replace existing data!"
-                : "WARN: This will replace existing data!"}
+                ? "WARN: This will override all data!"
+                : "WARN: This will override all data!"}
             </div>
 
             <div className="flex justify-between">
@@ -139,6 +166,7 @@ export function InitScreen({
                     .filter((row) => row.length >= 1)
                     .map((row) => row.split(/\s+/));
                   initBuildMap.get(selected)!(
+                    indexing,
                     initInput,
                     testCaseNumber,
                     setTestCaseNumber,

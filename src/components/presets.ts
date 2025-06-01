@@ -7,6 +7,7 @@ export const initPreviewMap = new Map<number, string>();
 export const initBuildMap = new Map<
   number,
   (
+    indexing: number,
     rows: string[][],
     testCaseNumber: number,
     setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>,
@@ -22,6 +23,7 @@ initPreviewMap.set(0, "n [...]\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initBuildMap.set(
   0,
   (
+    indexing: number,
     rows: string[][],
     testCaseNumber: number,
     setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>,
@@ -37,6 +39,10 @@ initBuildMap.set(
       edges: "",
     };
     let edgesInput = "";
+    const n = parseInt(rows[0][0]);
+    for (let u = 0; u < n; u++) {
+      edgesInput += u + indexing + "\n";
+    }
     for (let i = 1; i < rows.length; i++) {
       edgesInput += rows[i].join(" ");
       if (i != rows.length - 1) edgesInput += "\n";
@@ -60,6 +66,7 @@ initPreviewMap.set(1, "n [...]\na₁ ... aₙ\nu₁ v₁ [w]\n...\nuₘ vₘ [w]
 initBuildMap.set(
   1,
   (
+    indexing: number,
     rows: string[][],
     testCaseNumber: number,
     setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>,
@@ -75,6 +82,10 @@ initBuildMap.set(
       edges: "",
     };
     let edgesInput = "";
+    const n = parseInt(rows[0][0]);
+    for (let u = 0; u < n; u++) {
+      edgesInput += u + indexing + "\n";
+    }
     edges["nodeLabels"] = rows[1].join(" ");
     for (let i = 2; i < rows.length; i++) {
       edgesInput += rows[i].join(" ");
@@ -99,6 +110,7 @@ initPreviewMap.set(2, "n [...]\np₂ ... pₙ");
 initBuildMap.set(
   2,
   (
+    indexing: number,
     rows: string[][],
     testCaseNumber: number,
     setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>,
@@ -117,10 +129,10 @@ initBuildMap.set(
     };
     const n = parseInt(rows[0][0]);
     if (n == 0) return;
-    let parRow = "1",
-      childRow = "";
-    for (let i = 1; i <= n; i++) {
-      childRow += i;
+    let parRow = indexing.toString();
+    let childRow = "";
+    for (let i = 0; i < n; i++) {
+      childRow += i + indexing;
       if (i != n) childRow += " ";
     }
     for (const u of rows[1]) {
@@ -146,6 +158,7 @@ initPreviewMap.set(3, "n [...]\na₁ ... aₙ\np₂ ... pₙ");
 initBuildMap.set(
   3,
   (
+    indexing: number,
     rows: string[][],
     testCaseNumber: number,
     setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>,
@@ -165,10 +178,10 @@ initBuildMap.set(
     const n = parseInt(rows[0][0]);
     parChild["nodeLabels"] = rows[1].join(" ");
     if (n == 0) return;
-    let parRow = "1",
-      childRow = "";
-    for (let i = 1; i <= n; i++) {
-      childRow += i;
+    let parRow = indexing.toString();
+    let childRow = "";
+    for (let i = 0; i < n; i++) {
+      childRow += i + indexing;
       if (i != n) childRow += " ";
     }
     for (const u of rows[2]) {
@@ -193,6 +206,55 @@ initNameMap.set(4 + "cn", "[multiple] basic (edges)");
 initPreviewMap.set(
   4,
   "t\nn₁ m₁ [...]\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
+);
+initBuildMap.set(
+  4,
+  (
+    indexing: number,
+    rows: string[][],
+    testCaseNumber: number,
+    setTestCaseNumber: React.Dispatch<React.SetStateAction<number>>,
+    setTestCases: React.Dispatch<React.SetStateAction<TestCases>>,
+    setTabs: React.Dispatch<React.SetStateAction<number[]>>,
+    setCurrentId: React.Dispatch<React.SetStateAction<number>>,
+  ) => {
+    setTestCases(new Map<number, TestCase>());
+    setTabs([]);
+    let rowIdx = 0;
+    let tc = parseInt(rows[rowIdx++][0]);
+    for (let i = 1; i <= tc; i++) {
+      const offset = 50 * i;
+      setTimeout(() => {
+        const n = parseInt(rows[rowIdx][0]);
+        let m = parseInt(rows[rowIdx][1]);
+        rowIdx++;
+        let edges: EdgesParams = {
+          nodeLabels: "",
+          roots: "",
+          edges: "",
+        };
+        let edgesInput = "";
+        for (let u = 0; u < n; u++) {
+          edgesInput += u + indexing + "\n";
+        }
+        while (m--) {
+          edgesInput += rows[rowIdx++].join(" ");
+          if (m !== 0) edgesInput += "\n";
+        }
+        edges["edges"] = edgesInput;
+        createTestCase(
+          testCaseNumber,
+          setTestCaseNumber,
+          setTestCases,
+          setTabs,
+          setCurrentId,
+          edges,
+          undefined,
+        );
+        testCaseNumber++;
+      }, offset);
+    }
+  },
 );
 
 initNameMap.set(5 + "en", "[multiple] array (edges)");

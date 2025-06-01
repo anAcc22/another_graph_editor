@@ -9,6 +9,7 @@ import { RandomizerScreen } from "./components/RandomizerScreen";
 import { Settings } from "./types";
 import { SettingsFormat } from "./types";
 import { TestCase, TestCases } from "./types";
+import { Randomizer } from "./types";
 
 import { getDefaultGraph } from "./components/utils";
 
@@ -100,6 +101,12 @@ function App() {
 
   const [init, setInit] = useState<boolean>(false);
   const [randomizer, setRandomizer] = useState<boolean>(false);
+  const [randomizerConfig, setRandomizerConfig] = useState<Randomizer>({
+    nodeCount: "",
+    edgeCount: "",
+    connected: false,
+    tree: false,
+  });
 
   return (
     <>
@@ -261,7 +268,12 @@ function App() {
         )}
 
         {randomizer ? (
-          <RandomizerScreen settings={settings} setRandomizer={setRandomizer} />
+          <RandomizerScreen
+            settings={settings}
+            setRandomizer={setRandomizer}
+            randomizerConfig={randomizerConfig}
+            setRandomizerConfig={setRandomizerConfig}
+          />
         ) : (
           <></>
         )}

@@ -59,12 +59,12 @@ export function InitScreen({
                   className={
                     indexing === 0
                       ? "px-2 bg-clear-hover rounded-l-md"
-                      : `px-2 bg-ovr-darkened bg-opacity-50
-                        hover:bg-clear-hover hover:bg-opacity-50 rounded-l-md`
+                      : `px-2 bg-ovr-darkened bg-opacity-50 hover:bg-clear-hover
+                        hover:bg-opacity-50 rounded-l-md`
                   }
                   onClick={() => setIndexing(0)}
                 >
-                  0-indexed
+                  {settings.language == "en" ? "0-indexed" : "0-indexed"}
                 </button>
                 <button
                   className={
@@ -75,7 +75,7 @@ export function InitScreen({
                   }
                   onClick={() => setIndexing(1)}
                 >
-                  1-indexed
+                  {settings.language == "en" ? "1-indexed" : "1-indexed"}
                 </button>
               </div>
             </div>

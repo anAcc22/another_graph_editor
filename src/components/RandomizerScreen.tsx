@@ -1,12 +1,25 @@
-import { Settings } from "../types";
+import { Settings, Randomizer } from "../types";
 import { useState } from "react";
 
 interface Props {
   settings: Settings;
   setRandomizer: React.Dispatch<React.SetStateAction<boolean>>;
+  randomizerConfig: Randomizer;
+  setRandomizerConfig: React.Dispatch<React.SetStateAction<Randomizer>>;
 }
 
-export function RandomizerScreen({ settings, setRandomizer }: Props) {
+const handleTextAreaKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === "Escape" || e.key === "Enter") {
+    e.currentTarget.blur();
+  }
+};
+
+export function RandomizerScreen({
+  settings,
+  setRandomizer,
+  randomizerConfig,
+  setRandomizerConfig,
+}: Props) {
   const [indexing, setIndexing] = useState<number>(1);
 
   return (
@@ -36,7 +49,7 @@ export function RandomizerScreen({ settings, setRandomizer }: Props) {
                 }
                 onClick={() => setIndexing(0)}
               >
-                0-indexed
+                {settings.language == "en" ? "0-indexed" : "0-indexed"}
               </button>
               <button
                 className={
@@ -47,8 +60,114 @@ export function RandomizerScreen({ settings, setRandomizer }: Props) {
                 }
                 onClick={() => setIndexing(1)}
               >
-                1-indexed
+                {settings.language == "en" ? "1-indexed" : "1-indexed"}
               </button>
+            </div>
+          </div>
+
+          <hr className="border-dashed border-border" />
+
+          <div className="flex-col space-y-3">
+            <div className="flex justify-between items-center">
+              <div>
+                {settings.language == "en"
+                  ? "Node Count (n)"
+                  : "Node Count (n)"}
+              </div>
+              <input
+                type="text"
+                id="randomizerNodeCount"
+                className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
+                  w-12 opacity-50 focus:opacity-100 text-center"
+                onKeyDown={handleTextAreaKeyDown}
+              ></input>
+            </div>
+
+            {randomizerConfig.tree ? (
+              <></>
+            ) : (
+              <div className="flex justify-between items-center">
+                <div>
+                  {settings.language == "en"
+                    ? "Edge Count (m)"
+                    : "Edge Count (m)"}
+                </div>
+                <input
+                  type="text"
+                  id="randomizerEdgeCount"
+                  className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
+                    w-12 opacity-50 focus:opacity-100 text-center"
+                  onKeyDown={handleTextAreaKeyDown}
+                ></input>
+              </div>
+            )}
+
+            {randomizerConfig.tree ? (
+              <></>
+            ) : (
+              <div className="flex justify-between items-center">
+                <div>
+                  {settings.language == "en"
+                    ? "Guarantee Connected"
+                    : "Guarantee Connected"}
+                </div>
+                <label className="relative inline w-12">
+                  <input
+                    type="checkbox"
+                    checked={randomizerConfig.connected}
+                    id="randomizerConnected"
+                    className="peer invisible"
+                    onChange={() => {
+                      const flipped = !randomizerConfig.connected;
+                      setRandomizerConfig({
+                        ...randomizerConfig,
+                        connected: flipped,
+                      });
+                    }}
+                  />
+                  <span
+                    className="absolute top-0 left-0 w-12 h-6 cursor-pointer
+                      rounded-full bg-toggle-uncheck border-none transition-all
+                      duration-75 hover:bg-toggle-hover
+                      peer-checked:bg-toggle-check"
+                  ></span>
+                  <span
+                    className="absolute top-0.5 left-0.5 w-5 h-5
+                      bg-toggle-circle rounded-full transition-all duration-75
+                      cursor-pointer peer-checked:translate-x-6"
+                  ></span>
+                </label>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center">
+              <div>{settings.language == "en" ? "Tree" : "Tree"}</div>
+              <label className="relative inline w-12">
+                <input
+                  type="checkbox"
+                  checked={randomizerConfig.tree}
+                  id="randomizerTree"
+                  className="peer invisible"
+                  onChange={() => {
+                    const flipped = !randomizerConfig.tree;
+                    setRandomizerConfig({
+                      ...randomizerConfig,
+                      tree: flipped,
+                    });
+                  }}
+                />
+                <span
+                  className="absolute top-0 left-0 w-12 h-6 cursor-pointer
+                    rounded-full bg-toggle-uncheck border-none transition-all
+                    duration-75 hover:bg-toggle-hover
+                    peer-checked:bg-toggle-check"
+                ></span>
+                <span
+                  className="absolute top-0.5 left-0.5 w-5 h-5 bg-toggle-circle
+                    rounded-full transition-all duration-75 cursor-pointer
+                    peer-checked:translate-x-6"
+                ></span>
+              </label>
             </div>
           </div>
 
@@ -62,7 +181,7 @@ export function RandomizerScreen({ settings, setRandomizer }: Props) {
                 setRandomizer(false);
               }}
             >
-              {settings.language == "en" ? "Confirm" : "Confirm"}
+              {settings.language == "en" ? "Exit" : "Exit"}
             </button>
           </div>
         </div>

@@ -45,7 +45,7 @@ export interface Settings {
   showMSTs: boolean;
   treeMode: boolean;
   bipartiteMode: boolean;
-  gridMode: boolean,
+  gridMode: boolean;
   lockMode: boolean;
   markedNodes: boolean;
   fixedMode: boolean;
@@ -81,3 +81,10 @@ export interface PositionMap {
 }
 
 export type MarkBorder = "single" | "double";
+
+export interface Randomizer {
+  nodeCount: string;
+  edgeCount: string;
+  connected: boolean;
+  tree: boolean;
+}

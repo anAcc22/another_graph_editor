@@ -2,6 +2,7 @@ import { Settings, TestCases } from "../types";
 import { GraphInput } from "./GraphInput";
 import { InputTab } from "./InputTab";
 import { createTestCase } from "./createTestCase";
+import { Randomizer } from "../types";
 
 import { useEffect } from "react";
 
@@ -21,6 +22,7 @@ interface Props {
   setDirected: React.Dispatch<React.SetStateAction<boolean>>;
   setInit: React.Dispatch<React.SetStateAction<boolean>>;
   setRandomizer: React.Dispatch<React.SetStateAction<boolean>>;
+  randomizerConfig: Randomizer;
 }
 
 export function InputTabs({
@@ -38,7 +40,8 @@ export function InputTabs({
   directed,
   setDirected,
   setInit,
-  setRandomizer
+  setRandomizer,
+  randomizerConfig,
 }: Props) {
   useEffect(() => {
     const newInputs: number[] = [];
@@ -120,6 +123,7 @@ export function InputTabs({
               directed={directed}
               setDirected={setDirected}
               setRandomizer={setRandomizer}
+              randomizerConfig={randomizerConfig}
             />
           ))}
         </ul>

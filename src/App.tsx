@@ -101,11 +101,28 @@ function App() {
 
   const [init, setInit] = useState<boolean>(false);
   const [randomizer, setRandomizer] = useState<boolean>(false);
+
   const [randomizerConfig, setRandomizerConfig] = useState<Randomizer>({
-    nodeCount: "",
-    edgeCount: "",
-    connected: false,
-    tree: false,
+    indexing:
+      localStorage.getItem("randomizerIndexing") !== null
+        ? parseInt(localStorage.getItem("randomizerIndexing")!)
+        : 0,
+    nodeCount:
+      localStorage.getItem("randomizerNodeCount") !== null
+        ? localStorage.getItem("randomizerNodeCount")!
+        : "",
+    edgeCount:
+      localStorage.getItem("randomizerEdgeCount") !== null
+        ? localStorage.getItem("randomizerEdgeCount")!
+        : "",
+    connected:
+      localStorage.getItem("randomizerConnected") !== null
+        ? localStorage.getItem("randomizerConnected")! == "true"
+        : false,
+    tree:
+      localStorage.getItem("randomizerTree") !== null
+        ? localStorage.getItem("randomizerTree")! == "true"
+        : false,
   });
 
   return (
@@ -294,6 +311,7 @@ function App() {
           setDirected={setDirected}
           setInit={setInit}
           setRandomizer={setRandomizer}
+          randomizerConfig={randomizerConfig}
         />
 
         <div className="relative z-0">

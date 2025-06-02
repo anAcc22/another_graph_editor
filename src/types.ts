@@ -83,6 +83,7 @@ export interface PositionMap {
 export type MarkBorder = "single" | "double";
 
 export interface Randomizer {
+  indexing: number;
   nodeCount: string;
   edgeCount: string;
   connected: boolean;

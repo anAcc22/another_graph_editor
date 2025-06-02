@@ -5,7 +5,10 @@ import { useState, useEffect } from "react";
 import { Settings } from "../types";
 import { ParsedGraph } from "../types";
 import { TestCases } from "../types";
+import { Randomizer } from "../types";
 import { padNode, sortNodes } from "./utils";
+
+import { generateRandomGraph } from "./generator";
 
 interface Props {
   settings: Settings;
@@ -17,6 +20,7 @@ interface Props {
   directed: boolean;
   setDirected: React.Dispatch<React.SetStateAction<boolean>>;
   setRandomizer: React.Dispatch<React.SetStateAction<boolean>>;
+  randomizerConfig: Randomizer;
 }
 
 export function GraphInput({
@@ -28,8 +32,12 @@ export function GraphInput({
   directed,
   setDirected,
   setRandomizer,
+  randomizerConfig,
 }: Props) {
   const [inputStatus, setInputStatus] = useState<boolean>(true);
+  const [randomizerError, setRandomizerError] = useState<string | undefined>(
+    undefined,
+  );
 
   const processGraphInput = () => {
     if (testCases.get(inputId) === undefined) return;
@@ -367,7 +375,9 @@ export function GraphInput({
                 });
               }}
               type="checkbox"
-              checked={testCases.get(inputId)?.inputFormat === "parentChild"}
+              defaultChecked={
+                testCases.get(inputId)?.inputFormat === "parentChild"
+              }
               id={"inputFormatCheckbox" + inputId}
               className="peer invisible"
             />
@@ -648,40 +658,88 @@ export function GraphInput({
               className="hover:opacity-50 active:text-randomize"
               onClick={() => {
                 const inputFormat = testCases.get(inputId)!.inputFormat;
-                const us = [],
-                  vs = [];
-                const n = 2 + Math.floor(Math.random() * 9);
-                for (let i = 0; i < n; i++) {
-                  let u = 0,
-                    v = 0;
-                  while (u == v) {
-                    u = 1 + Math.floor(Math.random() * 9);
-                    v = 1 + Math.floor(Math.random() * 9);
+                try {
+                  const graphEdges = generateRandomGraph(randomizerConfig);
+                  const left = new Set<number>();
+                  for (
+                    let u = 0;
+                    u < parseInt(randomizerConfig.nodeCount);
+                    u++
+                  ) {
+                    left.add(u + randomizerConfig.indexing);
                   }
-                  us.push(u);
-                  vs.push(v);
-                }
-                if (inputFormat === "edges") {
-                  let edges = document.getElementById(
-                    "graphInputEdges" + inputId,
-                  ) as HTMLTextAreaElement;
-                  let s = "";
-                  for (let i = 0; i < n; i++) {
-                    s += us[i].toString() + " " + vs[i].toString();
-                    if (i != n - 1) s += "\n";
+                  for (const e of graphEdges) {
+                    left.delete(e[0]);
+                    left.delete(e[1]);
                   }
-                  edges.value = s;
-                } else {
-                  let ps = document.getElementById(
-                    "graphInputParent" + inputId,
-                  ) as HTMLTextAreaElement;
-                  let cs = document.getElementById(
-                    "graphInputChild" + inputId,
-                  ) as HTMLTextAreaElement;
-                  ps.value = us.join(" ");
-                  cs.value = vs.join(" ");
+                  if (inputFormat === "edges") {
+                    let edges = document.getElementById(
+                      "graphInputEdges" + inputId,
+                    ) as HTMLTextAreaElement;
+                    let ans = "";
+                    for (const u of left) ans += u + "\n";
+                    for (let i = 0; i < graphEdges.length; i++) {
+                      ans += graphEdges[i].join(" ");
+                      if (i != graphEdges.length - 1) ans += "\n";
+                    }
+                    edges.value = ans;
+                  } else {
+                    let ps = document.getElementById(
+                      "graphInputParent" + inputId,
+                    ) as HTMLTextAreaElement;
+                    let cs = document.getElementById(
+                      "graphInputChild" + inputId,
+                    ) as HTMLTextAreaElement;
+                    let pAns = "";
+                    let cAns = "";
+                    for (let i = 0; i < graphEdges.length; i++) {
+                      pAns += graphEdges[i][0];
+                      cAns += graphEdges[i][1];
+                      if (i != graphEdges.length - 1) {
+                        pAns += " ";
+                        cAns += " ";
+                      }
+                    }
+                    for (const u of left) {
+                      pAns += " " + u;
+                      cAns += " " + u;
+                    }
+                    ps.value = pAns;
+                    cs.value = cAns;
+                  }
+                  setRandomizerError(undefined);
+                  processGraphInput();
+                } catch (error: any) {
+                  console.log(error);
+                  if (error.message === `n must be an integer >= 0!`) {
+                    setRandomizerError(
+                      settings.language === "en"
+                        ? `n must be an integer >= 0!`
+                        : `n must be an integer >= 0!`,
+                    );
+                  }
+                  if (error.message === `m must be an integer >= 0!`) {
+                    setRandomizerError(
+                      settings.language === "en"
+                        ? `m must be an integer >= 0!`
+                        : `m must be an integer >= 0!`,
+                    );
+                  }
+                  if (error.message === `too many edges!`) {
+                    setRandomizerError(
+                      settings.language === "en"
+                        ? `too many edges!`
+                        : `too many edges!`,
+                    );
+                  }
+                  if (error.message === `insufficient edges!`) {
+                    setRandomizerError(
+                      settings.language === "en"
+                        ? `insufficient edges!`
+                        : `insufficient edges!`,
+                    );
+                  }
                 }
-                processGraphInput();
               }}
             >
               {settings.language == "en" ? "Random" : "随机"}
@@ -717,6 +775,13 @@ export function GraphInput({
             </svg>
           </div>
         </div>
+        {randomizerError ? (
+          <footer className="text-format-bad-border">
+            ERROR: {randomizerError}
+          </footer>
+        ) : (
+          <></>
+        )}
       </li>
     </>
   );

@@ -1,5 +1,4 @@
 import { Settings, Randomizer } from "../types";
-import { useState } from "react";
 
 interface Props {
   settings: Settings;
@@ -20,8 +19,6 @@ export function RandomizerScreen({
   randomizerConfig,
   setRandomizerConfig,
 }: Props) {
-  const [indexing, setIndexing] = useState<number>(1);
-
   return (
     <>
       <div
@@ -44,23 +41,29 @@ export function RandomizerScreen({
             <div>
               <button
                 className={
-                  indexing === 0
+                  randomizerConfig.indexing === 0
                     ? "px-2 bg-clear-hover rounded-l-md"
                     : `px-2 bg-ovr-darkened bg-opacity-50 hover:bg-clear-hover
                       hover:bg-opacity-50 rounded-l-md`
                 }
-                onClick={() => setIndexing(0)}
+                onClick={() => {
+                  setRandomizerConfig({ ...randomizerConfig, indexing: 0 });
+                  localStorage.setItem("randomizerIndexing", "0");
+                }}
               >
                 {settings.language == "en" ? "0-indexed" : "0-indexed"}
               </button>
               <button
                 className={
-                  indexing === 1
+                  randomizerConfig.indexing === 1
                     ? "px-2 bg-clear-hover rounded-r-md"
                     : `px-2 bg-ovr-darkened bg-opacity-50 rounded-r-md
                       hover:bg-clear-hover hover:bg-opacity-50`
                 }
-                onClick={() => setIndexing(1)}
+                onClick={() => {
+                  setRandomizerConfig({ ...randomizerConfig, indexing: 1 });
+                  localStorage.setItem("randomizerIndexing", "1");
+                }}
               >
                 {settings.language == "en" ? "1-indexed" : "1-indexed"}
               </button>
@@ -79,9 +82,17 @@ export function RandomizerScreen({
               <input
                 type="text"
                 id="randomizerNodeCount"
+                defaultValue={randomizerConfig.nodeCount}
                 className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
                   w-12 opacity-50 focus:opacity-100 text-center"
                 onKeyDown={handleTextAreaKeyDown}
+                onChange={(e) => {
+                  setRandomizerConfig({
+                    ...randomizerConfig,
+                    nodeCount: e.target.value,
+                  });
+                  localStorage.setItem("randomizerNodeCount", e.target.value);
+                }}
               ></input>
             </div>
 
@@ -97,9 +108,17 @@ export function RandomizerScreen({
                 <input
                   type="text"
                   id="randomizerEdgeCount"
+                  defaultValue={randomizerConfig.edgeCount}
                   className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
                     w-12 opacity-50 focus:opacity-100 text-center"
                   onKeyDown={handleTextAreaKeyDown}
+                  onChange={(e) => {
+                    setRandomizerConfig({
+                      ...randomizerConfig,
+                      edgeCount: e.target.value,
+                    });
+                    localStorage.setItem("randomizerEdgeCount", e.target.value);
+                  }}
                 ></input>
               </div>
             )}
@@ -109,9 +128,7 @@ export function RandomizerScreen({
             ) : (
               <div className="flex justify-between items-center">
                 <div>
-                  {settings.language == "en"
-                    ? "Guarantee Connected"
-                    : "Guarantee Connected"}
+                  {settings.language == "en" ? "Connected" : "Connected"}
                 </div>
                 <label className="relative inline w-12">
                   <input
@@ -125,6 +142,10 @@ export function RandomizerScreen({
                         ...randomizerConfig,
                         connected: flipped,
                       });
+                      localStorage.setItem(
+                        "randomizerConnected",
+                        flipped ? "true" : "false",
+                      );
                     }}
                   />
                   <span
@@ -156,6 +177,10 @@ export function RandomizerScreen({
                       ...randomizerConfig,
                       tree: flipped,
                     });
+                    localStorage.setItem(
+                      "randomizerTree",
+                      flipped ? "true" : "false",
+                    );
                   }}
                 />
                 <span

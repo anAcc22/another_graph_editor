@@ -27,11 +27,13 @@ export function RandomizerScreen({
       <div
         className="absolute w-full h-full bg-ovr-darkened bg-opacity-80 z-50
           flex font-jetbrains"
+        onClick={() => setRandomizer(false)}
       >
         <div
           className={`font-jetbrains flex flex-col border-2 rounded-lg bg-block
             shadow-shadow shadow border-border hover:border-border-hover p-3
             space-y-3 w-150 m-auto`}
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center">
             <h4 className="text-base font-semibold">

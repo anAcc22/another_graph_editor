@@ -39,6 +39,7 @@ export function InitScreen({
       <div
         className="absolute w-full h-full bg-ovr-darkened bg-opacity-80 z-50
           flex font-jetbrains"
+        onClick={() => setInit(false)}
       >
         <div
           className="flex-col flex lg:flex-row space-x-0 lg:space-x-16
@@ -49,6 +50,7 @@ export function InitScreen({
               bg-block shadow-shadow shadow border-border
               hover:border-border-hover p-3 space-y-3 w-100 max-h-200
               overflow-scroll no-scrollbar`}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center">
               <h4 className="text-base font-semibold">
@@ -101,6 +103,7 @@ export function InitScreen({
             className={`font-jetbrains flex flex-col border-2 rounded-lg
               bg-block shadow-shadow shadow border-border
               hover:border-border-hover p-3 space-y-3 w-80`}
+            onClick={(e) => e.stopPropagation()}
           >
             <h4 className="text-base font-semibold">
               {settings.language == "en" ? "Preview" : "Preview"}
@@ -125,6 +128,7 @@ export function InitScreen({
             className={`font-jetbrains flex flex-col border-2 rounded-lg
               bg-block shadow-shadow shadow border-border
               hover:border-border-hover p-3 space-y-3 w-80`}
+            onClick={(e) => e.stopPropagation()}
           >
             <h4 className="text-base font-semibold">
               {settings.language == "en" ? "Input" : "Input"}

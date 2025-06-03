@@ -1,5 +1,10 @@
 import { InputFormat } from "../types";
 
+export function randInt(l: number, r: number) {
+  const len = r - l + 1;
+  return Math.floor(Math.random() * len) + l;
+}
+
 export function isInteger(s: string) {
   return parseInt(s).toString() === s;
 }

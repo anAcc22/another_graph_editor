@@ -196,6 +196,180 @@ export function RandomizerScreen({
                 ></span>
               </label>
             </div>
+
+            <div className="flex justify-between items-center">
+              <div>
+                {settings.language == "en" ? "Node Label" : "Node Label"}
+              </div>
+              <label className="relative inline w-12">
+                <input
+                  type="checkbox"
+                  checked={randomizerConfig.hasNodeLabel}
+                  id="randomizerHasNodeLabel"
+                  className="peer invisible"
+                  onChange={() => {
+                    const flipped = !randomizerConfig.hasNodeLabel;
+                    setRandomizerConfig({
+                      ...randomizerConfig,
+                      hasNodeLabel: flipped,
+                    });
+                    localStorage.setItem(
+                      "randomizerHasNodeLabel",
+                      flipped ? "true" : "false",
+                    );
+                  }}
+                />
+                <span
+                  className="absolute top-0 left-0 w-12 h-6 cursor-pointer
+                    rounded-full bg-toggle-uncheck border-none transition-all
+                    duration-75 hover:bg-toggle-hover
+                    peer-checked:bg-toggle-check"
+                ></span>
+                <span
+                  className="absolute top-0.5 left-0.5 w-5 h-5 bg-toggle-circle
+                    rounded-full transition-all duration-75 cursor-pointer
+                    peer-checked:translate-x-6"
+                ></span>
+              </label>
+            </div>
+
+            {!randomizerConfig.hasNodeLabel ? (
+              <></>
+            ) : (
+              <div className="flex justify-between items-center">
+                <div>
+                  {settings.language == "en"
+                    ? "Inclusive Range [min, max]"
+                    : "Inclusive Range [min, max]"}
+                </div>
+                <div className="flex space-x-3 items-center">
+                  <input
+                    type="text"
+                    id="randomizerNodeLabelMin"
+                    defaultValue={randomizerConfig.nodeLabelMin}
+                    className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
+                      w-12 opacity-50 focus:opacity-100 text-center"
+                    onKeyDown={handleTextAreaKeyDown}
+                    onChange={(e) => {
+                      setRandomizerConfig({
+                        ...randomizerConfig,
+                        nodeLabelMin: e.target.value,
+                      });
+                      localStorage.setItem(
+                        "randomizerNodeLabelMin",
+                        e.target.value,
+                      );
+                    }}
+                  ></input>
+                  <div className="font-bold text-toggle-uncheck">{"=>"}</div>
+                  <input
+                    type="text"
+                    id="randomizerNodeLabelMax"
+                    defaultValue={randomizerConfig.nodeLabelMax}
+                    className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
+                      w-12 opacity-50 focus:opacity-100 text-center"
+                    onKeyDown={handleTextAreaKeyDown}
+                    onChange={(e) => {
+                      setRandomizerConfig({
+                        ...randomizerConfig,
+                        nodeLabelMax: e.target.value,
+                      });
+                      localStorage.setItem(
+                        "randomizerNodeLabelMax",
+                        e.target.value,
+                      );
+                    }}
+                  ></input>
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center">
+              <div>
+                {settings.language == "en" ? "Edge Label" : "Edge Label"}
+              </div>
+              <label className="relative inline w-12">
+                <input
+                  type="checkbox"
+                  checked={randomizerConfig.hasEdgeLabel}
+                  id="randomizerHasEdgeLabel"
+                  className="peer invisible"
+                  onChange={() => {
+                    const flipped = !randomizerConfig.hasEdgeLabel;
+                    setRandomizerConfig({
+                      ...randomizerConfig,
+                      hasEdgeLabel: flipped,
+                    });
+                    localStorage.setItem(
+                      "randomizerHasEdgeLabel",
+                      flipped ? "true" : "false",
+                    );
+                  }}
+                />
+                <span
+                  className="absolute top-0 left-0 w-12 h-6 cursor-pointer
+                    rounded-full bg-toggle-uncheck border-none transition-all
+                    duration-75 hover:bg-toggle-hover
+                    peer-checked:bg-toggle-check"
+                ></span>
+                <span
+                  className="absolute top-0.5 left-0.5 w-5 h-5 bg-toggle-circle
+                    rounded-full transition-all duration-75 cursor-pointer
+                    peer-checked:translate-x-6"
+                ></span>
+              </label>
+            </div>
+
+            {!randomizerConfig.hasEdgeLabel ? (
+              <></>
+            ) : (
+              <div className="flex justify-between items-center">
+                <div>
+                  {settings.language == "en"
+                    ? "Inclusive Range [min, max]"
+                    : "Inclusive Range [min, max]"}
+                </div>
+                <div className="flex space-x-3 items-center">
+                  <input
+                    type="text"
+                    id="randomizerEdgeLabelMin"
+                    defaultValue={randomizerConfig.edgeLabelMin}
+                    className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
+                      w-12 opacity-50 focus:opacity-100 text-center"
+                    onKeyDown={handleTextAreaKeyDown}
+                    onChange={(e) => {
+                      setRandomizerConfig({
+                        ...randomizerConfig,
+                        edgeLabelMin: e.target.value,
+                      });
+                      localStorage.setItem(
+                        "randomizerEdgeLabelMin",
+                        e.target.value,
+                      );
+                    }}
+                  ></input>
+                  <div className="font-bold text-toggle-uncheck">{"=>"}</div>
+                  <input
+                    type="text"
+                    id="randomizerEdgeLabelMax"
+                    defaultValue={randomizerConfig.edgeLabelMax}
+                    className="outline-none px-2 py-1 bg-ovr-darkened rounded-md
+                      w-12 opacity-50 focus:opacity-100 text-center"
+                    onKeyDown={handleTextAreaKeyDown}
+                    onChange={(e) => {
+                      setRandomizerConfig({
+                        ...randomizerConfig,
+                        edgeLabelMax: e.target.value,
+                      });
+                      localStorage.setItem(
+                        "randomizerEdgeLabelMax",
+                        e.target.value,
+                      );
+                    }}
+                  ></input>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-around">

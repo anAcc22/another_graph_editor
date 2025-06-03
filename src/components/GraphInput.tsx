@@ -6,9 +6,9 @@ import { Settings } from "../types";
 import { ParsedGraph } from "../types";
 import { TestCases } from "../types";
 import { Randomizer } from "../types";
-import { padNode, sortNodes } from "./utils";
+import { isInteger, padNode, randInt, sortNodes } from "./utils";
 
-import { generateRandomGraph } from "./generator";
+import { generateRandomGraph, generateRandomNodeLabels } from "./generator";
 
 interface Props {
   settings: Settings;
@@ -660,6 +660,25 @@ export function GraphInput({
                 const inputFormat = testCases.get(inputId)!.inputFormat;
                 try {
                   const graphEdges = generateRandomGraph(randomizerConfig);
+                  let nodeLabels = "";
+                  if (randomizerConfig.hasNodeLabel) {
+                    nodeLabels = generateRandomNodeLabels(randomizerConfig);
+                  }
+                  let edgeL = 0;
+                  let edgeR = 0;
+                  if (randomizerConfig.hasEdgeLabel) {
+                    if (
+                      !isInteger(randomizerConfig.edgeLabelMin) ||
+                      !isInteger(randomizerConfig.edgeLabelMax)
+                    ) {
+                      throw Error("invalid edge label range");
+                    }
+                    edgeL = parseInt(randomizerConfig.edgeLabelMin);
+                    edgeR = parseInt(randomizerConfig.edgeLabelMax);
+                    if (edgeR < edgeL) {
+                      throw Error("invalid edge label range");
+                    }
+                  }
                   const left = new Set<number>();
                   for (
                     let u = 0;
@@ -680,9 +699,17 @@ export function GraphInput({
                     for (const u of left) ans += u + "\n";
                     for (let i = 0; i < graphEdges.length; i++) {
                       ans += graphEdges[i].join(" ");
+                      if (randomizerConfig.hasEdgeLabel) {
+                        ans += " " + randInt(edgeL, edgeR);
+                      }
                       if (i != graphEdges.length - 1) ans += "\n";
                     }
                     edges.value = ans;
+                    (
+                      document.getElementById(
+                        "graphInputNodeLabelsEdges" + inputId,
+                      ) as HTMLTextAreaElement
+                    ).value = nodeLabels;
                   } else {
                     let ps = document.getElementById(
                       "graphInputParent" + inputId,
@@ -692,12 +719,19 @@ export function GraphInput({
                     ) as HTMLTextAreaElement;
                     let pAns = "";
                     let cAns = "";
+                    let eAns = "";
                     for (let i = 0; i < graphEdges.length; i++) {
                       pAns += graphEdges[i][0];
                       cAns += graphEdges[i][1];
+                      if (randomizerConfig.hasEdgeLabel) {
+                        eAns += randInt(edgeL, edgeR);
+                      }
                       if (i != graphEdges.length - 1) {
                         pAns += " ";
                         cAns += " ";
+                        if (randomizerConfig.hasEdgeLabel) {
+                          eAns += " ";
+                        }
                       }
                     }
                     for (const u of left) {
@@ -706,6 +740,16 @@ export function GraphInput({
                     }
                     ps.value = pAns;
                     cs.value = cAns;
+                    (
+                      document.getElementById(
+                        "graphInputNodeLabelsParChild" + inputId,
+                      ) as HTMLTextAreaElement
+                    ).value = nodeLabels;
+                    (
+                      document.getElementById(
+                        "graphInputEdgeLabels" + inputId,
+                      ) as HTMLTextAreaElement
+                    ).value = eAns;
                   }
                   setRandomizerError(undefined);
                   processGraphInput();
@@ -737,6 +781,20 @@ export function GraphInput({
                       settings.language === "en"
                         ? `insufficient edges!`
                         : `insufficient edges!`,
+                    );
+                  }
+                  if (error.message === `invalid node label range`) {
+                    setRandomizerError(
+                      settings.language === "en"
+                        ? `invalid node label range`
+                        : `invalid node label range`,
+                    );
+                  }
+                  if (error.message === `invalid edge label range`) {
+                    setRandomizerError(
+                      settings.language === "en"
+                        ? `invalid edge label range`
+                        : `invalid edge label range`,
                     );
                   }
                 }

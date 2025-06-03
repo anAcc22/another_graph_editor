@@ -88,4 +88,10 @@ export interface Randomizer {
   edgeCount: string;
   connected: boolean;
   tree: boolean;
+  hasNodeLabel: boolean;
+  nodeLabelMin: string;
+  nodeLabelMax: string;
+  hasEdgeLabel: boolean;
+  edgeLabelMin: string;
+  edgeLabelMax: string;
 }

@@ -1,5 +1,6 @@
 import { Randomizer } from "../types";
 import { isInteger } from "./utils";
+import { randInt } from "./utils";
 
 export function generateRandomGraph(
   randomizerConfig: Randomizer,
@@ -125,4 +126,31 @@ export function generateRandomGraph(
   }
 
   return ans;
+}
+
+export function generateRandomNodeLabels(
+  randomizerConfig: Randomizer,
+): string {
+  if (
+    !isInteger(randomizerConfig.nodeLabelMin) ||
+    !isInteger(randomizerConfig.nodeLabelMax)
+  ) {
+    throw Error(`invalid node label range`);
+  }
+
+  const l = parseInt(randomizerConfig.nodeLabelMin);
+  const r = parseInt(randomizerConfig.nodeLabelMax);
+
+  if (r < l) {
+    throw Error(`invalid node label range`);
+  }
+
+  const n = parseInt(randomizerConfig.nodeCount);
+  const ans = new Array<number>();
+
+  for (let i = 0; i < n; i++) {
+    ans.push(randInt(l, r));
+  }
+
+  return ans.join(" ");
 }

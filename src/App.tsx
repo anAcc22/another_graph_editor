@@ -123,6 +123,30 @@ function App() {
       localStorage.getItem("randomizerTree") !== null
         ? localStorage.getItem("randomizerTree")! == "true"
         : false,
+    hasNodeLabel:
+      localStorage.getItem("randomizerHasNodeLabel") !== null
+        ? localStorage.getItem("randomizerHasNodeLabel")! == "true"
+        : false,
+    nodeLabelMin:
+      localStorage.getItem("randomizerNodeLabelMin") !== null
+        ? localStorage.getItem("randomizerNodeLabelMin")!
+        : "",
+    nodeLabelMax:
+      localStorage.getItem("randomizerNodeLabelMax") !== null
+        ? localStorage.getItem("randomizerNodeLabelMax")!
+        : "",
+    hasEdgeLabel:
+      localStorage.getItem("randomizerHasEdgeLabel") !== null
+        ? localStorage.getItem("randomizerHasEdgeLabel")! == "true"
+        : false,
+    edgeLabelMin:
+      localStorage.getItem("randomizerEdgeLabelMin") !== null
+        ? localStorage.getItem("randomizerEdgeLabelMin")!
+        : "",
+    edgeLabelMax:
+      localStorage.getItem("randomizerEdgeLabelMax") !== null
+        ? localStorage.getItem("randomizerEdgeLabelMax")!
+        : "",
   });
 
   return (

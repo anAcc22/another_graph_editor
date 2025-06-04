@@ -33,7 +33,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
           title={
             settings.language == "en"
               ? "Testcase Bounding Boxes"
-              : "Testcase Bounding Boxes"
+              : "测试用例边框"
           }
           leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
           rightLabel={settings.language == "en" ? "Show" : "展示"}
@@ -202,7 +202,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         <hr className="border-dashed border-border" />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Pen Thickness" : "Pen Thickness"}
+          {settings.language == "en" ? "Pen Thickness" : "画笔粗细"}
         </h4>
         <input
           type="range"
@@ -231,7 +231,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Pen Transparency" : "Pen Transparency"}
+          {settings.language == "en" ? "Pen Transparency" : "画笔透明度"}
         </h4>
         <input
           type="range"
@@ -263,7 +263,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Eraser Radius" : "Eraser Radius"}
+          {settings.language == "en" ? "Eraser Radius" : "橡皮擦半径"}
         </h4>
         <input
           type="range"

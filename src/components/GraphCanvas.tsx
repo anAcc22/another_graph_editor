@@ -452,7 +452,7 @@ export function GraphCanvas({
               title={
                 settings.language == "en"
                   ? "Clear ALL Annotations"
-                  : "清除所有图纸"
+                  : "清除所有笔迹"
               }
               onClick={() => {
                 let canvas = refAnnotation.current;

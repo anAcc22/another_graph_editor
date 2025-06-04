@@ -18,7 +18,7 @@ export const initBuildMap = new Map<
 >();
 
 initNameMap.set(0 + "en", "[single] basic (edges)");
-initNameMap.set(0 + "cn", "[single] basic (edges)");
+initNameMap.set(0 + "cn", "[单组] 基本 (边集)");
 initPreviewMap.set("0 0", "n [...]\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initPreviewMap.set("0 1", "n [...]\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initBuildMap.set(
@@ -62,7 +62,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(1 + "en", "[single] array (edges)");
-initNameMap.set(1 + "cn", "[single] array (edges)");
+initNameMap.set(1 + "cn", "[单组] 带点权 (边集)");
 initPreviewMap.set("1 0", "n [...]\na₀ ... aₙ₋₁\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initPreviewMap.set("1 1", "n [...]\na₁ ... aₙ\nu₁ v₁ [w]\n...\nuₘ vₘ [w]");
 initBuildMap.set(
@@ -107,7 +107,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(2 + "en", "[single] basic (parent-child)");
-initNameMap.set(2 + "cn", "[single] basic (parent-child)");
+initNameMap.set(2 + "cn", "[单组] 基本 (父-子节点)");
 initPreviewMap.set("2 0", "n [...]\np₁ ... pₙ₋₁");
 initPreviewMap.set("2 1", "n [...]\np₂ ... pₙ");
 initBuildMap.set(
@@ -155,7 +155,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(3 + "en", "[single] array (parent-child)");
-initNameMap.set(3 + "cn", "[single] array (parent-child)");
+initNameMap.set(3 + "cn", "[单组] 带点权 (父-子节点)");
 initPreviewMap.set("3 0", "n [...]\na₀ ... aₙ₋₁\np₁ ... pₙ₋₁");
 initPreviewMap.set("3 1", "n [...]\na₁ ... aₙ\np₂ ... pₙ");
 initBuildMap.set(
@@ -204,7 +204,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(4 + "en", "[multiple] basic (edges)");
-initNameMap.set(4 + "cn", "[multiple] basic (edges)");
+initNameMap.set(4 + "cn", "[多组] 基本 (边集)");
 initPreviewMap.set(
   "4 0",
   "t\nn₁ m₁ [...]\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
@@ -265,7 +265,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(5 + "en", "[multiple] array (edges)");
-initNameMap.set(5 + "cn", "[multiple] array (edges)");
+initNameMap.set(5 + "cn", "[多组] 带点权 (边集)");
 initPreviewMap.set(
   "5 0",
   "t\nn₁ m₁ [...]\na₀ ... a_{n₁-1}\nu₁ v₁ [w]\n...\nu_{m₁} v_{m₁} [w]\n...\nnₜ mₜ [...]\na₀ ... a_{nₜ-1}\nu₁ v₁ [w]\n...\nu_{mₜ} v_{mₜ} [w]",
@@ -327,7 +327,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(6 + "en", "[multiple] tree (edges)");
-initNameMap.set(6 + "cn", "[multiple] tree (edges)");
+initNameMap.set(6 + "cn", "[多组] 树 (边集)");
 initPreviewMap.set(
   "6 0",
   "t\nn₁ [...]\nu₁ v₁ [w]\n...\nu_{n₁-1} v_{n₁-1} [w]\n...\nnₜ [...]\nu₁ v₁ [w]\n...\nu_{nₜ-1} v_{nₜ-1} [w]",
@@ -388,7 +388,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(7 + "en", "[multiple] tree w/ array (edges)");
-initNameMap.set(7 + "cn", "[multiple] tree w/ array (edges)");
+initNameMap.set(7 + "cn", "[多组] 树 边权和点权 (边集)");
 initPreviewMap.set(
   "7 0",
   "t\nn₁ [...]\na₀ ... a_{n₁-1}\nu₁ v₁ [w]\n...\nu_{n₁-1} v_{n₁-1} [w]\n...\nnₜ [...]\na₀ ... a_{nₜ-1}\nu₁ v₁ [w]\n...\nu_{nₜ-1} v_{nₜ-1} [w]",
@@ -450,7 +450,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(8 + "en", "[multiple] basic (parent-child)");
-initNameMap.set(8 + "cn", "[multiple] basic (parent-child)");
+initNameMap.set(8 + "cn", "[多组] 基础 (父-子节点)");
 initPreviewMap.set(
   "8 0",
   "t\nn₁ [...]\np₁ ... p_{n₁-1}\n...\nnₜ [...]\np₁ ... p_{nₜ-1}",
@@ -514,7 +514,7 @@ initBuildMap.set(
 );
 
 initNameMap.set(9 + "en", "[multiple] array (parent-child)");
-initNameMap.set(9 + "cn", "[multiple] basic (parent-child)");
+initNameMap.set(9 + "cn", "[多组] 带点权 (父-子节点)");
 initPreviewMap.set(
   "9 0",
   "t\nn₁ [...]\na₀ ... a_{n₁-1}\np₁ ... p_{n₁-1}\n...\nnₜ [...]\na₀ ... a_{nₜ-1}\np₁ ... p_{nₜ-1}",

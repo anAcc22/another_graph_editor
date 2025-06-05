@@ -172,6 +172,13 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>5 June 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Improve annotation experience</li>
+              <li>Add randomizer config</li>
+              <li>Add "Init" system</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>24 Feb 2025</p>
             <ul className="list-disc list-inside">
               <li>Use SVG icons instead</li>

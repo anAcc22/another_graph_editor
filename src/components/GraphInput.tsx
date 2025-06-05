@@ -759,42 +759,42 @@ export function GraphInput({
                     setRandomizerError(
                       settings.language === "en"
                         ? `n must be an integer >= 0!`
-                        : `n must be an integer >= 0!`,
+                        : `n 必须是非负整数!`,
                     );
                   }
                   if (error.message === `m must be an integer >= 0!`) {
                     setRandomizerError(
                       settings.language === "en"
                         ? `m must be an integer >= 0!`
-                        : `m must be an integer >= 0!`,
+                        : `m 必须是非负整数!`,
                     );
                   }
                   if (error.message === `too many edges!`) {
                     setRandomizerError(
                       settings.language === "en"
                         ? `too many edges!`
-                        : `too many edges!`,
+                        : `边的数量过多!`,
                     );
                   }
                   if (error.message === `insufficient edges!`) {
                     setRandomizerError(
                       settings.language === "en"
                         ? `insufficient edges!`
-                        : `insufficient edges!`,
+                        : `边的数量过少!`,
                     );
                   }
                   if (error.message === `invalid node label range`) {
                     setRandomizerError(
                       settings.language === "en"
                         ? `invalid node label range`
-                        : `invalid node label range`,
+                        : `节点标签的范围不合法`,
                     );
                   }
                   if (error.message === `invalid edge label range`) {
                     setRandomizerError(
                       settings.language === "en"
                         ? `invalid edge label range`
-                        : `invalid edge label range`,
+                        : `边的标签的范围不合法`,
                     );
                   }
                 }

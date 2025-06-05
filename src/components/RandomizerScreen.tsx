@@ -36,7 +36,7 @@ export function RandomizerScreen({
             <h4 className="text-base font-semibold">
               {settings.language == "en"
                 ? "Randomizer Configuration"
-                : "Randomizer Configuration"}
+                : "随机化配置"}
             </h4>
             <div>
               <button
@@ -51,7 +51,7 @@ export function RandomizerScreen({
                   localStorage.setItem("randomizerIndexing", "0");
                 }}
               >
-                {settings.language == "en" ? "0-indexed" : "0-indexed"}
+                {settings.language == "en" ? "0-indexed" : "0-索引"}
               </button>
               <button
                 className={
@@ -65,7 +65,7 @@ export function RandomizerScreen({
                   localStorage.setItem("randomizerIndexing", "1");
                 }}
               >
-                {settings.language == "en" ? "1-indexed" : "1-indexed"}
+                {settings.language == "en" ? "1-indexed" : "1-索引"}
               </button>
             </div>
           </div>
@@ -77,7 +77,7 @@ export function RandomizerScreen({
               <div>
                 {settings.language == "en"
                   ? "Node Count (n)"
-                  : "Node Count (n)"}
+                  : "节点数 (n)"}
               </div>
               <input
                 type="text"
@@ -103,7 +103,7 @@ export function RandomizerScreen({
                 <div>
                   {settings.language == "en"
                     ? "Edge Count (m)"
-                    : "Edge Count (m)"}
+                    : "边数 (m)"}
                 </div>
                 <input
                   type="text"
@@ -128,7 +128,7 @@ export function RandomizerScreen({
             ) : (
               <div className="flex justify-between items-center">
                 <div>
-                  {settings.language == "en" ? "Connected" : "Connected"}
+                  {settings.language == "en" ? "Connected" : "保证联通"}
                 </div>
                 <label className="relative inline w-12">
                   <input
@@ -164,7 +164,7 @@ export function RandomizerScreen({
             )}
 
             <div className="flex justify-between items-center">
-              <div>{settings.language == "en" ? "Tree" : "Tree"}</div>
+              <div>{settings.language == "en" ? "Tree" : "保证为树"}</div>
               <label className="relative inline w-12">
                 <input
                   type="checkbox"
@@ -199,7 +199,7 @@ export function RandomizerScreen({
 
             <div className="flex justify-between items-center">
               <div>
-                {settings.language == "en" ? "Node Label" : "Node Label"}
+                {settings.language == "en" ? "Node Label" : "生成节点标签"}
               </div>
               <label className="relative inline w-12">
                 <input
@@ -240,7 +240,7 @@ export function RandomizerScreen({
                 <div>
                   {settings.language == "en"
                     ? "Inclusive Range [min, max]"
-                    : "Inclusive Range [min, max]"}
+                    : "闭区间 [min, max]"}
                 </div>
                 <div className="flex space-x-3 items-center">
                   <input
@@ -286,7 +286,7 @@ export function RandomizerScreen({
 
             <div className="flex justify-between items-center">
               <div>
-                {settings.language == "en" ? "Edge Label" : "Edge Label"}
+                {settings.language == "en" ? "Edge Label" : "生成边标签"}
               </div>
               <label className="relative inline w-12">
                 <input
@@ -327,7 +327,7 @@ export function RandomizerScreen({
                 <div>
                   {settings.language == "en"
                     ? "Inclusive Range [min, max]"
-                    : "Inclusive Range [min, max]"}
+                    : "闭区间 [min, max]"}
                 </div>
                 <div className="flex space-x-3 items-center">
                   <input
@@ -382,7 +382,7 @@ export function RandomizerScreen({
                 setRandomizer(false);
               }}
             >
-              {settings.language == "en" ? "Exit" : "Exit"}
+              {settings.language == "en" ? "Exit" : "关闭"}
             </button>
           </div>
         </div>

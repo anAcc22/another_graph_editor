@@ -106,7 +106,7 @@ export function InputTabs({
                 active:bg-tab-active font-semibold mt-8`}
               onClick={() => setInit(true)}
             >
-              {settings.language == "en" ? "Init" : "Init"}
+              {settings.language == "en" ? "Init" : "导入"}
             </button>
           </div>
         </div>

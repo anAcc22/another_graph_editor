@@ -54,7 +54,7 @@ export function InitScreen({
           >
             <div className="flex justify-between items-center">
               <h4 className="text-base font-semibold">
-                {settings.language == "en" ? "Presets" : "Presets"}
+                {settings.language == "en" ? "Presets" : "预设"}
               </h4>
               <div>
                 <button
@@ -66,7 +66,7 @@ export function InitScreen({
                   }
                   onClick={() => setIndexing(0)}
                 >
-                  {settings.language == "en" ? "0-indexed" : "0-indexed"}
+                  {settings.language == "en" ? "0-indexed" : "0-索引"}
                 </button>
                 <button
                   className={
@@ -77,7 +77,7 @@ export function InitScreen({
                   }
                   onClick={() => setIndexing(1)}
                 >
-                  {settings.language == "en" ? "1-indexed" : "1-indexed"}
+                  {settings.language == "en" ? "1-indexed" : "1-索引"}
                 </button>
               </div>
             </div>
@@ -106,7 +106,7 @@ export function InitScreen({
             onClick={(e) => e.stopPropagation()}
           >
             <h4 className="text-base font-semibold">
-              {settings.language == "en" ? "Preview" : "Preview"}
+              {settings.language == "en" ? "Preview" : "示例"}
             </h4>
             <textarea
               wrap="off"
@@ -131,7 +131,7 @@ export function InitScreen({
             onClick={(e) => e.stopPropagation()}
           >
             <h4 className="text-base font-semibold">
-              {settings.language == "en" ? "Input" : "Input"}
+              {settings.language == "en" ? "Input" : "输入"}
             </h4>
             <textarea
               wrap="off"
@@ -146,7 +146,7 @@ export function InitScreen({
             <div className="text-format-bad-border text-sm">
               {settings.language == "en"
                 ? "WARN: This will override all data!"
-                : "WARN: This will override all data!"}
+                : "警告: 这会覆盖当前所有数据!"}
             </div>
 
             <div className="flex justify-between">
@@ -157,7 +157,7 @@ export function InitScreen({
                   active:bg-opacity-50 font-semibold text-format-bad-border`}
                 onClick={() => setInit(false)}
               >
-                {settings.language == "en" ? "Cancel" : "Cancel"}
+                {settings.language == "en" ? "Cancel" : "取消"}
               </button>
               <button
                 className={`h-7 border-2 border-format-ok-border bg-block
@@ -184,7 +184,7 @@ export function InitScreen({
                   setInit(false);
                 }}
               >
-                {settings.language == "en" ? "Confirm" : "Confirm"}
+                {settings.language == "en" ? "Confirm" : "确定"}
               </button>
             </div>
           </div>

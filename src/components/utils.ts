@@ -1,5 +1,10 @@
 import { InputFormat } from "../types";
 
+export function randInt(l: number, r: number) {
+  const len = r - l + 1;
+  return Math.floor(Math.random() * len) + l;
+}
+
 export function isInteger(s: string) {
   return parseInt(s).toString() === s;
 }
@@ -19,6 +24,12 @@ export function stripNode(u: string) {
     u = u.substring(1);
   }
   return u;
+}
+
+export function getTestCase(u: string) {
+  let toDeduct = 0;
+  if (u.length && u[0] == "ρ") toDeduct++;
+  return u.length - stripNode(u).length - toDeduct;
 }
 
 export function sortNodes(nodes: string[]) {

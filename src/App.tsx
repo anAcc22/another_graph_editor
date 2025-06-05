@@ -3,8 +3,13 @@ import { InputTabs } from "./components/InputTabs";
 import { GraphCanvas } from "./components/GraphCanvas";
 import { GraphSettings } from "./components/GraphSettings";
 
+import { InitScreen } from "./components/InitScreen";
+import { RandomizerScreen } from "./components/RandomizerScreen";
+
 import { Settings } from "./types";
+import { SettingsFormat } from "./types";
 import { TestCase, TestCases } from "./types";
+import { Randomizer } from "./types";
 
 import { getDefaultGraph } from "./components/utils";
 
@@ -62,6 +67,19 @@ function App() {
       localStorage.getItem("edgeLabelSeparation") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLabelSeparation")!)
         : 10,
+    penThickness:
+      localStorage.getItem("penThickness") !== null
+        ? Number.parseFloat(localStorage.getItem("penThickness")!)
+        : 1,
+    penTransparency:
+      localStorage.getItem("penTransparency") !== null
+        ? Number.parseFloat(localStorage.getItem("penTransparency")!)
+        : 0,
+    eraserRadius:
+      localStorage.getItem("eraserRadius") !== null
+        ? Number.parseFloat(localStorage.getItem("eraserRadius")!)
+        : 10,
+    testCaseBoundingBoxes: true,
     showComponents: false,
     showBridges: false,
     showMSTs: false,
@@ -74,8 +92,61 @@ function App() {
         : false,
     fixedMode: false,
     multiedgeMode: true,
-    settingsFormat: "general",
+    settingsFormat:
+      localStorage.getItem("settingsFormat") !== null
+        ? (localStorage.getItem("settingsFormat") as SettingsFormat)
+        : "general",
     gridMode: false,
+  });
+
+  const [init, setInit] = useState<boolean>(false);
+  const [randomizer, setRandomizer] = useState<boolean>(false);
+
+  const [randomizerConfig, setRandomizerConfig] = useState<Randomizer>({
+    indexing:
+      localStorage.getItem("randomizerIndexing") !== null
+        ? parseInt(localStorage.getItem("randomizerIndexing")!)
+        : 0,
+    nodeCount:
+      localStorage.getItem("randomizerNodeCount") !== null
+        ? localStorage.getItem("randomizerNodeCount")!
+        : "",
+    edgeCount:
+      localStorage.getItem("randomizerEdgeCount") !== null
+        ? localStorage.getItem("randomizerEdgeCount")!
+        : "",
+    connected:
+      localStorage.getItem("randomizerConnected") !== null
+        ? localStorage.getItem("randomizerConnected")! == "true"
+        : false,
+    tree:
+      localStorage.getItem("randomizerTree") !== null
+        ? localStorage.getItem("randomizerTree")! == "true"
+        : false,
+    hasNodeLabel:
+      localStorage.getItem("randomizerHasNodeLabel") !== null
+        ? localStorage.getItem("randomizerHasNodeLabel")! == "true"
+        : false,
+    nodeLabelMin:
+      localStorage.getItem("randomizerNodeLabelMin") !== null
+        ? localStorage.getItem("randomizerNodeLabelMin")!
+        : "",
+    nodeLabelMax:
+      localStorage.getItem("randomizerNodeLabelMax") !== null
+        ? localStorage.getItem("randomizerNodeLabelMax")!
+        : "",
+    hasEdgeLabel:
+      localStorage.getItem("randomizerHasEdgeLabel") !== null
+        ? localStorage.getItem("randomizerHasEdgeLabel")! == "true"
+        : false,
+    edgeLabelMin:
+      localStorage.getItem("randomizerEdgeLabelMin") !== null
+        ? localStorage.getItem("randomizerEdgeLabelMin")!
+        : "",
+    edgeLabelMax:
+      localStorage.getItem("randomizerEdgeLabelMax") !== null
+        ? localStorage.getItem("randomizerEdgeLabelMax")!
+        : "",
   });
 
   return (
@@ -83,8 +154,10 @@ function App() {
       <div
         className={
           settings.darkMode
-            ? "dark bg-ovr text-text absolute w-full overflow-scroll"
-            : "light bg-ovr text-text absolute w-full overflow-scroll"
+            ? `dark bg-ovr text-text absolute w-full overflow-scroll
+              no-scrollbar`
+            : `light bg-ovr text-text absolute w-full overflow-scroll
+              no-scrollbar`
         }
       >
         <div
@@ -99,6 +172,13 @@ function App() {
               rounded-lg bg-block left-0 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>5 June 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Improve annotation experience</li>
+              <li>Add randomizer config</li>
+              <li>Add "Init" system</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>24 Feb 2025</p>
             <ul className="list-disc list-inside">
               <li>Use SVG icons instead</li>
@@ -221,6 +301,31 @@ function App() {
           </a>
         </div>
 
+        {init ? (
+          <InitScreen
+            settings={settings}
+            setInit={setInit}
+            testCaseNumber={testCaseNumber}
+            setTestCaseNumber={setTestCaseNumber}
+            setTestCases={setTestCases}
+            setTabs={setTabs}
+            setCurrentId={setCurrentId}
+          />
+        ) : (
+          <></>
+        )}
+
+        {randomizer ? (
+          <RandomizerScreen
+            settings={settings}
+            setRandomizer={setRandomizer}
+            randomizerConfig={randomizerConfig}
+            setRandomizerConfig={setRandomizerConfig}
+          />
+        ) : (
+          <></>
+        )}
+
         <InputTabs
           settings={settings}
           tabs={tabs}
@@ -235,6 +340,9 @@ function App() {
           setCurrentId={setCurrentId}
           directed={directed}
           setDirected={setDirected}
+          setInit={setInit}
+          setRandomizer={setRandomizer}
+          randomizerConfig={randomizerConfig}
         />
 
         <div className="relative z-0">

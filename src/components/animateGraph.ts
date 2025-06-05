@@ -28,13 +28,14 @@ import { GraphRenderer } from "./drawingTools";
 
 import { FILL_PALETTE_LIGHT } from "./palettes";
 import { FILL_PALETTE_DARK } from "./palettes";
+import { Bounds, buildTestCaseBoundingBoxes } from "./testCaseBoundingBoxes";
 
 interface Vector2D {
   x: number;
   y: number;
 }
 
-class Node {
+export class Node {
   pos: Vector2D;
   vel: Vector2D = { x: 0, y: 0 };
   markColor: number | undefined;
@@ -99,23 +100,20 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
-const FPS = 120;
-
-const ANNOTATION_WIDTH = 2;
-const ERASE_WIDTH = 50;
+const FPS = 90;
 
 const STROKE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const TEXT_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_COLOR_LIGHT = "hsl(0, 0%, 10%)";
 const EDGE_LABEL_LIGHT = "hsl(30, 50%, 40%)";
-const NODE_LABEL_LIGHT = "hsl(10, 50%, 40%)";
+const NODE_LABEL_LIGHT = "hsl(30, 80%, 50%)";
 const NODE_LABEL_OUTLINE_LIGHT = "hsl(10, 2%, 70%)";
 
 const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_COLOR_DARK = "hsl(0, 0%, 90%)";
 const EDGE_LABEL_DARK = "hsl(30, 70%, 60%)";
-const NODE_LABEL_DARK = "hsl(10, 70%, 60%)";
+const NODE_LABEL_DARK = "hsl(30, 100%, 50%)";
 const NODE_LABEL_OUTLINE_DARK = "hsl(10, 2%, 30%)";
 
 const TEXT_Y_OFFSET = 1;
@@ -125,7 +123,7 @@ const NODE_FRICTION = 0.05;
 const CANVAS_FIELD_DIST = 50;
 
 const FILL_COLORS_LIGHT = [
-  "#dedede",
+  "#9ece7e",
   "#dd7878",
   "#7287ed",
   "#dfae5d",
@@ -138,12 +136,12 @@ const FILL_COLORS_LIGHT = [
 ];
 
 const FILL_COLORS_DARK = [
-  "#232323",
+  "#536333",
   "#7d3838",
   "#42479d",
   "#7f5e0d",
   "#40603b",
-  "#8c3a28",
+  "#8c4a28",
   "#104f85",
   "#176249",
   "#7a366b",
@@ -177,6 +175,9 @@ let oldDirected = false;
 let directed = false;
 
 let inAnnotation = false;
+let toAnnotate = 0;
+
+let annotationSecondLastPos: Vector2D = { x: 0, y: 0 };
 let annotationLastPos: Vector2D = { x: 0, y: 0 };
 
 let inErase = false;
@@ -197,6 +198,10 @@ let settings: Settings = {
   nodeBorderWidthHalf: 15,
   edgeLength: 10,
   edgeLabelSeparation: 10,
+  penThickness: 1,
+  penTransparency: 0,
+  eraserRadius: 20,
+  testCaseBoundingBoxes: true,
   showComponents: false,
   showBridges: false,
   showMSTs: false,
@@ -212,8 +217,9 @@ let settings: Settings = {
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
 
 let nodes: string[] = [];
-let nodesToConceal = new Set<String>();
+let nodesToConceal = new Set<string>();
 let nodeMap = new Map<string, Node>();
+let testCaseMap = new Map<number, number>();
 
 let nodeDist: number = 40;
 
@@ -244,6 +250,7 @@ let cutMap: CutMap | undefined = undefined;
 let bridgeMap: BridgeMap | undefined = undefined;
 
 let positionMap: PositionMap | undefined = undefined;
+let testCaseBoundingBoxes: Map<number, Bounds> | undefined = undefined;
 
 function updateNodes(graphNodes: string[]): void {
   let deletedNodes: string[] = [];
@@ -297,7 +304,9 @@ function updateEdges(graphEdges: string[]): void {
 }
 
 function updateVelocities() {
-  const bucketSize = Math.sqrt(canvasWidth * canvasHeight / Math.max(nodes.length, 1));
+  const bucketSize = Math.sqrt(
+    (canvasWidth * canvasHeight) / Math.max(nodes.length, 1),
+  );
   const buckets = new Map<number, Set<string>>();
   for (const node of nodes) {
     const bucketX = Math.floor(nodeMap.get(node)!.pos.x / bucketSize);
@@ -421,15 +430,19 @@ function updateVelocities() {
       };
     } else if (positionMap !== undefined) {
       const cellSide = (nodeDist * 4) / 5;
-      const xSize = positionMap.gridWidth * cellSide > canvasWidth - 2 * CANVAS_FIELD_DIST
-        ? (canvasWidth - 2 * CANVAS_FIELD_DIST) / positionMap.gridWidth
-        : cellSide;
-      const ySize = positionMap.gridHeight * cellSide > canvasHeight - 2 * CANVAS_FIELD_DIST
-        ? (canvasHeight - 2 * CANVAS_FIELD_DIST) / positionMap.gridHeight
-        : cellSide;
+      const xSize =
+        positionMap.gridWidth * cellSide > canvasWidth - 2 * CANVAS_FIELD_DIST
+          ? (canvasWidth - 2 * CANVAS_FIELD_DIST) / positionMap.gridWidth
+          : cellSide;
+      const ySize =
+        positionMap.gridHeight * cellSide > canvasHeight - 2 * CANVAS_FIELD_DIST
+          ? (canvasHeight - 2 * CANVAS_FIELD_DIST) / positionMap.gridHeight
+          : cellSide;
 
-      const xTarget = positionMap.positions.get(u)![0] * xSize + CANVAS_FIELD_DIST;
-      const yTarget = positionMap.positions.get(u)![1] * ySize + CANVAS_FIELD_DIST;
+      const xTarget =
+        positionMap.positions.get(u)![0] * xSize + CANVAS_FIELD_DIST;
+      const yTarget =
+        positionMap.positions.get(u)![1] * ySize + CANVAS_FIELD_DIST;
 
       const x = nodeMap.get(u)!.pos.x;
       const y = nodeMap.get(u)!.pos.y;
@@ -513,7 +526,11 @@ function buildSettings(): void {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
     }
     if (settings.gridMode) {
-      positionMap = buildGraphGrid(nodes, fullAdjSet, canvasWidth / canvasHeight);
+      positionMap = buildGraphGrid(
+        nodes,
+        fullAdjSet,
+        canvasWidth / canvasHeight,
+      );
     }
     if (settings.showBridges) {
       [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
@@ -625,6 +642,13 @@ export function updateGraph(testCases: TestCases) {
   [isBipartite] = buildBipartite(nodes, adj);
   localStorage.setItem("isBipartite", isBipartite.toString());
 
+  let curIdx = 0;
+  testCaseMap.clear();
+
+  testCases.forEach((_, rawNumber) => {
+    testCaseMap.set(rawNumber, curIdx++);
+  });
+
   buildSettings();
 }
 
@@ -650,7 +674,7 @@ function resetMisplacedNodes() {
   });
 }
 
-function renderNodes(ctx: GraphRenderer) {
+function renderNodes(renderer: GraphRenderer) {
   for (let i = 0; i < nodes.length; i++) {
     const u = nodes[i];
 
@@ -658,14 +682,14 @@ function renderNodes(ctx: GraphRenderer) {
 
     const node = nodeMap.get(u)!;
 
-    ctx.lineWidth = 2 * nodeBorderWidthHalf;
-    ctx.lineCap = "round";
+    renderer.lineWidth = 2 * nodeBorderWidthHalf;
+    renderer.lineCap = "round";
 
-    ctx.strokeStyle = strokeColor;
+    renderer.strokeStyle = strokeColor;
 
     let isTransparent = colorMap === undefined;
 
-    ctx.fillStyle =
+    renderer.fillStyle =
       fillColors[
         colorMap === undefined
           ? 0
@@ -678,12 +702,12 @@ function renderNodes(ctx: GraphRenderer) {
       const color = settings.darkMode
         ? FILL_PALETTE_DARK[idx]
         : FILL_PALETTE_LIGHT[idx];
-      ctx.fillStyle = color;
+      renderer.fillStyle = color;
     }
 
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
       drawHexagon(
-        ctx,
+        renderer,
         node.pos,
         node.selected,
         nodeBorderWidthHalf,
@@ -692,7 +716,7 @@ function renderNodes(ctx: GraphRenderer) {
       );
     } else {
       drawCircle(
-        ctx,
+        renderer,
         node.pos,
         node.selected,
         nodeBorderWidthHalf,
@@ -701,22 +725,28 @@ function renderNodes(ctx: GraphRenderer) {
       );
     }
 
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
+    renderer.textBaseline = "middle";
+    renderer.textAlign = "center";
 
     const s = stripNode(u);
 
-    ctx.font = `${settings.fontSize + 2}px JB`;
-    ctx.fillStyle = textColor;
-    ctx.fillText(
+    renderer.font = `${settings.fontSize + 2}px JB`;
+    renderer.fillStyle = textColor;
+    renderer.fillText(
       isInteger(s) ? (parseInt(s, 10) + labelOffset).toString() : s,
       node!.pos.x,
       node!.pos.y + TEXT_Y_OFFSET,
     );
+  }
+  for (let i = 0; i < nodes.length; i++) {
+    const u = nodes[i];
+
+    if (nodesToConceal.has(u)) continue;
+    const node = nodeMap.get(u)!;
 
     if (nodeLabels.has(nodes[i])) {
       drawOctagon(
-        ctx,
+        renderer,
         node.pos,
         nodeLabels.get(nodes[i])!,
         settings,
@@ -729,7 +759,7 @@ function renderNodes(ctx: GraphRenderer) {
   }
 }
 
-function renderEdges(ctx: GraphRenderer) {
+function renderEdges(renderer: GraphRenderer) {
   let renderedEdges = [...edges];
 
   if (!settings.multiedgeMode) {
@@ -764,10 +794,10 @@ function renderEdges(ctx: GraphRenderer) {
       backedgeMap !== undefined &&
       (edr !== 0 || backedgeMap.get(eBase))
     ) {
-      ctx.setLineDash([2, 10]);
+      renderer.setLineDash([2, 10]);
     }
 
-    ctx.strokeStyle = strokeColor;
+    renderer.strokeStyle = strokeColor;
 
     let thickness = nodeBorderWidthHalf;
 
@@ -786,16 +816,16 @@ function renderEdges(ctx: GraphRenderer) {
       edrMax === 0 &&
       bridgeMap.get(eBase)
     ) {
-      drawBridge(ctx, pt1, pt2, thickness, nodeRadius, edgeColor);
+      drawBridge(renderer, pt1, pt2, thickness, nodeRadius, edgeColor);
     } else {
-      drawLine(ctx, pt1, pt2, edr, thickness, edgeColor);
+      drawLine(renderer, pt1, pt2, edr, thickness, edgeColor);
     }
 
-    ctx.setLineDash([]);
+    renderer.setLineDash([]);
 
     if (directed) {
       drawArrow(
-        ctx,
+        renderer,
         pt1,
         pt2,
         edr,
@@ -812,7 +842,7 @@ function renderEdges(ctx: GraphRenderer) {
     if (edgeLabels.has(e)) {
       if (!edgeLabels.has(eRev)) {
         drawEdgeLabel(
-          ctx,
+          renderer,
           pt1,
           pt2,
           edr,
@@ -825,7 +855,7 @@ function renderEdges(ctx: GraphRenderer) {
       } else {
         if (e < eRev) {
           drawEdgeLabel(
-            ctx,
+            renderer,
             pt1,
             pt2,
             edr,
@@ -837,7 +867,7 @@ function renderEdges(ctx: GraphRenderer) {
           );
         } else {
           drawEdgeLabel(
-            ctx,
+            renderer,
             pt1,
             pt2,
             edr,
@@ -859,10 +889,18 @@ function eraseAnnotation(
 ) {
   ctxAnnotation.lineCap = "round";
 
+  ctxAnnotation.globalAlpha = 1.0;
+
   ctxAnnotation.globalCompositeOperation = "destination-out";
 
   ctxAnnotation.beginPath();
-  ctxAnnotation.arc(mousePos.x, mousePos.y, ERASE_WIDTH / 2, 0, 2 * Math.PI);
+  ctxAnnotation.arc(
+    mousePos.x,
+    mousePos.y,
+    settings.eraserRadius,
+    0,
+    2 * Math.PI,
+  );
   ctxAnnotation.fill();
 
   ctxAnnotation.globalCompositeOperation = "source-over";
@@ -874,9 +912,11 @@ function drawAnnotation(
 ) {
   const idx = settings.markColor;
 
+  ctxAnnotation.globalAlpha = 1.0 - settings.penTransparency / 100;
+
   ctxAnnotation.lineCap = "round";
   ctxAnnotation.lineJoin = "round";
-  ctxAnnotation.lineWidth = ANNOTATION_WIDTH;
+  ctxAnnotation.lineWidth = settings.penThickness;
 
   if (settings.darkMode) {
     if (idx >= 3) {
@@ -898,25 +938,150 @@ function drawAnnotation(
     }
   }
 
-  ctxAnnotation.beginPath();
-  ctxAnnotation.moveTo(annotationLastPos.x, annotationLastPos.y);
-  ctxAnnotation.lineTo(mousePos.x, mousePos.y);
+  ctxAnnotation.fillStyle = ctxAnnotation.strokeStyle;
 
-  ctxAnnotation.stroke();
-  ctxAnnotation.fill();
+  if (toAnnotate % 2 == 0) {
+    if (toAnnotate == 0) {
+      ctxAnnotation.beginPath();
+      ctxAnnotation.moveTo(
+        annotationSecondLastPos.x,
+        annotationSecondLastPos.y,
+      );
+      ctxAnnotation.quadraticCurveTo(
+        annotationLastPos.x,
+        annotationLastPos.y,
+        mousePos.x,
+        mousePos.y,
+      );
 
-  annotationLastPos = mousePos;
+      ctxAnnotation.stroke();
+      ctxAnnotation.fill();
+    }
+    annotationSecondLastPos = annotationLastPos;
+    annotationLastPos = mousePos;
+  }
+
+  toAnnotate++;
+  toAnnotate %= 4;
+}
+
+function renderEraseIndicator(renderer: GraphRenderer) {
+  if (settings.drawMode !== "erase") return;
+
+  let curMS = performance.now() / 350;
+  if (!inErase) curMS = 0;
+
+  renderer.lineCap = "round";
+  renderer.lineWidth = 2.0;
+  renderer.strokeStyle = settings.darkMode ? NODE_LABEL_LIGHT : NODE_LABEL_DARK;
+
+  renderer.setLineDash([2, 10]);
+
+  renderer.beginPath();
+  renderer.arc(
+    mousePos.x,
+    mousePos.y,
+    settings.eraserRadius,
+    0 + curMS,
+    2 * Math.PI + curMS,
+  );
+  renderer.stroke();
+
+  renderer.setLineDash([]);
+}
+
+function renderPenIndicator(renderer: GraphRenderer) {
+  if (settings.drawMode !== "pen") return;
+
+  renderer.lineCap = "round";
+  renderer.lineWidth = 2.0;
+  renderer.strokeStyle = settings.darkMode
+    ? NODE_LABEL_OUTLINE_LIGHT
+    : NODE_LABEL_OUTLINE_DARK;
+
+  renderer.beginPath();
+  renderer.arc(
+    mousePos.x,
+    mousePos.y,
+    settings.penThickness / 2.0,
+    0,
+    2 * Math.PI,
+  );
+  renderer.stroke();
+}
+
+function renderTestcaseBoundingBoxes(renderer: GraphRenderer) {
+  if (testCaseBoundingBoxes === undefined || !settings.testCaseBoundingBoxes)
+    return;
+
+  testCaseBoundingBoxes.forEach((bounds: Bounds, caseNumber: number) => {
+    const fixedCaseNumber = testCaseMap.get(caseNumber)!;
+
+    renderer.lineCap = "round";
+    renderer.lineWidth = 2.0;
+    renderer.strokeStyle = settings.darkMode
+      ? FILL_COLORS_DARK[fixedCaseNumber % FILL_COLORS_LENGTH]
+      : FILL_COLORS_LIGHT[fixedCaseNumber % FILL_COLORS_LENGTH];
+
+    const PAD = 52;
+    renderer.setLineDash([2, 4]);
+
+    renderer.textBaseline = "middle";
+    renderer.textAlign = "left";
+
+    renderer.font = `${settings.fontSize}px JB`;
+    renderer.fillStyle = textColor;
+
+    let yPrint = bounds.yMax + settings.nodeRadius + PAD + settings.fontSize;
+
+    if (bounds.yMin - settings.nodeRadius - PAD - settings.fontSize >= 10) {
+      yPrint = bounds.yMin - settings.nodeRadius - PAD - settings.fontSize;
+    }
+
+    renderer.fillText(
+      "#" + (fixedCaseNumber + 1).toString(),
+      bounds.xMin - settings.nodeRadius - PAD,
+      yPrint,
+    );
+
+    renderer.beginPath();
+    renderer.moveTo(
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMin - settings.nodeRadius - PAD,
+    );
+    renderer.lineTo(
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMax + settings.nodeRadius + PAD,
+    );
+    renderer.lineTo(
+      bounds.xMax + settings.nodeRadius + PAD,
+      bounds.yMax + settings.nodeRadius + PAD,
+    );
+    renderer.lineTo(
+      bounds.xMax + settings.nodeRadius + PAD,
+      bounds.yMin - settings.nodeRadius - PAD,
+    );
+    renderer.lineTo(
+      bounds.xMin - settings.nodeRadius - PAD,
+      bounds.yMin - settings.nodeRadius - PAD,
+    );
+    renderer.stroke();
+
+    renderer.setLineDash([]);
+  });
 }
 
 export function renderGraphToRenderer(renderer: GraphRenderer) {
   renderEdges(renderer);
   renderNodes(renderer);
+  renderTestcaseBoundingBoxes(renderer);
 }
 
 export function animateGraph(
   canvas: HTMLCanvasElement,
   canvasAnnotation: HTMLCanvasElement,
-  ctx: GraphRenderer,
+  mainRenderer: GraphRenderer,
+  indicatorRenderer: GraphRenderer,
   ctxAnnotation: CanvasRenderingContext2D,
 ) {
   generateRandomCoords();
@@ -929,11 +1094,13 @@ export function animateGraph(
       y: event.offsetY,
     };
 
+    annotationSecondLastPos = mousePos;
     annotationLastPos = mousePos;
 
     if (settings.drawMode === "pen") {
       inAnnotation = true;
       inErase = false;
+      toAnnotate = 0;
       drawAnnotation(ctxAnnotation, mousePos);
     } else if (settings.drawMode === "erase") {
       inErase = true;
@@ -1041,7 +1208,8 @@ export function animateGraph(
     setTimeout(() => {
       requestAnimationFrame(animate);
 
-      ctx.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
+      mainRenderer.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
+      indicatorRenderer.clearRect(0, 0, canvasWidth + 20, canvasHeight + 20);
 
       resetMisplacedNodes();
 
@@ -1057,7 +1225,14 @@ export function animateGraph(
         };
       });
 
-      renderGraphToRenderer(ctx);
+      testCaseBoundingBoxes = buildTestCaseBoundingBoxes(
+        nodeMap,
+        nodesToConceal,
+      );
+
+      renderGraphToRenderer(mainRenderer);
+      renderEraseIndicator(indicatorRenderer);
+      renderPenIndicator(indicatorRenderer);
 
       if (!settings.lockMode) {
         updateVelocities();

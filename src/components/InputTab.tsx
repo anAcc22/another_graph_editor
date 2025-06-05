@@ -53,9 +53,9 @@ export function InputTab({
             className={`transition duration-500 absolute border-2 text-sm px-0
               ease-in-out py-0 rounded-3xl text-format-bad border-dotted
               hover:text-format-bad-border hover:border-format-bad-border
-              border-format-bad left-0 active:text-format-bad-active
-              active:border-format-bad-active -top-[60px] w-7 h-7 inline-flex
-              items-center justify-center ${
+              hover:bg-format-bad hover:bg-opacity-50 border-format-bad left-0
+              active:text-format-bad-active active:border-format-bad-active
+              -top-[60px] w-7 h-7 inline-flex items-center justify-center ${
               isHoveredMain || isHoveredSide
                   ? "visible opacity-100"
                   : "hover:visible hover:opacity-100 invisible opacity-0"

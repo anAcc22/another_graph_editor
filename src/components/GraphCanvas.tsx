@@ -68,6 +68,7 @@ export function GraphCanvas({
 }: Props) {
   let refMain = useRef<HTMLCanvasElement>(null);
   let refAnnotation = useRef<HTMLCanvasElement>(null);
+  let refIndicator = useRef<HTMLCanvasElement>(null);
 
   const downloadImage = (): void => {
     let canvasMain = refMain.current;
@@ -207,9 +208,37 @@ export function GraphCanvas({
     ctx.putImageData(annotations, 0, 0);
   };
 
+  const resizeCanvasIndicator = (): void => {
+    let canvas = refIndicator.current;
+
+    if (canvas === null) {
+      console.log("Error: `canvas` is null!");
+      return;
+    }
+
+    let ctx = canvas.getContext("2d");
+
+    if (ctx === null) {
+      console.log("Error: `ctx` is null!");
+      return;
+    }
+
+    const pixelRatio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+
+    const width = pixelRatio * rect.width;
+    const height = pixelRatio * rect.height;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx.scale(pixelRatio, pixelRatio);
+  };
+
   const resizeCanvas = (): void => {
     resizeCanvasMain();
     resizeCanvasOverall();
+    resizeCanvasIndicator();
   };
 
   useEffect(() => {
@@ -223,28 +252,47 @@ export function GraphCanvas({
 
     let canvasMain = refMain.current;
     let canvasAnnotation = refAnnotation.current;
+    let canvasIndicator = refIndicator.current;
 
-    if (canvasMain === null || canvasAnnotation === null) {
+    if (
+      canvasMain === null ||
+      canvasAnnotation === null ||
+      canvasIndicator === null
+    ) {
       console.log("Error: canvas is null!");
       return;
     }
 
     let mainRenderer = new CanvasRenderer(canvasMain);
+    let indicatorRenderer = new CanvasRenderer(canvasIndicator);
 
     let ctxMain = canvasMain.getContext("2d");
     let ctxAnnotation = canvasAnnotation.getContext("2d");
+    let ctxIndicator = canvasIndicator.getContext("2d");
 
-    if (mainRenderer === null || ctxMain === null || ctxAnnotation === null) {
+    if (
+      mainRenderer === null ||
+      ctxMain === null ||
+      ctxAnnotation === null ||
+      ctxIndicator === null
+    ) {
       console.log("Error: canvas context is null!");
       return;
     }
 
     resizeCanvas();
 
-    animateGraph(canvasMain, canvasAnnotation, mainRenderer, ctxAnnotation);
+    animateGraph(
+      canvasMain,
+      canvasAnnotation,
+      mainRenderer,
+      indicatorRenderer,
+      ctxAnnotation,
+    );
 
     oversampleCanvas(canvasMain, ctxMain, OVERSAMPLE_FACTOR);
     oversampleCanvas(canvasAnnotation, ctxAnnotation, OVERSAMPLE_FACTOR);
+    oversampleCanvas(canvasIndicator, ctxIndicator, OVERSAMPLE_FACTOR);
 
     window.addEventListener("resize", resizeCanvas);
     return () => {
@@ -267,6 +315,7 @@ export function GraphCanvas({
   useEffect(() => {
     resizeCanvasMain();
     resizeCanvasOverall();
+    resizeCanvasIndicator();
   }, [settings.expandedCanvas]);
 
   return (
@@ -398,12 +447,12 @@ export function GraphCanvas({
               className="inline-flex transition-[border] duration-500
                 ease-in-out hover:rounded-3xl border-2 border-border text-center
                 text-lg hover:border-border-hover rounded-md w-7 h-7
-                items-center justify-center active:bg-tab-active pl-[1px]
-                pb-[1px]"
+                items-center justify-center active:bg-tab-active pl-[0.45px]
+                pt-[0.1px]"
               title={
                 settings.language == "en"
                   ? "Clear ALL Annotations"
-                  : "清除所有图纸"
+                  : "清除所有笔迹"
               }
               onClick={() => {
                 let canvas = refAnnotation.current;
@@ -454,9 +503,9 @@ export function GraphCanvas({
               </svg>
             </button>
 
-            <div className="hidden lg:inline-flex"></div>
-            <div className="hidden lg:inline-flex"></div>
-            <div className="hidden lg:inline-flex"></div>
+            <div className="hidden xl:inline-flex"></div>
+            <div className="hidden xl:inline-flex"></div>
+            <div className="hidden xl:inline-flex"></div>
 
             <button
               className="hidden lg:inline-flex transition duration-500
@@ -518,20 +567,25 @@ export function GraphCanvas({
             ref={refAnnotation}
             className={
               settings.drawMode === "node"
-                ? `active:cursor-pointer border-2 border-border
+                ? `active:cursor-pointer border-2 border-transparent
                   pointer-events-none hover:border-border-hover rounded-lg
                   shadow shadow-shadow touch-none top-0 bottom-0 left-0 right-0
                   w-full h-full absolute`
                 : settings.drawMode === "pen"
-                  ? `cursor-cell border-2 border-border
-                    hover:border-border-hover rounded-lg shadow shadow-shadow
-                    touch-none top-0 bottom-0 left-0 right-0 w-full h-full
-                    absolute`
-                  : `cursor-crosshair border-2 border-border
+                  ? `border-2 border-border hover:border-border-hover rounded-lg
+                    shadow shadow-shadow touch-none top-0 bottom-0 left-0
+                    right-0 w-full h-full absolute`
+                  : `cursor-cell border-2 border-border
                     hover:border-border-hover rounded-lg shadow shadow-shadow
                     touch-none top-0 bottom-0 left-0 right-0 w-full h-full
                     absolute`
             }
+          ></canvas>
+          <canvas
+            ref={refIndicator}
+            className="border-2 border-transparent hover:border-border-hover
+              rounded-lg shadow shadow-shadow touch-none top-0 bottom-0 left-0
+              right-0 w-full h-full absolute pointer-events-none"
           ></canvas>
         </div>
         <div className="flex justify-end">

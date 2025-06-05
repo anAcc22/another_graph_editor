@@ -36,12 +36,16 @@ export interface Settings {
   nodeBorderWidthHalf: number;
   edgeLength: number;
   edgeLabelSeparation: number;
+  penThickness: number;
+  penTransparency: number;
+  eraserRadius: number;
+  testCaseBoundingBoxes: boolean;
   showComponents: boolean;
   showBridges: boolean;
   showMSTs: boolean;
   treeMode: boolean;
   bipartiteMode: boolean;
-  gridMode: boolean,
+  gridMode: boolean;
   lockMode: boolean;
   markedNodes: boolean;
   fixedMode: boolean;
@@ -77,3 +81,17 @@ export interface PositionMap {
 }
 
 export type MarkBorder = "single" | "double";
+
+export interface Randomizer {
+  indexing: number;
+  nodeCount: string;
+  edgeCount: string;
+  connected: boolean;
+  tree: boolean;
+  hasNodeLabel: boolean;
+  nodeLabelMin: string;
+  nodeLabelMax: string;
+  hasEdgeLabel: boolean;
+  edgeLabelMin: string;
+  edgeLabelMax: string;
+}

@@ -28,11 +28,7 @@ function App() {
     return init;
   });
 
-  const [directed, setDirected] = useState<boolean>(
-    localStorage.getItem("directed") !== null
-      ? localStorage.getItem("directed") === "true"
-      : false
-  );
+  const [directed, setDirected] = useState<boolean>(false);
 
   const [tabs, setTabs] = useState<number[]>([0]);
   const [inputs, setInputs] = useState<number[]>([0]);
@@ -42,22 +38,10 @@ function App() {
       localStorage.getItem("language") !== null
         ? (localStorage.getItem("language")! as "en" | "cn")
         : "en",
-    drawMode:
-      localStorage.getItem("drawMode") !== null
-        ? (localStorage.getItem("drawMode") as "node" | "pen" | "erase")
-        : "node",
-    expandedCanvas:
-      localStorage.getItem("expandedCanvas") !== null
-        ? localStorage.getItem("expandedCanvas") === "true"
-        : false,
-    markBorder:
-      localStorage.getItem("markBorder") !== null
-        ? (localStorage.getItem("markBorder") as "single" | "double")
-        : "double",
-    markColor:
-      localStorage.getItem("markColor") !== null
-        ? Number.parseInt(localStorage.getItem("markColor")!)
-        : 1,
+    drawMode: "node",
+    expandedCanvas: false,
+    markBorder: "double",
+    markColor: 1,
     labelOffset:
       localStorage.getItem("labelOffset") !== null
         ? Number.parseInt(localStorage.getItem("labelOffset")!)

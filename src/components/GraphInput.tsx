@@ -406,6 +406,7 @@ export function GraphInput({
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
                     setDirected(false);
+                    localStorage.setItem("directed", "false");
                     let checkbox = document.getElementById(
                       "directedCheckbox" + inputId,
                     ) as HTMLInputElement;
@@ -427,6 +428,7 @@ export function GraphInput({
                   className="p-0 hover:cursor-pointer"
                   onClick={() => {
                     setDirected(true);
+                    localStorage.setItem("directed", "true");
                     let checkbox = document.getElementById(
                       "directedCheckbox" + inputId,
                     ) as HTMLInputElement;
@@ -440,7 +442,11 @@ export function GraphInput({
           </span>
           <label className="relative inline w-9">
             <input
-              onClick={() => setDirected(!directed)}
+              onClick={() => {
+                const newDirected = !directed;
+                setDirected(newDirected);
+                localStorage.setItem("directed", newDirected.toString());
+              }}
               type="checkbox"
               id={"directedCheckbox" + inputId}
               className="peer invisible"

@@ -353,6 +353,7 @@ export function GraphCanvas({
                   ...settings,
                   drawMode: "node",
                 });
+                localStorage.setItem("drawMode", "node");
               }}
             >
               <svg
@@ -390,6 +391,7 @@ export function GraphCanvas({
                   ...settings,
                   drawMode: "pen",
                 });
+                localStorage.setItem("drawMode", "pen");
               }}
             >
               <svg
@@ -428,6 +430,7 @@ export function GraphCanvas({
                   ...settings,
                   drawMode: "erase",
                 });
+                localStorage.setItem("drawMode", "erase");
               }}
             >
               <svg
@@ -523,6 +526,7 @@ export function GraphCanvas({
                   ...settings,
                   expandedCanvas: settings.expandedCanvas ? false : true,
                 });
+                localStorage.setItem("expandedCanvas", (settings.expandedCanvas ? false : true).toString());
               }}
             >
               {settings.expandedCanvas ? (

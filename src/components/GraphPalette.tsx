@@ -19,7 +19,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 ease-in-out hover:scale-150 duration-100 hover:border-text
                 border-dotted border-text border-2`
           }
-          onClick={() => setSettings({ ...settings, markColor: 1 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 1 });
+                localStorage.setItem("markColor", "1");
+              }}
         ></div>
         <div
           className={
@@ -31,7 +34,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 3 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 3 });
+                localStorage.setItem("markColor", "3");
+              }}
         ></div>
         <div
           className={
@@ -43,7 +49,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 5 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 5 });
+                localStorage.setItem("markColor", "5");
+              }}
         ></div>
         <div
           className={
@@ -55,7 +64,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 7 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 7 });
+                localStorage.setItem("markColor", "7");
+              }}
         ></div>
         <div
           className={
@@ -67,7 +79,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 9 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 9 });
+                localStorage.setItem("markColor", "9");
+              }}
         ></div>
         <div
           className={
@@ -79,7 +94,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 11 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 11 });
+                localStorage.setItem("markColor", "11");
+              }}
         ></div>
         <div
           className={
@@ -91,7 +109,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 13 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 13 });
+                localStorage.setItem("markColor", "13");
+              }}
         ></div>
         <div
           className={
@@ -103,7 +124,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 15 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 15 });
+                localStorage.setItem("markColor", "15");
+              }}
         ></div>
         <div
           className={
@@ -115,7 +139,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 xl:block transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 17 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 17 });
+                localStorage.setItem("markColor", "17");
+              }}
         ></div>
         <div
           className={
@@ -127,7 +154,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 19 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 19 });
+                localStorage.setItem("markColor", "19");
+              }}
         ></div>
         <div
           className={
@@ -139,7 +169,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 21 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 21 });
+                localStorage.setItem("markColor", "21");
+              }}
         ></div>
         <div
           className={
@@ -151,7 +184,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 23 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 23 });
+                localStorage.setItem("markColor", "23");
+              }}
         ></div>
         <div
           className={
@@ -163,7 +199,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 25 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 25 });
+                localStorage.setItem("markColor", "25");
+              }}
         ></div>
         <div
           className={
@@ -175,7 +214,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 27 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 27 });
+                localStorage.setItem("markColor", "27");
+              }}
         ></div>
         <div
           className={
@@ -187,7 +229,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 29 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 29 });
+                localStorage.setItem("markColor", "29");
+              }}
         ></div>
         <div
           className={
@@ -199,7 +244,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 31 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 31 });
+                localStorage.setItem("markColor", "31");
+              }}
         ></div>
         <div
           className={
@@ -211,7 +259,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 33 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 33 });
+                localStorage.setItem("markColor", "33");
+              }}
         ></div>
         <div
           className={
@@ -223,7 +274,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 35 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 35 });
+                localStorage.setItem("markColor", "35");
+              }}
         ></div>
         <div
           className={
@@ -235,7 +289,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 37 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 37 });
+                localStorage.setItem("markColor", "37");
+              }}
         ></div>
         <div
           className={
@@ -247,7 +304,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 39 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 39 });
+                localStorage.setItem("markColor", "39");
+              }}
         ></div>
       </div>
 
@@ -262,7 +322,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 ease-in-out hover:scale-150 duration-100 hover:border-format-bad
                 border-dotted border-format-bad border-2`
           }
-          onClick={() => setSettings({ ...settings, markColor: 2 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 2 });
+                localStorage.setItem("markColor", "2");
+              }}
         ></div>
         <div
           className={
@@ -275,7 +338,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 rounded-full transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 4 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 4 });
+                localStorage.setItem("markColor", "4");
+              }}
         ></div>
         <div
           className={
@@ -288,7 +354,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 6 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 6 });
+                localStorage.setItem("markColor", "6");
+              }}
         ></div>
         <div
           className={
@@ -300,7 +369,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 8 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 8 });
+                localStorage.setItem("markColor", "8");
+              }}
         ></div>
         <div
           className={
@@ -313,7 +385,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 10 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 10 });
+                localStorage.setItem("markColor", "10");
+              }}
         ></div>
         <div
           className={
@@ -325,7 +400,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 12 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 12 });
+                localStorage.setItem("markColor", "12");
+              }}
         ></div>
         <div
           className={
@@ -338,7 +416,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 14 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 14 });
+                localStorage.setItem("markColor", "14");
+              }}
         ></div>
         <div
           className={
@@ -350,7 +431,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 16 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 16 });
+                localStorage.setItem("markColor", "16");
+              }}
         ></div>
         <div
           className={
@@ -363,7 +447,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 18 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 18 });
+                localStorage.setItem("markColor", "18");
+              }}
         ></div>
         <div
           className={
@@ -375,7 +462,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 20 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 20 });
+                localStorage.setItem("markColor", "20");
+              }}
         ></div>
         <div
           className={
@@ -388,7 +478,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 xl:block rounded-full transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 22 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 22 });
+                localStorage.setItem("markColor", "22");
+              }}
         ></div>
         <div
           className={
@@ -401,7 +494,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 rounded-full transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 24 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 24 });
+                localStorage.setItem("markColor", "24");
+              }}
         ></div>
         <div
           className={
@@ -414,7 +510,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 xl:block rounded-full transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 26 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 26 });
+                localStorage.setItem("markColor", "26");
+              }}
         ></div>
         <div
           className={
@@ -426,7 +525,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 28 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 28 });
+                localStorage.setItem("markColor", "28");
+              }}
         ></div>
         <div
           className={
@@ -439,7 +541,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 30 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 30 });
+                localStorage.setItem("markColor", "30");
+              }}
         ></div>
         <div
           className={
@@ -452,7 +557,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 rounded-full transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 32 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 32 });
+                localStorage.setItem("markColor", "32");
+              }}
         ></div>
         <div
           className={
@@ -465,7 +573,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 hidden xl:block transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 34 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 34 });
+                localStorage.setItem("markColor", "34");
+              }}
         ></div>
         <div
           className={
@@ -477,7 +588,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 36 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 36 });
+                localStorage.setItem("markColor", "36");
+              }}
         ></div>
         <div
           className={
@@ -490,7 +604,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 xl:block rounded-full transition ease-in-out hover:scale-150
                 duration-100 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 38 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 38 });
+                localStorage.setItem("markColor", "38");
+              }}
         ></div>
         <div
           className={
@@ -502,7 +619,10 @@ export function GraphPalette({ settings, setSettings }: Props) {
                 transition ease-in-out hover:scale-150 duration-100
                 hover:border-text`
           }
-          onClick={() => setSettings({ ...settings, markColor: 40 })}
+          onClick={() => {
+                setSettings({ ...settings, markColor: 40 });
+                localStorage.setItem("markColor", "40");
+              }}
         ></div>
       </div>
     </div>

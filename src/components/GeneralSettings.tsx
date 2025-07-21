@@ -40,10 +40,12 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
             [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
             [&::-moz-range-thumb]:rounded-full"
           onChange={(e) => {
+            const newLabelOffset = Number.parseInt(e.target.value);
             setSettings({
               ...settings,
-              labelOffset: Number.parseInt(e.target.value),
+              labelOffset: newLabelOffset,
             });
+            localStorage.setItem("labelOffset", newLabelOffset.toString());
           }}
         />
         <div className="flex justify-between w-5/6 self-center">

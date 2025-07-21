@@ -56,21 +56,11 @@ export function SettingsToggleSectionDimmed({
                     ) {
                       newSettings["bipartiteMode"] = false;
                     }
-                    if (settingsName === "darkMode") {
-                      localStorage.setItem(
-                        "darkMode",
-                        newSettings.darkMode.toString(),
-                      );
-                    }
-                    if (settingsName === "markedNodes") {
-                      localStorage.setItem(
-                        "markedNodes",
-                        newSettings.markedNodes.toString(),
-                      );
-                    }
+                    // Save any setting to localStorage
+                    localStorage.setItem(settingsName, newSettings[settingsName].toString());
                     return newSettings;
                   });
-                  let checkbox = document.getElementById(
+                  const checkbox = document.getElementById(
                     toggleId,
                   ) as HTMLInputElement;
                   checkbox.checked = false;
@@ -111,21 +101,11 @@ export function SettingsToggleSectionDimmed({
                     ) {
                       newSettings["bipartiteMode"] = false;
                     }
-                    if (settingsName === "darkMode") {
-                      localStorage.setItem(
-                        "darkMode",
-                        newSettings.darkMode.toString(),
-                      );
-                    }
-                    if (settingsName === "markedNodes") {
-                      localStorage.setItem(
-                        "markedNodes",
-                        newSettings.markedNodes.toString(),
-                      );
-                    }
+                    // Save any setting to localStorage
+                    localStorage.setItem(settingsName, newSettings[settingsName].toString());
                     return newSettings;
                   });
-                  let checkbox = document.getElementById(
+                  const checkbox = document.getElementById(
                     toggleId,
                   ) as HTMLInputElement;
                   checkbox.checked = true;
@@ -160,18 +140,8 @@ export function SettingsToggleSectionDimmed({
                 ) {
                   newSettings["bipartiteMode"] = false;
                 }
-                if (settingsName === "darkMode") {
-                  localStorage.setItem(
-                    "darkMode",
-                    newSettings.darkMode.toString(),
-                  );
-                }
-                if (settingsName === "markedNodes") {
-                  localStorage.setItem(
-                    "markedNodes",
-                    newSettings.markedNodes.toString(),
-                  );
-                }
+                // Save any setting to localStorage
+                localStorage.setItem(settingsName, newSettings[settingsName].toString());
                 return newSettings;
               })
             }

@@ -38,6 +38,7 @@ interface Vector2D {
 export class Node {
   pos: Vector2D;
   vel: Vector2D = { x: 0, y: 0 };
+  displacement: Vector2D = { x: 0, y: 0 }; // Smooth displacement for collision avoidance
   markColor: number | undefined;
   selected: boolean;
   constructor(x: number, y: number) {
@@ -59,6 +60,23 @@ export class Node {
       x: clamp(this.pos.x, nodeRadius, canvasWidth - nodeRadius),
       y: clamp(this.pos.y, nodeRadius, canvasHeight - nodeRadius),
     };
+  }
+  // Apply smooth displacement for fluid-like collision avoidance
+  applySmoothDisplacement(): void {
+    if (this.displacement.x !== 0 || this.displacement.y !== 0) {
+      // Apply displacement gradually with easing
+      const easingFactor = 0.15; // Controls smoothness (0.1 = very smooth, 0.3 = faster)
+      this.pos.x += this.displacement.x * easingFactor;
+      this.pos.y += this.displacement.y * easingFactor;
+      
+      // Gradually reduce displacement (damping)
+      this.displacement.x *= 0.85;
+      this.displacement.y *= 0.85;
+      
+      // Clear very small displacements to prevent jitter
+      if (Math.abs(this.displacement.x) < 0.1) this.displacement.x = 0;
+      if (Math.abs(this.displacement.y) < 0.1) this.displacement.y = 0;
+    }
   }
 }
 
@@ -212,6 +230,9 @@ let settings: Settings = {
   lockMode: false,
   fixedMode: false,
   multiedgeMode: true,
+  collisionAvoidance: true,
+  minNodeDistance: 0.5,
+  collisionStrength: 1.0,
 };
 
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
@@ -303,6 +324,44 @@ function updateEdges(graphEdges: string[]): void {
   }
 }
 
+function calculateSmoothCollisionDisplacement(nodeId: string): void {
+  if (!settings.collisionAvoidance) {
+    return;
+  }
+  
+  const node = nodeMap.get(nodeId)!;
+  const minDistance = nodeRadius * settings.minNodeDistance;
+  const collisionStrength = settings.collisionStrength * 2; // Much lower strength for smooth movement
+  
+  for (const otherId of nodes) {
+    if (otherId === nodeId || nodesToConceal.has(otherId)) continue;
+    
+    const otherNode = nodeMap.get(otherId)!;
+    const distance = euclidDist(node.pos, otherNode.pos);
+    
+    // If nodes are too close, calculate smooth displacement
+    if (distance < minDistance && distance > 0) {
+      const overlap = minDistance - distance;
+      const displacementMagnitude = overlap * collisionStrength;
+      
+      // Calculate displacement direction (away from other node)
+      const dx = node.pos.x - otherNode.pos.x;
+      const dy = node.pos.y - otherNode.pos.y;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      
+      if (length > 0) {
+        // Normalize and apply displacement
+        const normalizedDx = dx / length;
+        const normalizedDy = dy / length;
+        
+        // Add to existing displacement (accumulative)
+        node.displacement.x += normalizedDx * displacementMagnitude;
+        node.displacement.y += normalizedDy * displacementMagnitude;
+      }
+    }
+  }
+}
+
 function updateVelocities() {
   const bucketSize = Math.sqrt(
     (canvasWidth * canvasHeight) / Math.max(nodes.length, 1),
@@ -352,6 +411,13 @@ function updateVelocities() {
 
     const uPos = nodeMap.get(u)!.pos;
 
+    // Calculate smooth collision displacement
+    calculateSmoothCollisionDisplacement(u);
+    
+    // Apply smooth displacement (separate from velocity)
+    nodeMap.get(u)!.applySmoothDisplacement();
+
+    // Standard physics forces (repulsion and attraction)
     for (const v of nodesToCheck.get(u)!) {
       if (nodesToConceal.has(v)) continue;
       const vPos = nodeMap.get(v)!.pos;
@@ -372,11 +438,11 @@ function updateVelocities() {
       const ax = vPos.x - uPos.x;
       const ay = vPos.y - uPos.y;
 
-      const uVel = nodeMap.get(u)!.vel;
+      const currentVel = nodeMap.get(u)!.vel;
 
       nodeMap.get(u)!.vel = {
-        x: clamp((uVel.x - aMag * ax) * (1 - NODE_FRICTION), -100, 100),
-        y: clamp((uVel.y - aMag * ay) * (1 - NODE_FRICTION), -100, 100),
+        x: clamp((currentVel.x - aMag * ax) * (1 - NODE_FRICTION), -100, 100),
+        y: clamp((currentVel.y - aMag * ay) * (1 - NODE_FRICTION), -100, 100),
       };
     }
 
@@ -462,11 +528,11 @@ function updateVelocities() {
       };
     }
 
-    const uVel = nodeMap.get(u)!.vel;
+    const finalVel = nodeMap.get(u)!.vel;
 
     nodeMap.get(u)!.pos = {
-      x: uPos.x + uVel.x,
-      y: uPos.y + uVel.y,
+      x: uPos.x + finalVel.x,
+      y: uPos.y + finalVel.y,
     };
   }
 }

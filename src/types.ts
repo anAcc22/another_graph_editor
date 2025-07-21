@@ -50,6 +50,9 @@ export interface Settings {
   markedNodes: boolean;
   fixedMode: boolean;
   multiedgeMode: boolean;
+  collisionAvoidance: boolean;
+  collisionStrength: number;
+  minNodeDistance: number;
 }
 
 export interface ParsedGraph {

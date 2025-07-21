@@ -292,6 +292,68 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <br />
+        <hr className="border-dashed border-border" />
+
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Collision Strength" : "碰撞强度"}
+        </h4>
+        <input
+          type="range"
+          min={0.1}
+          max={3.0}
+          step={0.1}
+          value={settings.collisionStrength}
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
+            [&::-webkit-slider-thumb]:bg-slider-thumb-canvas
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb-canvas
+            [&::-moz-range-thumb]:border-none
+            [&::-moz-range-thumb]:rounded-full
+            [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4"
+          onChange={(e) => {
+            setSettings({
+              ...settings,
+              collisionStrength: Number.parseFloat(e.target.value),
+            });
+            localStorage.setItem("collisionStrength", e.target.value);
+          }}
+        />
+
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Minimum Node Distance" : "最小节点距离"}
+        </h4>
+        <input
+          type="range"
+          min={10}
+          max={50}
+          step={5}
+          value={settings.minNodeDistance * 10}
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newMinNodeDistance = Number.parseInt(e.target.value) / 10;
+            setSettings({
+              ...settings,
+              minNodeDistance: newMinNodeDistance,
+            });
+            localStorage.setItem("minNodeDistance", newMinNodeDistance.toString());
+          }}
+        />
+
+        <br />
       </div>
     </>
   );

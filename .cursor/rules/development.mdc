@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+---
+
+Running app: Using `npm run dev`, it's using vite on port 5173, so no need to start a new server to test if it's running correctly. Use the attached terminal to see logs.
+Testing front end: Use browser tools to access http://localhost:5173/another_graph_editor/
+
+Implementation Strategy
+Phase 1: Implement collision avoidance with existing physics
+Phase 2: Add adaptive edge length system
+Phase 3: Implement clustering forces
+Phase 4: Add performance optimizations
+Phase 5: Create UI controls for new settings
+
+Expected Results
+No Collisions: Nodes maintain minimum distance from each other
+Clear Visibility: Ample spacing between all nodes
+Natural Clustering: Dense areas form tight clusters, sparse areas spread out
+Adaptive Spacing: Edge length varies based on local density
+Smooth Animation: Maintains 90 FPS with optimizations

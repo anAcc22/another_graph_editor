@@ -173,6 +173,16 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
         />
 
         <SettingsToggleSection
+          title={settings.language == "en" ? "Collision Avoidance" : "碰撞避免"}
+          leftLabel={settings.language == "en" ? "Off" : "关闭"}
+          rightLabel={settings.language == "en" ? "On" : "开启"}
+          toggleId={"settingsCollisionAvoidance"}
+          settingsName={"collisionAvoidance"}
+          settings={settings}
+          setSettings={setSettings}
+        />
+
+        <SettingsToggleSection
           title={
             settings.language == "en"
               ? "Mark/Unmark Nodes on Click"

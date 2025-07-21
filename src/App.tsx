@@ -146,6 +146,18 @@ function App() {
       localStorage.getItem("gridMode") !== null
         ? localStorage.getItem("gridMode") === "true"
         : false,
+    collisionAvoidance:
+      localStorage.getItem("collisionAvoidance") !== null
+        ? localStorage.getItem("collisionAvoidance") === "true"
+        : true,
+    collisionStrength:
+      localStorage.getItem("collisionStrength") !== null
+        ? Number.parseFloat(localStorage.getItem("collisionStrength")!)
+        : 1.0,
+    minNodeDistance:
+      localStorage.getItem("minNodeDistance") !== null
+        ? Number.parseFloat(localStorage.getItem("minNodeDistance")!)
+        : 2.2,
   });
 
   const [init, setInit] = useState<boolean>(false);

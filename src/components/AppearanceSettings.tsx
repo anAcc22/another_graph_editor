@@ -141,7 +141,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         <input
           type="range"
           min={0}
-          max={75}
+          max={500}
           step={5}
           value={settings.edgeLength - 10}
           className="range appearance-none outline-none bg-slider h-1 w-5/6

@@ -134,7 +134,9 @@ export function GraphInput({
   };
 
   useEffect(() => {
-    setTimeout(() => processGraphInput(), 100);
+    setTimeout(() => {
+      processGraphInput();
+    }, 100);
   }, []);
 
   const processNodeLabels = () => {

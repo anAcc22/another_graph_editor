@@ -1,5 +1,5 @@
 import { ParsedGraph } from "../types";
-import { padNode } from "./utils";
+import { padNode, sortNodes } from "./utils";
 
 /* function isConvertibleToNum(s: string): boolean {
   for (const c of s) {
@@ -135,7 +135,7 @@ export function parseGraphInputParentChild(
     }
   }
 
-  const sortedNodes = [...nodes].sort();
+  const sortedNodes = sortNodes(nodes, false);
 
   const len = Math.min(sortedNodes.length, nl.length);
 
@@ -273,7 +273,7 @@ export function parseGraphInputEdges(
     }
   }
 
-  const sortedNodes = [...nodes].sort();
+  const sortedNodes = sortNodes(nodes, false);
 
   const nl = nodeLabels
     .trim()

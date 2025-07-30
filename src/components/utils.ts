@@ -26,20 +26,39 @@ export function stripNode(u: string) {
   return u;
 }
 
+export function getHiddenPrefix(u: string) {
+  let prefix = "";
+  for (let i = 0; i < u.length; i++) {
+    if (u[i] === "ρ" || u[i] === "⋅") {
+      prefix += u[i];
+    }
+  }
+  return prefix;
+}
+
 export function getTestCase(u: string) {
   let toDeduct = 0;
   if (u.length && u[0] == "ρ") toDeduct++;
   return u.length - stripNode(u).length - toDeduct;
 }
 
-export function sortNodes(nodes: string[]) {
+export function sortNodes(nodes: string[], toStrip: boolean = true) {
+  if (nodes.length === 0) return [];
+
+  const hiddenPrefix = getHiddenPrefix(nodes[0]);
+
   nodes = nodes.map((u) => stripNode(u));
 
-  const ints = nodes.filter((s: string) => isInteger(s));
-  const notInts = nodes.filter((s: string) => !isInteger(s));
+  let ints = nodes.filter((s: string) => isInteger(s));
+  let notInts = nodes.filter((s: string) => !isInteger(s));
 
   ints.sort((x: string, y: string) => parseInt(x) - parseInt(y));
   notInts.sort();
+
+  if (!toStrip) {
+    ints = ints.map((u: string) => hiddenPrefix + u);
+    notInts = notInts.map((u: string) => hiddenPrefix + u);
+  }
 
   return [...ints, ...notInts];
 }

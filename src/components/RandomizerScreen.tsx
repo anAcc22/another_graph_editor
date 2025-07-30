@@ -22,8 +22,8 @@ export function RandomizerScreen({
   return (
     <>
       <div
-        className="absolute w-full h-full bg-ovr-darkened bg-opacity-80 z-50
-          flex font-jetbrains"
+        className="fixed w-full h-full bg-ovr-darkened bg-opacity-80 z-50
+          flex font-jetbrains overflow-scroll"
         onClick={() => setRandomizer(false)}
       >
         <div

@@ -29,6 +29,7 @@
     "tailwindcss-themer": "^4.0.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.4",
-    "vite-plugin-pwa": "^1.0.2"
+    "vite-plugin-pwa": "^1.0.2",
+    "workbox-window": "^7.3.0"
   }
 }

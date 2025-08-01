@@ -63,6 +63,9 @@ importers:
       vite-plugin-pwa:
         specifier: ^1.0.2
         version: 1.0.2(vite@5.3.5(terser@5.43.1))(workbox-build@7.3.0(@types/babel__core@7.20.5))(workbox-window@7.3.0)
+      workbox-window:
+        specifier: ^7.3.0
+        version: 7.3.0
 
 packages:
 

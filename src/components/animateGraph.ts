@@ -151,6 +151,7 @@ const FILL_COLORS_DARK = [
 const FILL_COLORS_LENGTH = 10;
 
 let prevMS = performance.now();
+let latestColorChangeMS = performance.now();
 
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
@@ -1230,7 +1231,7 @@ export function animateGraph(
   canvas.addEventListener("pointerup", (event) => {
     event.preventDefault();
     const curMS = performance.now();
-    if (curMS - prevMS <= 200) {
+    if (curMS - prevMS <= 200 && curMS - latestColorChangeMS > 200) {
       if (draggedNodes.length) {
         const u = draggedNodes[0];
         const sel = nodeMap.get(u)!.selected;
@@ -1240,12 +1241,14 @@ export function animateGraph(
         } else if (settings.markColor >= 3) {
           nodeMap.get(u)!.markColor = settings.markColor;
         }
+        latestColorChangeMS = performance.now();
       } else if (coloredEdge) {
         if (settings.markColor === 2) {
           edgeMap.set(coloredEdge, undefined);
         } else if (settings.markColor >= 3) {
           edgeMap.set(coloredEdge, settings.markColor);
         }
+        latestColorChangeMS = performance.now();
       }
     }
     draggedNodes = [];

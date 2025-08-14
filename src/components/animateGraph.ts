@@ -228,8 +228,11 @@ let nodeLabels = new Map<string, string>();
 let labelOffset = 0;
 
 let draggedNodes: string[] = [];
+let coloredEdge: string | undefined = undefined;
+let prevColoredEdgeMS = 0;
 
 let edges: string[] = [];
+let edgeMap = new Map<string, number | undefined>();
 let edgeToPos = new Map<string, number>();
 let edgeLabels = new Map<string, string>();
 
@@ -291,6 +294,7 @@ function updateNodes(graphNodes: string[]): void {
 function updateEdges(graphEdges: string[]): void {
   edges = graphEdges;
   edgeToPos.clear();
+
   for (const e of edges) {
     const [u, v, rStr] = e.split(" ");
     const eBase = [u, v].join(" ");
@@ -301,6 +305,12 @@ function updateEdges(graphEdges: string[]): void {
       edgeToPos.set(eBase, Math.max(rNum, edgeToPos.get(eBase)!));
     }
   }
+
+  edgeMap.forEach((_, e) => {
+    if (!edges.includes(e)) {
+      edgeMap.delete(e);
+    }
+  });
 }
 
 function updateVelocities() {
@@ -797,6 +807,19 @@ function renderEdges(renderer: GraphRenderer) {
       renderer.setLineDash([2, 10]);
     }
 
+    if (!edgeMap.has(e)) edgeMap.set(e, undefined);
+
+    let finalColor = edgeColor;
+
+    if (edgeMap.get(e)! !== undefined) {
+      const idx = edgeMap.get(e)!;
+      const color = settings.darkMode
+        ? FILL_PALETTE_DARK[idx]
+        : FILL_PALETTE_LIGHT[idx];
+
+      finalColor = color;
+    }
+
     renderer.strokeStyle = strokeColor;
 
     let thickness = nodeBorderWidthHalf;
@@ -810,15 +833,38 @@ function renderEdges(renderer: GraphRenderer) {
       thickness *= 2;
     }
 
+    let isSelected = false;
+
     if (
       settings.showBridges &&
       bridgeMap !== undefined &&
       edrMax === 0 &&
       bridgeMap.get(eBase)
     ) {
-      drawBridge(renderer, pt1, pt2, thickness, nodeRadius, edgeColor);
+      isSelected = drawBridge(
+        renderer,
+        pt1,
+        pt2,
+        thickness,
+        nodeRadius,
+        finalColor,
+        mousePos,
+      );
     } else {
-      drawLine(renderer, pt1, pt2, edr, thickness, edgeColor);
+      isSelected = drawLine(
+        renderer,
+        pt1,
+        pt2,
+        edr,
+        thickness,
+        finalColor,
+        mousePos,
+      );
+    }
+
+    if (isSelected) {
+      coloredEdge = e;
+      prevColoredEdgeMS = performance.now();
     }
 
     renderer.setLineDash([]);
@@ -1184,14 +1230,22 @@ export function animateGraph(
   canvas.addEventListener("pointerup", (event) => {
     event.preventDefault();
     const curMS = performance.now();
-    if (curMS - prevMS <= 200 && draggedNodes.length) {
-      const u = draggedNodes[0];
-      const sel = nodeMap.get(u)!.selected;
-      if (settings.markedNodes) nodeMap.get(u)!.selected = !sel;
-      if (settings.markColor === 2) {
-        nodeMap.get(u)!.markColor = undefined;
-      } else if (settings.markColor >= 3) {
-        nodeMap.get(u)!.markColor = settings.markColor;
+    if (curMS - prevMS <= 200) {
+      if (draggedNodes.length) {
+        const u = draggedNodes[0];
+        const sel = nodeMap.get(u)!.selected;
+        if (settings.markedNodes) nodeMap.get(u)!.selected = !sel;
+        if (settings.markColor === 2) {
+          nodeMap.get(u)!.markColor = undefined;
+        } else if (settings.markColor >= 3) {
+          nodeMap.get(u)!.markColor = settings.markColor;
+        }
+      } else if (coloredEdge) {
+        if (settings.markColor === 2) {
+          edgeMap.set(coloredEdge, undefined);
+        } else if (settings.markColor >= 3) {
+          edgeMap.set(coloredEdge, settings.markColor);
+        }
       }
     }
     draggedNodes = [];
@@ -1233,6 +1287,10 @@ export function animateGraph(
       renderGraphToRenderer(mainRenderer);
       renderEraseIndicator(indicatorRenderer);
       renderPenIndicator(indicatorRenderer);
+
+      if (performance.now() - prevColoredEdgeMS > 200) {
+        coloredEdge = undefined;
+      }
 
       if (!settings.lockMode) {
         updateVelocities();

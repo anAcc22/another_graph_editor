@@ -59,6 +59,10 @@ function App() {
       localStorage.getItem("nodeBorderWidthHalf") !== null
         ? Number.parseFloat(localStorage.getItem("nodeBorderWidthHalf")!)
         : 1,
+    edgeBorderWidthHalf:
+      localStorage.getItem("edgeBorderWidthHalf") !== null
+        ? Number.parseFloat(localStorage.getItem("edgeBorderWidthHalf")!)
+        : 1,
     edgeLength:
       localStorage.getItem("edgeLength") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLength")!)

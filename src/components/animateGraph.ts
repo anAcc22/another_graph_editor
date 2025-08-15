@@ -155,6 +155,7 @@ let latestColorChangeMS = performance.now();
 
 let nodeRadius = 16;
 let nodeBorderWidthHalf = 1;
+let edgeBorderWidthHalf = 1;
 
 let nodeLabelColor = NODE_LABEL_LIGHT;
 let nodeLabelOutlineColor = NODE_LABEL_OUTLINE_LIGHT;
@@ -197,6 +198,7 @@ let settings: Settings = {
   nodeRadius: 15,
   fontSize: 15,
   nodeBorderWidthHalf: 15,
+  edgeBorderWidthHalf: 15,
   edgeLength: 10,
   edgeLabelSeparation: 10,
   penThickness: 1,
@@ -503,6 +505,7 @@ function buildSettings(): void {
 
   nodeRadius = settings.nodeRadius;
   nodeBorderWidthHalf = settings.nodeBorderWidthHalf;
+  edgeBorderWidthHalf = settings.edgeBorderWidthHalf;
   nodeDist = settings.edgeLength + 2 * nodeRadius;
 
   labelOffset = settings.labelOffset;
@@ -823,7 +826,7 @@ function renderEdges(renderer: GraphRenderer) {
 
     renderer.strokeStyle = strokeColor;
 
-    let thickness = nodeBorderWidthHalf;
+    let thickness = edgeBorderWidthHalf;
 
     if (
       localStorage.getItem("isEdgeNumeric") === "true" &&

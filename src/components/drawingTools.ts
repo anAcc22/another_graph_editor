@@ -347,6 +347,24 @@ function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
+function getMagnitude(u: Vector2D): number {
+  return Math.hypot(u.x, u.y);
+}
+
+function getPointToLineDist(l1: Vector2D, l2: Vector2D, p: Vector2D): number {
+  const ltop: Vector2D = { x: p.x - l1.x, y: p.y - l1.y };
+  const d: Vector2D = { x: l2.x - l1.x, y: l2.y - l1.y };
+
+  const proj: number = (ltop.x * d.x + ltop.y * d.y) / (d.x * d.x + d.y * d.y);
+
+  if (proj < 0) return euclidDist(l1, p);
+  if (proj > 1) return euclidDist(l2, p);
+
+  const cross: number = ltop.x * d.y - ltop.y * d.x;
+
+  return Math.abs(cross) / getMagnitude(d);
+}
+
 export function drawLine(
   ctx: GraphRenderer,
   u: Vector2D,
@@ -354,6 +372,8 @@ export function drawLine(
   r: number,
   nodeBorderWidthHalf: number,
   edgeColor: string,
+  mousePos: Vector2D,
+  mouseDetectionThreshold: number = 10,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
@@ -363,6 +383,53 @@ export function drawLine(
   px *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
   py *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
 
+  // NOTE: Split bezier curve into multiple line segments to detect mouse intersection
+  const steps = 10;
+
+  let p0: Vector2D = u;
+  let intersect = false;
+
+  const p0c: Vector2D = { x: u.x + px, y: u.y + py };
+  const p1c: Vector2D = { x: v.x + px, y: v.y + py };
+  const p2: Vector2D = v;
+
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    const tcom = 1 - t;
+
+    const tcomSquared = tcom * tcom;
+    const tSquared = t * t;
+    const tcomCubed = tcom * tcom * tcom;
+    const tCubed = t * t * t;
+
+    const x =
+      tcomCubed * u.x +
+      3 * tcomSquared * t * p0c.x +
+      3 * tcom * tSquared * p1c.x +
+      tCubed * p2.x;
+    const y =
+      tcomCubed * u.y +
+      3 * tcomSquared * t * p0c.y +
+      3 * tcom * tSquared * p1c.y +
+      tCubed * p2.y;
+
+    const p1 = { x, y };
+
+    // ctx.lineWidth = 2 * nodeBorderWidthHalf; // NOTE: debug line segments if needed
+    // ctx.strokeStyle = edgeColor;
+    //
+    // ctx.beginPath();
+    // ctx.moveTo(p0.x, p0.y);
+    //
+    // ctx.lineTo(p1.x, p1.y);
+    // ctx.stroke();
+
+    if (getPointToLineDist(p0, p1, mousePos) <= mouseDetectionThreshold) {
+      intersect = true;
+    }
+    p0 = p1;
+  }
+
   ctx.lineWidth = 2 * nodeBorderWidthHalf;
   ctx.strokeStyle = edgeColor;
 
@@ -371,6 +438,8 @@ export function drawLine(
   ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
 
   ctx.stroke();
+
+  return intersect;
 }
 
 export function drawArrow(
@@ -427,6 +496,8 @@ export function drawBridge(
   nodeBorderWidthHalf: number,
   nodeRadius: number,
   edgeColor: string,
+  mousePos: Vector2D,
+  mouseDetectionThreshold: number = 10,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
@@ -447,6 +518,14 @@ export function drawBridge(
   ctx.lineTo(v.x - px, v.y - py);
 
   ctx.stroke();
+
+  let intersect = false;
+
+  if (getPointToLineDist(u, v, mousePos) <= mouseDetectionThreshold) {
+    intersect = true;
+  }
+
+  return intersect;
 }
 
 export function drawEdgeLabel(

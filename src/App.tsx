@@ -59,6 +59,10 @@ function App() {
       localStorage.getItem("nodeBorderWidthHalf") !== null
         ? Number.parseFloat(localStorage.getItem("nodeBorderWidthHalf")!)
         : 1,
+    edgeBorderWidthHalf:
+      localStorage.getItem("edgeBorderWidthHalf") !== null
+        ? Number.parseFloat(localStorage.getItem("edgeBorderWidthHalf")!)
+        : 1,
     edgeLength:
       localStorage.getItem("edgeLength") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLength")!)
@@ -166,12 +170,31 @@ function App() {
             px-2 py-1 justify-between items-center hover:border-border-hover
             z-20 bg-block group h-9"
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="size-5 mr-1"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+            />
+          </svg>
           {settings.language == "en" ? "Changelog" : "更新记录"}
           <div
             className="absolute border-2 text-sm px-2 py-1 border-border-hover
-              rounded-lg bg-block left-0 top-8 w-100 invisible
+              rounded-lg bg-block -left-2 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>15 Aug 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Support edge coloring</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>5 June 2025</p>
             <ul className="list-disc list-inside">
               <li>Improve annotation experience</li>

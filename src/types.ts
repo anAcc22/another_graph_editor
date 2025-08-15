@@ -34,6 +34,7 @@ export interface Settings {
   nodeRadius: number;
   fontSize: number;
   nodeBorderWidthHalf: number;
+  edgeBorderWidthHalf: number;
   edgeLength: number;
   edgeLabelSeparation: number;
   penThickness: number;

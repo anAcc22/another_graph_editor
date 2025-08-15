@@ -104,7 +104,9 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <h4 className="font-semibold">
-          {settings.language == "en" ? "Line Thickness" : "线条粗细"}
+          {settings.language == "en"
+            ? "Line Thickness (Node)"
+            : "线条粗细 (节点)"}
         </h4>
         <input
           type="range"
@@ -130,6 +132,40 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
             });
             localStorage.setItem(
               "nodeBorderWidthHalf",
+              newBorderWidthHalf.toString(),
+            );
+          }}
+        />
+
+        <h4 className="font-semibold">
+          {settings.language == "en"
+            ? "Line Thickness (Edge)"
+            : "线条粗细 (边)"}
+        </h4>
+        <input
+          type="range"
+          min={0}
+          max={1.5}
+          step={0.1}
+          value={settings.edgeBorderWidthHalf - 1}
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
+            [&::-webkit-slider-thumb]:bg-slider-thumb
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:w-4
+            [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:border-none
+            [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newBorderWidthHalf = 1 + Number.parseFloat(e.target.value);
+            setSettings({
+              ...settings,
+              edgeBorderWidthHalf: newBorderWidthHalf,
+            });
+            localStorage.setItem(
+              "edgeBorderWidthHalf",
               newBorderWidthHalf.toString(),
             );
           }}

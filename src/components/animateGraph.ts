@@ -109,9 +109,9 @@ const EDGE_LABEL_LIGHT = "hsl(30, 50%, 40%)";
 const NODE_LABEL_LIGHT = "hsl(30, 80%, 50%)";
 const NODE_LABEL_OUTLINE_LIGHT = "hsl(10, 2%, 70%)";
 
-const STROKE_COLOR_DARK = "hsl(0, 0%, 90%)";
-const TEXT_COLOR_DARK = "hsl(0, 0%, 90%)";
-const EDGE_COLOR_DARK = "hsl(0, 0%, 90%)";
+const STROKE_COLOR_DARK = "hsl(0, 0%, 98%)";
+const TEXT_COLOR_DARK = "hsl(0, 0%, 98%)";
+const EDGE_COLOR_DARK = "hsl(0, 0%, 98%)";
 const EDGE_LABEL_DARK = "hsl(30, 70%, 60%)";
 const NODE_LABEL_DARK = "hsl(30, 100%, 50%)";
 const NODE_LABEL_OUTLINE_DARK = "hsl(10, 2%, 30%)";

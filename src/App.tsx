@@ -190,7 +190,7 @@ function App() {
               rounded-lg bg-block -left-2 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
-            <p>14 Aug 2025</p>
+            <p>15 Aug 2025</p>
             <ul className="list-disc list-inside">
               <li>Support edge coloring</li>
             </ul>

@@ -5,15 +5,35 @@ interface Cell {
   j: number,
 }
 
-function genRandom(r: number): number {
-  return Math.floor(Math.random() * r);
-}
-
 function distance(a: Cell, b: Cell): number {
   return Math.hypot(a.i - b.i, a.j - b.j);
 }
 
 const TIME_LIMIT_SECONDS = 0.25;
+
+class RandomTable {
+  private table: Array<number>;
+  private idx = 0;
+
+  constructor() {
+    this.table = [];
+    this.idx = 0;
+  }
+
+  reset(): void {
+    this.idx = 0;
+  }
+
+  // return a value in [0, N)
+  getNext(N: number): number {
+    if (this.idx >= this.table.length) {
+      this.table.push(Math.random());
+    }
+    return Math.floor(this.table[this.idx++] * N);
+  }
+}
+
+let randomTable: RandomTable = new RandomTable();
 
 export function buildGraphGrid(
   nodes: string[],
@@ -134,16 +154,18 @@ export function buildGraphGrid(
   }
 
   // Randomly swap nodes if it decreases total edge length
+
+  randomTable.reset();
   if (nodes.length >= 2) {
     const startTime = performance.now();
     for (let it = 0; it < nodes.length * nodes.length * 10; ++it) {
       if ((performance.now() - startTime) / 1000 > TIME_LIMIT_SECONDS) {
         break;
       }
-      const u = genRandom(adj.length);
+      const u = randomTable.getNext(adj.length);
       let v = u;
       while (u === v) {
-        v = genRandom(adj.length);
+        v = randomTable.getNext(adj.length);
       }
 
       function swapCells() {

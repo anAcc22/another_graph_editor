@@ -8,6 +8,8 @@ import {
   BridgeMap,
   MSTMap,
   EBCCEdgeMap,
+  VBCCColorMap,
+  VBCCEdgeMap,
 } from "../types";
 
 import { stripNode } from "./utils";
@@ -22,6 +24,7 @@ import { buildGraphGrid } from "./graphGrid";
 import { buildBridges } from "./graphBridges";
 
 import { buildEBCC } from "./graphEBCC";
+import { buildVBCC } from "./graphVBCC";
 
 import { buildMSTs } from "./graphMSTs";
 
@@ -210,6 +213,7 @@ let settings: Settings = {
   testCaseBoundingBoxes: true,
   showComponents: false,
   showEBCC: false,
+  showVBCC: false,
   showBridges: false,
   showMSTs: false,
   treeMode: false,
@@ -244,6 +248,8 @@ let edgeToPos = new Map<string, number>();
 let edgeLabels = new Map<string, string>();
 
 let ebccEdgeMap : EBCCEdgeMap | undefined = undefined;
+let vbccColorMap: VBCCColorMap | undefined = undefined;
+let vbccEdgeMap: VBCCEdgeMap | undefined = undefined;
 
 let adj = new Map<string, string[]>();
 let rev = new Map<string, string[]>();
@@ -525,6 +531,8 @@ function buildSettings(): void {
   positionMap = undefined;
 
   ebccEdgeMap = undefined;
+  vbccColorMap = undefined;
+  vbccEdgeMap = undefined;
 
   if (settings.bipartiteMode) {
     let isBipartite: boolean;
@@ -546,6 +554,9 @@ function buildSettings(): void {
     }
     if (settings.showEBCC) {
       [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges);
+    }
+    if (settings.showVBCC) {
+      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges);
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
@@ -730,6 +741,24 @@ function renderNodes(renderer: GraphRenderer) {
       renderer.fillStyle = color;
     }
 
+    let vbccFillColor: {range: number[], color: string}[] | undefined = undefined;
+
+    if (vbccColorMap !== undefined && vbccColorMap.get(u) !== undefined) {
+      isTransparent = false;
+      vbccFillColor = [];
+
+      let colorSet = new Set<string>();
+      for (const i of vbccColorMap.get(u)!) {
+        const color = fillColors[i.group % FILL_COLORS_LENGTH];
+        colorSet.add(color);
+      }
+      let colorArr = Array.from(colorSet);
+      const rangeSize = 2.0 * Math.PI / colorArr.length;
+      for (let i = 0; i < colorArr.length; i++) {
+        vbccFillColor.push({range: [i * rangeSize, (i + 1) * rangeSize], color: colorArr[i]});
+      }
+    }
+
     if (settings.showBridges && cutMap !== undefined && cutMap.get(u)) {
       drawHexagon(
         renderer,
@@ -747,6 +776,7 @@ function renderNodes(renderer: GraphRenderer) {
         nodeBorderWidthHalf,
         nodeRadius,
         isTransparent,
+        vbccFillColor,
       );
     }
 
@@ -763,6 +793,7 @@ function renderNodes(renderer: GraphRenderer) {
       node!.pos.y + TEXT_Y_OFFSET,
     );
   }
+
   for (let i = 0; i < nodes.length; i++) {
     const u = nodes[i];
 
@@ -833,6 +864,12 @@ function renderEdges(renderer: GraphRenderer) {
         ? FILL_PALETTE_DARK[idx]
         : FILL_PALETTE_LIGHT[idx];
 
+      finalColor = color;
+    }
+
+    if (vbccEdgeMap !== undefined && vbccEdgeMap.get(e) !== undefined) {
+      const idx = vbccEdgeMap.get(e)!;
+      const color = fillColors[idx % FILL_COLORS_LENGTH];
       finalColor = color;
     }
 

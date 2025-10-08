@@ -43,6 +43,7 @@ export interface Settings {
   testCaseBoundingBoxes: boolean;
   showComponents: boolean;
   showEBCC: boolean;
+  showVBCC: boolean;
   showBridges: boolean;
   showMSTs: boolean;
   treeMode: boolean;
@@ -64,7 +65,9 @@ export type SettingsFormat = "general" | "appearance";
 
 export type ColorMap = Map<string, number>;
 
-export type EBCCEdgeMap = Map<string, number[] | undefined>;
+export type VBCCColorMap = Map<string, {edge: string | null, group: number}[]>;
+export type VBCCEdgeMap = Map<string, number>;
+export type EBCCEdgeMap = Map<string, number[]>;
 
 export type CutMap = Map<string, boolean>;
 

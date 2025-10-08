@@ -66,7 +66,7 @@ export function buildEBCC(
     }
   }
 
-  let edgeMap: EBCCEdgeMap = new Map<string, number[] | undefined>();
+  let edgeMap: EBCCEdgeMap = new Map<string, number[]>();
 
   for (const e of edges) {
     let u = e.split(" ")[0];

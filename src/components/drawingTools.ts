@@ -374,6 +374,7 @@ export function drawLine(
   edgeColor: string,
   mousePos: Vector2D,
   mouseDetectionThreshold: number = 10,
+  ebccEdgeColor: string[] | undefined = undefined,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
@@ -430,14 +431,47 @@ export function drawLine(
     p0 = p1;
   }
 
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
-  ctx.strokeStyle = edgeColor;
+  if (ebccEdgeColor !== undefined) {
+    ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
-  ctx.beginPath();
-  ctx.moveTo(u.x, u.y);
-  ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
+    const mid = (a: Vector2D, b: Vector2D): Vector2D => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 
-  ctx.stroke();
+    const P0 = u;
+    const P1 = { x: u.x + px, y: u.y + py };
+    const P2 = { x: v.x + px, y: v.y + py };
+    const P3 = v;
+
+    // De Casteljau at t = 0.5 (all midpoints)
+    const A = mid(P0, P1);
+    const B = mid(P1, P2);
+    const C = mid(P2, P3);
+    const D = mid(A, B);
+    const E = mid(B, C);
+    const F = mid(D, E); // point on curve at t=0.5
+
+    // 第一段 (P0, A, D, F)
+    ctx.beginPath();
+    ctx.moveTo(P0.x, P0.y);
+    ctx.bezierCurveTo(A.x, A.y, D.x, D.y, F.x, F.y);
+    ctx.strokeStyle = ebccEdgeColor[0];
+    ctx.stroke();
+
+    // 第二段 (F, E, C, P3)
+    ctx.beginPath();
+    ctx.moveTo(F.x, F.y);
+    ctx.bezierCurveTo(E.x, E.y, C.x, C.y, P3.x, P3.y);
+    ctx.strokeStyle = ebccEdgeColor[1];
+    ctx.stroke();
+  } else {
+    ctx.lineWidth = 2 * nodeBorderWidthHalf;
+    ctx.strokeStyle = edgeColor;
+
+    ctx.beginPath();
+    ctx.moveTo(u.x, u.y);
+    ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
+
+    ctx.stroke();
+  }
 
   return intersect;
 }

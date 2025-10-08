@@ -42,6 +42,7 @@ export interface Settings {
   eraserRadius: number;
   testCaseBoundingBoxes: boolean;
   showComponents: boolean;
+  showEBCC: boolean;
   showBridges: boolean;
   showMSTs: boolean;
   treeMode: boolean;
@@ -62,6 +63,8 @@ export type InputFormat = "edges" | "parentChild";
 export type SettingsFormat = "general" | "appearance";
 
 export type ColorMap = Map<string, number>;
+
+export type EBCCEdgeMap = Map<string, number[] | undefined>;
 
 export type CutMap = Map<string, boolean>;
 

@@ -7,6 +7,7 @@ import {
   BackedgeMap,
   BridgeMap,
   MSTMap,
+  EBCCEdgeMap,
 } from "../types";
 
 import { stripNode } from "./utils";
@@ -19,6 +20,8 @@ import { buildBipartite } from "./graphBipartite";
 import { buildGraphGrid } from "./graphGrid";
 
 import { buildBridges } from "./graphBridges";
+
+import { buildEBCC } from "./graphEBCC";
 
 import { buildMSTs } from "./graphMSTs";
 
@@ -206,6 +209,7 @@ let settings: Settings = {
   eraserRadius: 20,
   testCaseBoundingBoxes: true,
   showComponents: false,
+  showEBCC: false,
   showBridges: false,
   showMSTs: false,
   treeMode: false,
@@ -238,6 +242,8 @@ let edges: string[] = [];
 let edgeMap = new Map<string, number | undefined>();
 let edgeToPos = new Map<string, number>();
 let edgeLabels = new Map<string, string>();
+
+let ebccEdgeMap : EBCCEdgeMap | undefined = undefined;
 
 let adj = new Map<string, string[]>();
 let rev = new Map<string, string[]>();
@@ -518,6 +524,8 @@ function buildSettings(): void {
   mstMap = undefined;
   positionMap = undefined;
 
+  ebccEdgeMap = undefined;
+
   if (settings.bipartiteMode) {
     let isBipartite: boolean;
     [isBipartite, colorMap, layerMap] = buildBipartite(nodes, adj);
@@ -535,6 +543,9 @@ function buildSettings(): void {
   } else {
     if (settings.showComponents) {
       colorMap = buildComponents(nodes, adj, rev);
+    }
+    if (settings.showEBCC) {
+      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges);
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);
@@ -814,6 +825,7 @@ function renderEdges(renderer: GraphRenderer) {
     if (!edgeMap.has(e)) edgeMap.set(e, undefined);
 
     let finalColor = edgeColor;
+    let ebccEdgeColor: string[] | undefined = undefined;
 
     if (edgeMap.get(e)! !== undefined) {
       const idx = edgeMap.get(e)!;
@@ -822,6 +834,16 @@ function renderEdges(renderer: GraphRenderer) {
         : FILL_PALETTE_LIGHT[idx];
 
       finalColor = color;
+    }
+
+    if (ebccEdgeMap !== undefined && ebccEdgeMap.get(e) !== undefined) {
+      const [idx1, idx2] = ebccEdgeMap.get(e)!;
+      const color1 = fillColors[idx1 % FILL_COLORS_LENGTH];
+      const color2 = fillColors[idx2 % FILL_COLORS_LENGTH];
+      ebccEdgeColor = [color1, color2];
+      if (toReverse) {
+        ebccEdgeColor = [color2, color1];
+      }
     }
 
     renderer.strokeStyle = strokeColor;
@@ -863,6 +885,8 @@ function renderEdges(renderer: GraphRenderer) {
         thickness,
         finalColor,
         mousePos,
+        10,
+        ebccEdgeColor,
       );
     }
 

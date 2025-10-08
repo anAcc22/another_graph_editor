@@ -68,6 +68,24 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           <SettingsToggleSection
             title={
               settings.language == "en"
+                ? "Edge-Biconnected Components"
+                : "边双联通分量"
+            }
+            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
+            rightLabel={settings.language == "en" ? "Show" : "展示"}
+            toggleId={"settingsEBCC"}
+            settingsName={"showEBCC"}
+            settings={settings}
+            setSettings={setSettings}
+          />
+        ) : (
+          <></>
+        )}
+
+        {!directed ? (
+          <SettingsToggleSection
+            title={
+              settings.language == "en"
                 ? "Bridges and Cut Vertices"
                 : "割点和桥"
             }

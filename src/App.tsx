@@ -85,6 +85,8 @@ function App() {
         : 10,
     testCaseBoundingBoxes: true,
     showComponents: false,
+    showEBCC: false,
+    showVBCC: false,
     showBridges: false,
     showMSTs: false,
     treeMode: false,

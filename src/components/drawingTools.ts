@@ -186,6 +186,7 @@ export class SVGRenderer implements GraphRenderer {
   // 暂存路径
   private currentPath: string[] = [];
   private currentPathClosed: boolean = false;
+  private currentPoint: { x: number; y: number } | null = null;
 
   private counter: number = 10000;
 
@@ -205,10 +206,30 @@ export class SVGRenderer implements GraphRenderer {
     this.height = height;
   }
 
-  clearRect(): void {
-    this.currentContent = "";
+  clearRect(x: number, y: number, width: number, height: number): void {
     this.currentPath = [];
     this.currentPathClosed = false;
+    this.currentPoint = null;
+
+    if (
+      x <= 0 &&
+      y <= 0 &&
+      width >= this.width &&
+      height >= this.height
+    ) {
+      this.currentContent = "";
+      return;
+    }
+
+    if (width <= 0 || height <= 0) return;
+
+    this.counter++;
+    const maskId = `mask-${this.counter}`;
+    this.currentContent =
+      `<mask id="${maskId}"><rect x="0" y="0" width="100%" height="100%" fill="#FFFFFF" /><rect x="${x}" y="${y}" width="${width}" height="${height}" fill="#000000" /></mask>\n` +
+      `<g mask="url(#${maskId})">\n` +
+      this.currentContent +
+      `</g>\n`;
   }
 
   setLineDash(segments: number[]): void {
@@ -218,21 +239,25 @@ export class SVGRenderer implements GraphRenderer {
   beginPath(): void {
     this.currentPath = [];
     this.currentPathClosed = false;
+    this.currentPoint = null;
   }
 
   closePath(): void {
     if (this.currentPathClosed) return;
     this.currentPath.push("Z");
     this.currentPathClosed = true;
+    this.currentPoint = null;
   }
 
   moveTo(x: number, y: number): void {
     this.currentPath.push(`M${x},${y}`);
+    this.currentPoint = { x, y };
   }
 
   lineTo(x: number, y: number): void {
-    if (this.currentPath.length == 0) return this.moveTo(x, y);
+    if (this.currentPath.length === 0) return this.moveTo(x, y);
     this.currentPath.push(`L${x},${y}`);
+    this.currentPoint = { x, y };
   }
 
   arc(
@@ -243,22 +268,32 @@ export class SVGRenderer implements GraphRenderer {
     endAngle: number,
     counterclockwise?: boolean,
   ): void {
-    if (Math.abs(endAngle - startAngle) >= 2 * Math.PI) {
-      // 完整的圆
-      this.currentPath.push(
-        `M${x + radius * Math.cos(startAngle)},${y + radius * Math.sin(startAngle)} ` +
-          `A${radius},${radius} 0 1 ${counterclockwise ? 0 : 1} ${x + radius * Math.cos(startAngle + Math.PI)},${y + radius * Math.sin(startAngle + Math.PI)} ` +
-          `A${radius},${radius} 0 1 ${counterclockwise ? 0 : 1} ${x + radius * Math.cos(startAngle)},${y + radius * Math.sin(startAngle)}`,
-      );
-    } else {
-      // 圆弧
-      const largeArc = Math.abs(endAngle - startAngle) > Math.PI ? 1 : 0;
-      const sweepFlag = counterclockwise ? 0 : 1;
-      this.currentPath.push(
-        `M${x + radius * Math.cos(startAngle)},${y + radius * Math.sin(startAngle)} ` +
-          `A${radius},${radius} 0 ${largeArc} ${sweepFlag} ${x + radius * Math.cos(endAngle)},${y + radius * Math.sin(endAngle)}`,
-      );
+    const startX = x + radius * Math.cos(startAngle);
+    const startY = y + radius * Math.sin(startAngle);
+    const endX = x + radius * Math.cos(endAngle);
+    const endY = y + radius * Math.sin(endAngle);
+
+    this.appendMoveOrLine(startX, startY);
+
+    const fullCircle = Math.abs(endAngle - startAngle) >= 2 * Math.PI - 1e-6;
+    const sweepFlag = counterclockwise ? 0 : 1;
+
+    if (fullCircle) {
+      const midAngle = counterclockwise ? startAngle - Math.PI : startAngle + Math.PI;
+      const midX = x + radius * Math.cos(midAngle);
+      const midY = y + radius * Math.sin(midAngle);
+
+      this.currentPath.push(`A${radius},${radius} 0 1 ${sweepFlag} ${midX},${midY}`);
+      this.currentPath.push(`A${radius},${radius} 0 1 ${sweepFlag} ${startX},${startY}`);
+      this.currentPoint = { x: startX, y: startY };
+      return;
     }
+
+    const delta = counterclockwise ? startAngle - endAngle : endAngle - startAngle;
+    const largeArc = Math.abs(((delta % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) > Math.PI ? 1 : 0;
+
+    this.currentPath.push(`A${radius},${radius} 0 ${largeArc} ${sweepFlag} ${endX},${endY}`);
+    this.currentPoint = { x: endX, y: endY };
   }
 
   bezierCurveTo(
@@ -270,6 +305,7 @@ export class SVGRenderer implements GraphRenderer {
     y: number,
   ): void {
     this.currentPath.push(`C${cp1x},${cp1y} ${cp2x},${cp2y} ${x},${y}`);
+    this.currentPoint = { x, y };
   }
 
   fill(): void {
@@ -294,11 +330,19 @@ export class SVGRenderer implements GraphRenderer {
     if (this.currentPath.length === 0) return;
 
     const path = this.currentPath.join(" ");
-    const dashArray = this.lineDash.length
-      ? `stroke-dasharray="${this.lineDash.join(",")}"`
-      : "";
+    const attributes = [
+      `d="${path}"`,
+      "fill=\"none\"",
+      `stroke="${this.strokeStyle}"`,
+      `stroke-width="${this.lineWidth}"`,
+      `stroke-linecap="${this.lineCap}"`,
+    ];
 
-    this.currentContent += `<path d="${path}" fill="none" stroke="${this.strokeStyle}" stroke-width="${this.lineWidth}" ${dashArray} />\n`;
+    if (this.lineDash.length) {
+      attributes.push(`stroke-dasharray="${this.lineDash.join(",")}"`);
+    }
+
+    this.currentContent += `<path ${attributes.join(" ")} />\n`;
   }
 
   fillText(text: string, x: number, y: number): void {
@@ -313,7 +357,31 @@ export class SVGRenderer implements GraphRenderer {
     if (this.textBaseline === "bottom") dominantBaseline = "text-after-edge";
 
     const style = `font: ${this.font}; fill: ${this.fillStyle}; text-anchor: ${anchor}; dominant-baseline: ${dominantBaseline};`;
-    this.currentContent += `<text x="${x}" y="${y}" style="${style}">${text}</text>\n`;
+    const safeText = this.escapeText(text);
+    this.currentContent += `<text x="${x}" y="${y}" style="${style}">${safeText}</text>\n`;
+  }
+
+  private appendMoveOrLine(x: number, y: number): void {
+    if (!this.currentPoint) {
+      this.currentPath.push(`M${x},${y}`);
+    } else if (!this.pointsEqual(this.currentPoint, { x, y })) {
+      this.currentPath.push(`L${x},${y}`);
+    }
+
+    this.currentPoint = { x, y };
+  }
+
+  private pointsEqual(a: { x: number; y: number }, b: { x: number; y: number }, epsilon = 1e-6): boolean {
+    return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
+  }
+
+  private escapeText(value: string): string {
+    return value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   getImage(): string {
@@ -374,6 +442,7 @@ export function drawLine(
   edgeColor: string,
   mousePos: Vector2D,
   mouseDetectionThreshold: number = 10,
+  ebccEdgeColor: string[] | undefined = undefined,
 ) {
   let px = u.y - v.y;
   let py = v.x - u.x;
@@ -430,14 +499,47 @@ export function drawLine(
     p0 = p1;
   }
 
-  ctx.lineWidth = 2 * nodeBorderWidthHalf;
-  ctx.strokeStyle = edgeColor;
+  if (ebccEdgeColor !== undefined) {
+    ctx.lineWidth = 2 * nodeBorderWidthHalf;
 
-  ctx.beginPath();
-  ctx.moveTo(u.x, u.y);
-  ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
+    const mid = (a: Vector2D, b: Vector2D): Vector2D => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 
-  ctx.stroke();
+    const P0 = u;
+    const P1 = { x: u.x + px, y: u.y + py };
+    const P2 = { x: v.x + px, y: v.y + py };
+    const P3 = v;
+
+    // De Casteljau at t = 0.5 (all midpoints)
+    const A = mid(P0, P1);
+    const B = mid(P1, P2);
+    const C = mid(P2, P3);
+    const D = mid(A, B);
+    const E = mid(B, C);
+    const F = mid(D, E); // point on curve at t=0.5
+
+    // 第一段 (P0, A, D, F)
+    ctx.beginPath();
+    ctx.moveTo(P0.x, P0.y);
+    ctx.bezierCurveTo(A.x, A.y, D.x, D.y, F.x, F.y);
+    ctx.strokeStyle = ebccEdgeColor[0];
+    ctx.stroke();
+
+    // 第二段 (F, E, C, P3)
+    ctx.beginPath();
+    ctx.moveTo(F.x, F.y);
+    ctx.bezierCurveTo(E.x, E.y, C.x, C.y, P3.x, P3.y);
+    ctx.strokeStyle = ebccEdgeColor[1];
+    ctx.stroke();
+  } else {
+    ctx.lineWidth = 2 * nodeBorderWidthHalf;
+    ctx.strokeStyle = edgeColor;
+
+    ctx.beginPath();
+    ctx.moveTo(u.x, u.y);
+    ctx.bezierCurveTo(u.x + px, u.y + py, v.x + px, v.y + py, v.x, v.y);
+
+    ctx.stroke();
+  }
 
   return intersect;
 }
@@ -577,23 +679,41 @@ export function drawCircle(
   nodeBorderWidthHalf: number,
   nodeRadius: number,
   isTransparent: boolean,
+  vbccFillColor: {range: number[], color: string}[] | undefined = undefined,
 ) {
-  ctx.beginPath();
 
-  if (isTransparent) {
-    ctx.globalCompositeOperation = "destination-out";
+  if (vbccFillColor !== undefined) {
+    for (const item of vbccFillColor) {
+      const [start, end] = item.range;
+      ctx.fillStyle = item.color;
+      ctx.beginPath();
+      ctx.moveTo(u.x, u.y);
+      ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, start, end);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    ctx.beginPath();
     ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
+    ctx.stroke();
+  } else {
+    ctx.beginPath();
+
+    if (isTransparent) {
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
+    }
+  
+    ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
+  
+    if (!isTransparent) {
+      ctx.fill();
+    }
+  
+    ctx.stroke();
   }
-
-  ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
-
-  if (!isTransparent) {
-    ctx.fill();
-  }
-
-  ctx.stroke();
 
   if (sel) {
     ctx.beginPath();

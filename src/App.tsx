@@ -101,7 +101,7 @@ function App() {
     settingsFormat:
       localStorage.getItem("settingsFormat") !== null
         ? (localStorage.getItem("settingsFormat") as SettingsFormat)
-        : "general",
+        : "modes",
     gridMode: false,
   });
 

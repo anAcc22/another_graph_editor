@@ -1,6 +1,7 @@
 import { Settings } from "../types";
-import { GeneralSettings } from "./GeneralSettings";
+import { AlgorithmSettings } from "./AlgorithmSettings";
 import { AppearanceSettings } from "./AppearanceSettings";
+import { ModeSettings } from "./ModeSettings";
 
 interface Props {
   directed: boolean;
@@ -19,7 +20,7 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
         <div className="flex space-x-3">
           <button
             className={
-              settings.settingsFormat === "general"
+              settings.settingsFormat === "modes"
                 ? `h-7 border-2 border-clear-normal bg-clear-hover
                   hover:bg-clear-active rounded-md px-2 py-1 inline-flex
                   items-center justify-center active:bg-tab-active font-semibold`
@@ -28,11 +29,28 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
                   items-center justify-center active:bg-tab-active font-semibold`
             }
             onClick={() => {
-              setSettings({ ...settings, settingsFormat: "general" });
-              localStorage.setItem("settingsFormat", "general");
+              setSettings({ ...settings, settingsFormat: "modes" });
+              localStorage.setItem("settingsFormat", "modes");
             }}
           >
-            {settings.language == "en" ? "General" : "功能设置"}
+            {settings.language == "en" ? "Modes" : "模式设置"}
+          </button>
+          <button
+            className={
+              settings.settingsFormat === "algos"
+                ? `h-7 border-2 border-clear-normal bg-clear-hover
+                  hover:bg-clear-active rounded-md px-2 py-1 inline-flex
+                  items-center justify-center active:bg-tab-active font-semibold`
+                : `h-7 border-2 border-border bg-block hover:border-border-hover
+                  hover:bg-bg-tab-hover rounded-md px-2 py-1 inline-flex
+                  items-center justify-center active:bg-tab-active font-semibold`
+            }
+            onClick={() => {
+              setSettings({ ...settings, settingsFormat: "algos" });
+              localStorage.setItem("settingsFormat", "algos");
+            }}
+          >
+            {settings.language == "en" ? "Algos" : "算法设置"}
           </button>
           <button
             className={
@@ -53,7 +71,12 @@ export function GraphSettings({ directed, settings, setSettings }: Props) {
           </button>
         </div>
       </div>
-      <GeneralSettings
+      <ModeSettings
+        directed={directed}
+        settings={settings}
+        setSettings={setSettings}
+      />
+      <AlgorithmSettings
         directed={directed}
         settings={settings}
         setSettings={setSettings}

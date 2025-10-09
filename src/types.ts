@@ -61,7 +61,7 @@ export interface ParsedGraph {
 }
 
 export type InputFormat = "edges" | "parentChild";
-export type SettingsFormat = "general" | "appearance";
+export type SettingsFormat = "algos" | "modes" | "appearance";
 
 export type ColorMap = Map<string, number>;
 

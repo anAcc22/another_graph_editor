@@ -247,7 +247,7 @@ let edgeMap = new Map<string, number | undefined>();
 let edgeToPos = new Map<string, number>();
 let edgeLabels = new Map<string, string>();
 
-let ebccEdgeMap : EBCCEdgeMap | undefined = undefined;
+let ebccEdgeMap: EBCCEdgeMap | undefined = undefined;
 let vbccColorMap: VBCCColorMap | undefined = undefined;
 let vbccEdgeMap: VBCCEdgeMap | undefined = undefined;
 
@@ -741,7 +741,8 @@ function renderNodes(renderer: GraphRenderer) {
       renderer.fillStyle = color;
     }
 
-    let vbccFillColor: {range: number[], color: string}[] | undefined = undefined;
+    let vbccFillColor: { range: number[]; color: string }[] | undefined =
+      undefined;
 
     if (vbccColorMap !== undefined && vbccColorMap.get(u) !== undefined) {
       isTransparent = false;
@@ -753,9 +754,12 @@ function renderNodes(renderer: GraphRenderer) {
         colorSet.add(color);
       }
       let colorArr = Array.from(colorSet);
-      const rangeSize = 2.0 * Math.PI / colorArr.length;
+      const rangeSize = (2.0 * Math.PI) / colorArr.length;
       for (let i = 0; i < colorArr.length; i++) {
-        vbccFillColor.push({range: [i * rangeSize, (i + 1) * rangeSize], color: colorArr[i]});
+        vbccFillColor.push({
+          range: [i * rangeSize, (i + 1) * rangeSize],
+          color: colorArr[i],
+        });
       }
     }
 
@@ -858,15 +862,6 @@ function renderEdges(renderer: GraphRenderer) {
     let finalColor = edgeColor;
     let ebccEdgeColor: string[] | undefined = undefined;
 
-    if (edgeMap.get(e)! !== undefined) {
-      const idx = edgeMap.get(e)!;
-      const color = settings.darkMode
-        ? FILL_PALETTE_DARK[idx]
-        : FILL_PALETTE_LIGHT[idx];
-
-      finalColor = color;
-    }
-
     if (vbccEdgeMap !== undefined && vbccEdgeMap.get(e) !== undefined) {
       const idx = vbccEdgeMap.get(e)!;
       const color = fillColors[idx % FILL_COLORS_LENGTH];
@@ -881,6 +876,17 @@ function renderEdges(renderer: GraphRenderer) {
       if (toReverse) {
         ebccEdgeColor = [color2, color1];
       }
+    }
+
+    if (edgeMap.get(e)! !== undefined) {
+      ebccEdgeColor = undefined; // NOTE: mask `ebccEdgeColor` if an edge is already colored
+
+      const idx = edgeMap.get(e)!;
+      const color = settings.darkMode
+        ? FILL_PALETTE_DARK[idx]
+        : FILL_PALETTE_LIGHT[idx];
+
+      finalColor = color;
     }
 
     renderer.strokeStyle = strokeColor;

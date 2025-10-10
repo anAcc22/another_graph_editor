@@ -198,7 +198,7 @@ let settings: Settings = {
   expandedCanvas: false,
   markBorder: "double",
   markColor: 1,
-  settingsFormat: "general",
+  settingsFormat: "modes",
   labelOffset: 0,
   darkMode: true,
   nodeRadius: 15,

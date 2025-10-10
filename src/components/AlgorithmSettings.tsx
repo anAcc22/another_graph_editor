@@ -20,130 +20,66 @@ export function AlgorithmSettings({ directed, settings, setSettings }: Props) {
             : "hidden"
         }
       >
-        {!settings.showVBCC && !settings.showEBCC ? (
+        <SettingsToggleSection
+          title={settings.language == "en" ? "Components" : "连通分量"}
+          leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
+          rightLabel={settings.language == "en" ? "Show" : "展示"}
+          toggleId={"settingsComponents"}
+          settingsName={"showComponents"}
+          settings={settings}
+          setSettings={setSettings}
+        />
+
+        {!directed ? (
           <SettingsToggleSection
-            title={settings.language == "en" ? "Components" : "连通分量"}
+            title={
+              settings.language == "en"
+                ? "Edge-Biconnected Components"
+                : "边双联通分量"
+            }
             leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
             rightLabel={settings.language == "en" ? "Show" : "展示"}
-            toggleId={"settingsComponents"}
-            settingsName={"showComponents"}
+            toggleId={"settingsEBCC"}
+            settingsName={"showEBCC"}
             settings={settings}
             setSettings={setSettings}
           />
-        ) : (
-          <SettingsToggleSectionDimmed
-            title={settings.language == "en" ? "Components" : "连通分量"}
-            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展示"}
-            toggleId={"settingsComponents"}
-            settingsName={"showComponents"}
-            settings={settings}
-            setSettings={setSettings}
-          />
-        )}
-
-        {!directed ? (
-          !settings.showComponents &&
-          !settings.showVBCC &&
-          !settings.showBridges ? (
-            <SettingsToggleSection
-              title={
-                settings.language == "en"
-                  ? "Edge-Biconnected Components"
-                  : "边双联通分量"
-              }
-              leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-              rightLabel={settings.language == "en" ? "Show" : "展示"}
-              toggleId={"settingsEBCC"}
-              settingsName={"showEBCC"}
-              settings={settings}
-              setSettings={setSettings}
-            />
-          ) : (
-            <SettingsToggleSectionDimmed
-              title={
-                settings.language == "en"
-                  ? "Edge-Biconnected Components"
-                  : "边双联通分量"
-              }
-              leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-              rightLabel={settings.language == "en" ? "Show" : "展示"}
-              toggleId={"settingsEBCC"}
-              settingsName={"showEBCC"}
-              settings={settings}
-              setSettings={setSettings}
-            />
-          )
         ) : (
           <></>
         )}
 
         {!directed ? (
-          !settings.showComponents &&
-          !settings.showEBCC &&
-          !settings.showBridges ? (
-            <SettingsToggleSection
-              title={
-                settings.language == "en"
-                  ? "Vertex-Biconnected Components"
-                  : "点双联通分量"
-              }
-              leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-              rightLabel={settings.language == "en" ? "Show" : "展示"}
-              toggleId={"settingsVBCC"}
-              settingsName={"showVBCC"}
-              settings={settings}
-              setSettings={setSettings}
-            />
-          ) : (
-            <SettingsToggleSectionDimmed
-              title={
-                settings.language == "en"
-                  ? "Vertex-Biconnected Components"
-                  : "点双联通分量"
-              }
-              leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-              rightLabel={settings.language == "en" ? "Show" : "展示"}
-              toggleId={"settingsVBCC"}
-              settingsName={"showVBCC"}
-              settings={settings}
-              setSettings={setSettings}
-            />
-          )
+          <SettingsToggleSection
+            title={
+              settings.language == "en"
+                ? "Vertex-Biconnected Components"
+                : "点双联通分量"
+            }
+            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
+            rightLabel={settings.language == "en" ? "Show" : "展示"}
+            toggleId={"settingsVBCC"}
+            settingsName={"showVBCC"}
+            settings={settings}
+            setSettings={setSettings}
+          />
         ) : (
           <></>
         )}
 
         {!directed ? (
-          !settings.showEBCC && !settings.showVBCC ? (
-            <SettingsToggleSection
-              title={
-                settings.language == "en"
-                  ? "Bridges and Cut Vertices"
-                  : "割点和桥"
-              }
-              leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-              rightLabel={settings.language == "en" ? "Show" : "展示"}
-              toggleId={"settingsBridges"}
-              settingsName={"showBridges"}
-              settings={settings}
-              setSettings={setSettings}
-            />
-          ) : (
-            <SettingsToggleSectionDimmed
-              title={
-                settings.language == "en"
-                  ? "Bridges and Cut Vertices"
-                  : "割点和桥"
-              }
-              leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-              rightLabel={settings.language == "en" ? "Show" : "展示"}
-              toggleId={"settingsBridges"}
-              settingsName={"showBridges"}
-              settings={settings}
-              setSettings={setSettings}
-            />
-          )
+          <SettingsToggleSection
+            title={
+              settings.language == "en"
+                ? "Bridges and Cut Vertices"
+                : "割点和桥"
+            }
+            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
+            rightLabel={settings.language == "en" ? "Show" : "展示"}
+            toggleId={"settingsBridges"}
+            settingsName={"showBridges"}
+            settings={settings}
+            setSettings={setSettings}
+          />
         ) : (
           <></>
         )}

@@ -85,6 +85,8 @@ function App() {
         : 10,
     testCaseBoundingBoxes: true,
     showComponents: false,
+    showEBCC: false,
+    showVBCC: false,
     showBridges: false,
     showMSTs: false,
     treeMode: false,
@@ -99,7 +101,7 @@ function App() {
     settingsFormat:
       localStorage.getItem("settingsFormat") !== null
         ? (localStorage.getItem("settingsFormat") as SettingsFormat)
-        : "general",
+        : "modes",
     gridMode: false,
   });
 

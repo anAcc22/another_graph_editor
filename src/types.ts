@@ -42,6 +42,8 @@ export interface Settings {
   eraserRadius: number;
   testCaseBoundingBoxes: boolean;
   showComponents: boolean;
+  showEBCC: boolean;
+  showVBCC: boolean;
   showBridges: boolean;
   showMSTs: boolean;
   treeMode: boolean;
@@ -59,9 +61,13 @@ export interface ParsedGraph {
 }
 
 export type InputFormat = "edges" | "parentChild";
-export type SettingsFormat = "general" | "appearance";
+export type SettingsFormat = "algos" | "modes" | "appearance";
 
 export type ColorMap = Map<string, number>;
+
+export type VBCCColorMap = Map<string, {edge: string | null, group: number}[]>;
+export type VBCCEdgeMap = Map<string, number>;
+export type EBCCEdgeMap = Map<string, number[]>;
 
 export type CutMap = Map<string, boolean>;
 

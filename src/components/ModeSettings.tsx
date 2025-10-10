@@ -8,12 +8,12 @@ interface Props {
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
 }
 
-export function GeneralSettings({ directed, settings, setSettings }: Props) {
+export function ModeSettings({ directed, settings, setSettings }: Props) {
   return (
     <>
       <div
         className={
-          settings.settingsFormat === "general"
+          settings.settingsFormat === "modes"
             ? `font-jetbrains flex flex-col border-2 rounded-lg bg-block
               shadow-shadow shadow border-border hover:border-border-hover p-3
               space-y-3`
@@ -53,66 +53,6 @@ export function GeneralSettings({ directed, settings, setSettings }: Props) {
           <div className="w-0">1</div>
           <div>2</div>
         </div>
-
-        <SettingsToggleSection
-          title={settings.language == "en" ? "Components" : "连通分量"}
-          leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-          rightLabel={settings.language == "en" ? "Show" : "展示"}
-          toggleId={"settingsComponents"}
-          settingsName={"showComponents"}
-          settings={settings}
-          setSettings={setSettings}
-        />
-
-        {!directed ? (
-          <SettingsToggleSection
-            title={
-              settings.language == "en"
-                ? "Bridges and Cut Vertices"
-                : "割点和桥"
-            }
-            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展示"}
-            toggleId={"settingsBridges"}
-            settingsName={"showBridges"}
-            settings={settings}
-            setSettings={setSettings}
-          />
-        ) : (
-          <></>
-        )}
-
-        {!directed && localStorage.getItem("isEdgeNumeric") === "true" ? (
-          <SettingsToggleSection
-            title={
-              settings.language == "en"
-                ? "Minimum Spanning Tree(s)"
-                : "最小生成树（森林）"
-            }
-            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展示"}
-            toggleId={"settingsShowMSTs"}
-            settingsName={"showMSTs"}
-            settings={settings}
-            setSettings={setSettings}
-          />
-        ) : !directed ? (
-          <SettingsToggleSectionDimmed
-            title={
-              settings.language == "en"
-                ? "Minimum Spanning Tree(s)"
-                : "最小生成树（森林）"
-            }
-            leftLabel={settings.language == "en" ? "Hide" : "隐藏"}
-            rightLabel={settings.language == "en" ? "Show" : "展示"}
-            toggleId={"settingsShowMSTs"}
-            settingsName={"showMSTs"}
-            settings={settings}
-            setSettings={setSettings}
-          />
-        ) : (
-          <></>
-        )}
 
         {!directed ? (
           <SettingsToggleSection

@@ -10,6 +10,7 @@ import { Settings } from "./types";
 import { SettingsFormat } from "./types";
 import { TestCase, TestCases } from "./types";
 import { Randomizer } from "./types";
+import { SettingsFormatList } from "./types";
 
 import { getDefaultGraph } from "./components/utils";
 
@@ -99,7 +100,10 @@ function App() {
     fixedMode: false,
     multiedgeMode: true,
     settingsFormat:
-      localStorage.getItem("settingsFormat") !== null
+      localStorage.getItem("settingsFormat") !== null &&
+      SettingsFormatList.includes(
+        localStorage.getItem("settingsFormat") as string,
+      )
         ? (localStorage.getItem("settingsFormat") as SettingsFormat)
         : "modes",
     gridMode: false,

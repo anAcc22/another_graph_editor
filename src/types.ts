@@ -63,9 +63,14 @@ export interface ParsedGraph {
 export type InputFormat = "edges" | "parentChild";
 export type SettingsFormat = "algos" | "modes" | "appearance";
 
+export const SettingsFormatList = ["algos", "modes", "appearance"];
+
 export type ColorMap = Map<string, number>;
 
-export type VBCCColorMap = Map<string, {edge: string | null, group: number}[]>;
+export type VBCCColorMap = Map<
+  string,
+  { edge: string | null; group: number }[]
+>;
 export type VBCCEdgeMap = Map<string, number>;
 export type EBCCEdgeMap = Map<string, number[]>;
 

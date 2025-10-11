@@ -104,9 +104,6 @@ export function buildVBCC(
     colorMap.get(v)!.push({edge: e, group: belong});
   }
 
-  console.log(colorMap);
-  console.log(edgeMap);
-
   for (const [idx, nodes] of bcc) {
     if (nodes.length <= 1) {
       colorMap.set(nodes[0], [{edge: null, group: idx}]);

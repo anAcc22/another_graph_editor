@@ -21,7 +21,7 @@ import { buildTreeLayers } from "./graphTreeLayers";
 import { buildBipartite } from "./graphBipartite";
 import { buildGraphGrid } from "./graphGrid";
 
-import { buildBridges } from "./graphBridges";
+import { buildBridges, buildCuts } from "./graphBridges";
 
 import { buildEBCC } from "./graphEBCC";
 import { buildVBCC } from "./graphVBCC";
@@ -569,7 +569,8 @@ function buildSettings(): void {
       );
     }
     if (settings.showBridges) {
-      [cutMap, bridgeMap] = buildBridges(nodes, adj, rev);
+      bridgeMap = buildBridges(nodes, edges);
+      cutMap = buildCuts(nodes, adj, rev);
     }
     if (settings.showMSTs) {
       mstMap = buildMSTs(nodes, edges, edgeLabels);

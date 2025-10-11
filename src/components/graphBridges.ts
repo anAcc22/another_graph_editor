@@ -1,10 +1,10 @@
 import { CutMap, BridgeMap } from "../types";
 
-export function buildBridges(
+export function buildCuts(
   nodes: string[],
   adj: Map<string, string[]>,
   rev: Map<string, string[]>,
-): [CutMap, BridgeMap] {
+): CutMap {
   let depth = new Map<string, number>();
   let memo = new Map<string, number>();
 
@@ -130,5 +130,88 @@ export function buildBridges(
     }
   }
 
-  return [cutMap, bridgeMap];
+  return cutMap;
+}
+
+export function buildBridges(
+  nodes: string[],
+  edges: string[],
+): BridgeMap {
+
+  const adjFull = new Map<string, string[]>();
+
+  for (const u of nodes) {
+    adjFull.set(u, []);
+  }
+
+  for (const e of edges) {
+    let u = e.split(" ")[0];
+    let v = e.split(" ")[1];
+    adjFull.get(u)!.push(v);
+    adjFull.get(v)!.push(u);
+  }
+
+  let colorMap = new Map<string, number>();
+  
+  let color = 0;
+  let time = 0;
+
+  let dfn = new Map<string, number>();
+  let low = new Map<string, number>();
+  let stack: string[] = [];
+
+  let bcc = new Map<number, string[]>();
+
+  const dfs = (u: string, parent: string | null): void => {
+    time++;
+    dfn.set(u, time);
+    low.set(u, time);
+    stack.push(u);
+
+    for (const v of adjFull.get(u)!) {
+      if (v === parent) {
+        parent = null;
+        continue;
+      } else if (!dfn.has(v)) {
+        dfs(v, u);
+        low.set(u, Math.min(low.get(u)!, low.get(v)!));
+      } else {
+        low.set(u, Math.min(low.get(u)!, dfn.get(v)!));
+      }
+    }
+
+    if (low.get(u) === dfn.get(u)) {
+      color ++;
+      const component = [];
+      let w: string;
+      do {
+        w = stack.pop()!;
+        component.push(w);
+        colorMap.set(w, color);
+      } while (w !== u);
+      bcc.set(color, component);
+    }
+  };
+
+  for (const u of nodes) {
+    if (!dfn.has(u)) {
+      dfs(u, null);
+    }
+  }
+
+  let bridgeMap: BridgeMap = new Map<string, boolean>();
+
+  for (const e of edges) {
+    let u = e.split(" ")[0];
+    let v = e.split(" ")[1];
+    if (colorMap.get(u) !== colorMap.get(v)) {
+      bridgeMap.set([u, v].join(" "), true);
+      bridgeMap.set([v, u].join(" "), true);
+    } else {
+      bridgeMap.set([u, v].join(" "), false);
+      bridgeMap.set([v, u].join(" "), false);
+    }
+  }
+
+  return bridgeMap;
 }

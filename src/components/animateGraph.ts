@@ -129,52 +129,32 @@ const NODE_FRICTION = 0.05;
 const CANVAS_FIELD_DIST = 50;
 
 const FILL_COLORS_LIGHT = [
-  "#8bc963",
+  "#9ece7e",
   "#dd7878",
-  "#6293f0",
-  "#c663e6",
-  "#dfae6d",
-  "#5dd2f7",
-  "#90c06b",
-  "#d173a0",
-  "#cfce7d",
-  "#b3a3fe",
-  "#dc9a68",
-  "#edd878",
-  "#4aa0e3",
-  "#afce7d",
-  "#7885fc",
-  "#37c2c9",
-  "#ff9e6d",
+  "#7287ed",
+  "#dfae5d",
+  "#70b05b",
+  "#dc8a68",
+  "#309fc5",
+  "#37c2b9",
   "#ea76cb",
-  "#c9c565",
-  "#a073f4",
+  "#a879ef",
 ];
 
 const FILL_COLORS_DARK = [
-  "#5a803a",
-  "#8a3a3a",
-  "#4d70a3",
-  "#7a44a6",
-  "#87673e",
-  "#398fa9",
-  "#627845",
-  "#844569",
-  "#797845",
-  "#6e6096",
-  "#845741",
-  "#817841",
-  "#396894",
-  "#687e4d",
-  "#5966a9",
-  "#298083",
-  "#906041",
-  "#884373",
-  "#787443",
-  "#6b5795",
+  "#536333",
+  "#7d3838",
+  "#42479d",
+  "#7f5e0d",
+  "#40603b",
+  "#8c4a28",
+  "#104f85",
+  "#176249",
+  "#7a366b",
+  "#58398f",
 ];
 
-const FILL_COLORS_LENGTH = 20;
+const FILL_COLORS_LENGTH = 10;
 
 let prevMS = performance.now();
 let latestColorChangeMS = performance.now();
@@ -575,10 +555,10 @@ function buildSettings(): void {
       colorMap = buildComponents(nodes, adj, rev);
     }
     if (settings.showEBCC) {
-      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges);
+      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges, FILL_COLORS_LENGTH);
     }
     if (settings.showVBCC) {
-      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges);
+      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges, FILL_COLORS_LENGTH);
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);

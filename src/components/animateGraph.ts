@@ -129,52 +129,32 @@ const NODE_FRICTION = 0.05;
 const CANVAS_FIELD_DIST = 50;
 
 const FILL_COLORS_LIGHT = [
-  "#8bc963",
+  "#9ece7e",
   "#dd7878",
-  "#c663e6",
-  "#6293f0",
-  "#dfae6d",
-  "#5dd2f7",
-  "#90c06b",
-  "#d173a0",
-  "#cfce7d",
-  "#b3a3fe",
-  "#dc9a68",
-  "#edd878",
-  "#4aa0e3",
-  "#afce7d",
-  "#7885fc",
-  "#37c2c9",
-  "#ff9e6d",
+  "#7287ed",
+  "#dfae5d",
+  "#70b05b",
+  "#dc8a68",
+  "#309fc5",
+  "#37c2b9",
   "#ea76cb",
-  "#c9c565",
-  "#a073f4",
+  "#a879ef",
 ];
 
 const FILL_COLORS_DARK = [
-  "#627847",
-  "#784545",
-  "#624985",
-  "#4d688a",
-  "#756248",
-  "#4f778a",
-  "#5a7144",
-  "#71495c",
-  "#717049",
-  "#625b8a",
-  "#735841",
-  "#7a7148",
-  "#406684",
-  "#61754c",
-  "#555f89",
-  "#397275",
-  "#795b41",
-  "#764666",
-  "#6a6845",
-  "#604f84",
+  "#536333",
+  "#7d3838",
+  "#42479d",
+  "#7f5e0d",
+  "#40603b",
+  "#8c4a28",
+  "#104f85",
+  "#176249",
+  "#7a366b",
+  "#58398f",
 ];
 
-const FILL_COLORS_LENGTH = 20;
+const FILL_COLORS_LENGTH = 10;
 
 let prevMS = performance.now();
 let latestColorChangeMS = performance.now();

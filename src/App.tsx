@@ -88,6 +88,10 @@ function App() {
       localStorage.getItem("tension") !== null
         ? Number.parseFloat(localStorage.getItem("tension")!)
         : 1.6,
+    nodeRepulsion:
+      localStorage.getItem("nodeRepulsion") !== null
+        ? Number.parseFloat(localStorage.getItem("nodeRepulsion")!)
+        : 0.0,
     testCaseBoundingBoxes: true,
     showComponents: false,
     showEBCC: false,

@@ -553,10 +553,10 @@ function buildSettings(): void {
       colorMap = buildComponents(nodes, adj, rev);
     }
     if (settings.showEBCC) {
-      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges);
+      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges, FILL_COLORS_LENGTH);
     }
     if (settings.showVBCC) {
-      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges);
+      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges, FILL_COLORS_LENGTH);
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);

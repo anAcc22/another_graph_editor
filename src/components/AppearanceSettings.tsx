@@ -177,7 +177,7 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         <input
           type="range"
           min={0}
-          max={75}
+          max={150}
           step={5}
           value={settings.edgeLength - 10}
           className="range appearance-none outline-none bg-slider h-1 w-5/6
@@ -328,6 +328,36 @@ export function AppearanceSettings({ settings, setSettings }: Props) {
         />
 
         <br />
+        <hr className="border-dashed border-border" />
+
+        <h4 className="font-semibold">
+          {settings.language == "en" ? "Tension" : "Tension"}
+        </h4>
+        <input
+          type="range"
+          min={0}
+          max={0.75}
+          step={0.05}
+          value={settings.tension - 1.0}
+          className="range appearance-none outline-none bg-slider h-1 w-5/6
+            self-center rounded-full cursor-ew-resize
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
+            [&::-webkit-slider-thumb]:border-none
+            [&::-webkit-slider-thumb]:bg-slider-thumb-physics
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-moz-range-thumb]:bg-slider-thumb-physics
+            [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4
+            [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full"
+          onChange={(e) => {
+            const newTension = 1.0 + Number.parseFloat(e.target.value);
+            setSettings({
+              ...settings,
+              tension: newTension,
+            });
+            localStorage.setItem("tension", newTension.toString());
+          }}
+        />
       </div>
     </>
   );

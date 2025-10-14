@@ -40,6 +40,7 @@ export interface Settings {
   penThickness: number;
   penTransparency: number;
   eraserRadius: number;
+  tension: number;
   testCaseBoundingBoxes: boolean;
   showComponents: boolean;
   showEBCC: boolean;

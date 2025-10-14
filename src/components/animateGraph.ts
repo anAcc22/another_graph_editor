@@ -230,6 +230,7 @@ let settings: Settings = {
   penThickness: 1,
   penTransparency: 0,
   eraserRadius: 20,
+  tension: 1.6,
   testCaseBoundingBoxes: true,
   showComponents: false,
   showEBCC: false,
@@ -408,7 +409,7 @@ function updateVelocities() {
       const isEdge = adjSet.get(u)!.has(v) || adjSet.get(v)!.has(u);
 
       if (isEdge) {
-        aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
+        aMag = Math.pow(Math.abs(dist - nodeDist), settings.tension) / 100_000;
         if (dist >= nodeDist) {
           aMag *= -1;
         }

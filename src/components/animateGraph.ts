@@ -230,6 +230,8 @@ let settings: Settings = {
   penThickness: 1,
   penTransparency: 0,
   eraserRadius: 20,
+  tension: 1.6,
+  nodeRepulsion: 0.0,
   testCaseBoundingBoxes: true,
   showComponents: false,
   showEBCC: false,
@@ -403,12 +405,12 @@ function updateVelocities() {
 
       const dist = Math.max(euclidDist(uPos, vPos), 10);
 
-      let aMag = 150_000 / (2 * Math.pow(dist, 4.5));
+      let aMag = 150_000 / (2 * Math.pow(dist, 4.5 - settings.nodeRepulsion));
 
       const isEdge = adjSet.get(u)!.has(v) || adjSet.get(v)!.has(u);
 
       if (isEdge) {
-        aMag = Math.pow(Math.abs(dist - nodeDist), 1.6) / 100_000;
+        aMag = Math.pow(Math.abs(dist - nodeDist), settings.tension) / 100_000;
         if (dist >= nodeDist) {
           aMag *= -1;
         }
@@ -573,10 +575,10 @@ function buildSettings(): void {
       colorMap = buildComponents(nodes, adj, rev);
     }
     if (settings.showEBCC) {
-      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges);
+      [colorMap, ebccEdgeMap] = buildEBCC(nodes, edges, FILL_COLORS_LENGTH);
     }
     if (settings.showVBCC) {
-      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges);
+      [vbccColorMap, vbccEdgeMap] = buildVBCC(nodes, edges, FILL_COLORS_LENGTH);
     }
     if (settings.treeMode) {
       [layerMap, backedgeMap] = buildTreeLayers(nodes, adj, rev);

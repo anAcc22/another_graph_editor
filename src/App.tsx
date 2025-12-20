@@ -71,7 +71,7 @@ function App() {
     edgeLabelSeparation:
       localStorage.getItem("edgeLabelSeparation") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLabelSeparation")!)
-        : 10,
+        : 14,
     penThickness:
       localStorage.getItem("penThickness") !== null
         ? Number.parseFloat(localStorage.getItem("penThickness")!)

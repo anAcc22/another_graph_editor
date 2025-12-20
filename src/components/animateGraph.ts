@@ -36,6 +36,8 @@ import { FILL_PALETTE_LIGHT } from "./palettes";
 import { FILL_PALETTE_DARK } from "./palettes";
 import { Bounds, buildTestCaseBoundingBoxes } from "./testCaseBoundingBoxes";
 
+import { getIdealCurvature } from "./utils";
+
 interface Vector2D {
   x: number;
   y: number;
@@ -102,7 +104,7 @@ function clamp(val: number, low: number, high: number) {
   return Math.max(low, Math.min(val, high));
 }
 
-function euclidDist(u: Vector2D, v: Vector2D): number {
+export function euclidDist(u: Vector2D, v: Vector2D): number {
   return Math.hypot(u.x - v.x, u.y - v.y);
 }
 
@@ -278,6 +280,8 @@ let rev = new Map<string, string[]>();
 
 let adjSet = new Map<string, Set<string>>(); // PERF: used to compute `isEdge`
 let fullAdjSet = new Map<string, Set<string>>();
+
+let edgeCurvatureMap = new Map<string, number>();
 
 let colorMap: ColorMap | undefined = undefined;
 let layerMap: LayerMap | undefined = undefined;
@@ -844,6 +848,7 @@ function renderNodes(renderer: GraphRenderer) {
 
 function renderEdges(renderer: GraphRenderer) {
   let renderedEdges = [...edges];
+  const seenEdges = new Set<string>();
 
   if (!settings.multiedgeMode) {
     renderedEdges = [];
@@ -856,11 +861,22 @@ function renderEdges(renderer: GraphRenderer) {
   }
 
   for (const e of renderedEdges) {
-    if (nodesToConceal.has(e.split(" ")[0])) continue;
+    const u = e.split(" ")[0];
+    const v = e.split(" ")[1];
 
-    let pt1 = nodeMap.get(e.split(" ")[0])!.pos;
-    let pt2 = nodeMap.get(e.split(" ")[1])!.pos;
+    if (nodesToConceal.has(u)) continue;
+
+    let pt1 = nodeMap.get(u)!.pos;
+    let pt2 = nodeMap.get(v)!.pos;
+
     let toReverse = false;
+
+    const nodePositions = new Array<Vector2D>();
+
+    for (const other_u of nodes) {
+      if (other_u === u || other_u === v) continue;
+      nodePositions.push(nodeMap.get(other_u)!.pos);
+    }
 
     if (e.split(" ")[0] > e.split(" ")[1]) {
       [pt1, pt2] = [pt2, pt1];
@@ -927,6 +943,15 @@ function renderEdges(renderer: GraphRenderer) {
 
     let isSelected = false;
 
+    let idealEdr = getIdealCurvature(edr);
+
+    const hashedEdgeName = [eBase, edr.toString()].join(" ");
+    seenEdges.add(hashedEdgeName);
+
+    if (!edgeCurvatureMap.has(hashedEdgeName)) {
+      edgeCurvatureMap.set(hashedEdgeName, idealEdr);
+    }
+
     if (
       settings.showBridges &&
       bridgeMap !== undefined &&
@@ -947,7 +972,10 @@ function renderEdges(renderer: GraphRenderer) {
         renderer,
         pt1,
         pt2,
-        edr,
+        idealEdr,
+        hashedEdgeName,
+        edgeCurvatureMap,
+        nodePositions,
         thickness,
         finalColor,
         mousePos,
@@ -963,12 +991,14 @@ function renderEdges(renderer: GraphRenderer) {
 
     renderer.setLineDash([]);
 
+    let r = edgeCurvatureMap.get(hashedEdgeName)!;
+
     if (directed) {
       drawArrow(
         renderer,
         pt1,
         pt2,
-        edr,
+        r,
         toReverse,
         thickness,
         nodeRadius,
@@ -985,7 +1015,7 @@ function renderEdges(renderer: GraphRenderer) {
           renderer,
           pt1,
           pt2,
-          edr,
+          r,
           edgeLabels.get(e)!,
           labelReverse,
           settings,
@@ -998,7 +1028,7 @@ function renderEdges(renderer: GraphRenderer) {
             renderer,
             pt1,
             pt2,
-            edr,
+            r,
             edgeLabels.get(e)!,
             labelReverse,
             settings,
@@ -1010,7 +1040,7 @@ function renderEdges(renderer: GraphRenderer) {
             renderer,
             pt1,
             pt2,
-            edr,
+            r,
             edgeLabels.get(e)!,
             labelReverse,
             settings,
@@ -1021,6 +1051,12 @@ function renderEdges(renderer: GraphRenderer) {
       }
     }
   }
+
+  edgeCurvatureMap.forEach((_, e) => {
+    if (!seenEdges.has(e)) {
+      edgeCurvatureMap.delete(e);
+    }
+  });
 }
 
 function eraseAnnotation(

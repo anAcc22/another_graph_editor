@@ -51,11 +51,11 @@ function App() {
     nodeRadius:
       localStorage.getItem("nodeRadius") !== null
         ? Number.parseInt(localStorage.getItem("nodeRadius")!)
-        : 16,
+        : 21,
     fontSize:
       localStorage.getItem("fontSize") !== null
         ? Number.parseInt(localStorage.getItem("fontSize")!)
-        : 10,
+        : 15,
     nodeBorderWidthHalf:
       localStorage.getItem("nodeBorderWidthHalf") !== null
         ? Number.parseFloat(localStorage.getItem("nodeBorderWidthHalf")!)
@@ -67,7 +67,7 @@ function App() {
     edgeLength:
       localStorage.getItem("edgeLength") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLength")!)
-        : 10,
+        : 80,
     edgeLabelSeparation:
       localStorage.getItem("edgeLabelSeparation") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLabelSeparation")!)
@@ -91,7 +91,7 @@ function App() {
     nodeRepulsion:
       localStorage.getItem("nodeRepulsion") !== null
         ? Number.parseFloat(localStorage.getItem("nodeRepulsion")!)
-        : 0.0,
+        : 0.24,
     testCaseBoundingBoxes: true,
     showComponents: false,
     showEBCC: false,

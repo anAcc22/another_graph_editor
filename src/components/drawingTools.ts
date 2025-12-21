@@ -448,6 +448,22 @@ function getPointToLineDist(l1: Vector2D, l2: Vector2D, p: Vector2D): number {
   return Math.abs(cross) / getMagnitude(d);
 }
 
+function isPointProjOutsideLine(
+  l1: Vector2D,
+  l2: Vector2D,
+  p: Vector2D,
+): boolean {
+  const ltop: Vector2D = { x: p.x - l1.x, y: p.y - l1.y };
+  const d: Vector2D = { x: l2.x - l1.x, y: l2.y - l1.y };
+
+  const proj: number = (ltop.x * d.x + ltop.y * d.y) / (d.x * d.x + d.y * d.y);
+
+  if (proj < 0) return true;
+  if (proj > 1) return true;
+
+  return false;
+}
+
 export function drawLine(
   ctx: GraphRenderer,
   u: Vector2D,
@@ -526,6 +542,8 @@ export function drawLine(
 
     if (2 <= i && i <= 9) {
       for (const pos of nodePositions) {
+        if (isPointProjOutsideLine(u, v, pos)) continue;
+
         const dnode: Vector2D = { x: pos.x - p0.x, y: pos.y - p0.y };
         const sign = dbase.x * dnode.y - dbase.y * dnode.x > 0 ? 1 : -1;
 
@@ -558,6 +576,7 @@ export function drawLine(
 
   edgeCurvatureMap.set(edgeStr, r);
 
+  // NOTE: Reset `px` and `py` with the new `r`.
   px = u.y - v.y;
   py = v.x - u.x;
 

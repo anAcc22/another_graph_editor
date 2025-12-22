@@ -155,6 +155,16 @@ export function ModeSettings({ directed, settings, setSettings }: Props) {
           settings={settings}
           setSettings={setSettings}
         />
+
+        <SettingsToggleSection
+          title={settings.language == "en" ? "Edge Physics" : "边物理"}
+          leftLabel={settings.language == "en" ? "Off" : "关闭"}
+          rightLabel={settings.language == "en" ? "On" : "开启"}
+          toggleId={"settingsEdgePhysics"}
+          settingsName={"edgePhysics"}
+          settings={settings}
+          setSettings={setSettings}
+        />
       </div>
     </>
   );

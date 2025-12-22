@@ -107,6 +107,10 @@ function App() {
         : false,
     fixedMode: false,
     multiedgeMode: true,
+    edgePhysics:
+      localStorage.getItem("edgePhysics") !== null
+        ? localStorage.getItem("edgePhysics") == "true"
+        : true,
     settingsFormat:
       localStorage.getItem("settingsFormat") !== null &&
       SettingsFormatList.includes(

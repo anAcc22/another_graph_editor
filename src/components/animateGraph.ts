@@ -247,6 +247,7 @@ let settings: Settings = {
   lockMode: false,
   fixedMode: false,
   multiedgeMode: true,
+  edgePhysics: true,
 };
 
 let lastDeletedNodePos: Vector2D = { x: -1, y: -1 };
@@ -950,6 +951,10 @@ function renderEdges(renderer: GraphRenderer) {
 
     if (!edgeCurvatureMap.has(hashedEdgeName)) {
       edgeCurvatureMap.set(hashedEdgeName, idealEdr);
+    }
+
+    if (!settings.edgePhysics) {
+      nodePositions.length = 0;
     }
 
     if (

@@ -55,6 +55,7 @@ export interface Settings {
   markedNodes: boolean;
   fixedMode: boolean;
   multiedgeMode: boolean;
+  edgePhysics: boolean;
 }
 
 export interface ParsedGraph {

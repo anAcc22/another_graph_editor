@@ -363,7 +363,7 @@ export function GraphCanvas({
                 width="800px"
                 height="800px"
                 viewBox="0 0 100 100"
-                enable-background="new 0 0 100 100"
+                enableBackground="new 0 0 100 100"
                 className="fill-text"
               >
                 <g>

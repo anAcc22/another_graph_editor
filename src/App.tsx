@@ -51,11 +51,11 @@ function App() {
     nodeRadius:
       localStorage.getItem("nodeRadius") !== null
         ? Number.parseInt(localStorage.getItem("nodeRadius")!)
-        : 16,
+        : 21,
     fontSize:
       localStorage.getItem("fontSize") !== null
         ? Number.parseInt(localStorage.getItem("fontSize")!)
-        : 10,
+        : 15,
     nodeBorderWidthHalf:
       localStorage.getItem("nodeBorderWidthHalf") !== null
         ? Number.parseFloat(localStorage.getItem("nodeBorderWidthHalf")!)
@@ -67,11 +67,11 @@ function App() {
     edgeLength:
       localStorage.getItem("edgeLength") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLength")!)
-        : 10,
+        : 80,
     edgeLabelSeparation:
       localStorage.getItem("edgeLabelSeparation") !== null
         ? Number.parseFloat(localStorage.getItem("edgeLabelSeparation")!)
-        : 10,
+        : 14,
     penThickness:
       localStorage.getItem("penThickness") !== null
         ? Number.parseFloat(localStorage.getItem("penThickness")!)
@@ -91,7 +91,7 @@ function App() {
     nodeRepulsion:
       localStorage.getItem("nodeRepulsion") !== null
         ? Number.parseFloat(localStorage.getItem("nodeRepulsion")!)
-        : 0.0,
+        : 0.24,
     testCaseBoundingBoxes: true,
     showComponents: false,
     showEBCC: false,
@@ -107,6 +107,10 @@ function App() {
         : false,
     fixedMode: false,
     multiedgeMode: true,
+    edgePhysics:
+      localStorage.getItem("edgePhysics") !== null
+        ? localStorage.getItem("edgePhysics") == "true"
+        : true,
     settingsFormat:
       localStorage.getItem("settingsFormat") !== null &&
       SettingsFormatList.includes(
@@ -204,6 +208,11 @@ function App() {
               rounded-lg bg-block -left-2 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>22 Dec 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Add edge physics</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>15 Aug 2025</p>
             <ul className="list-disc list-inside">
               <li>Support edge coloring</li>

@@ -96,6 +96,12 @@ export function SettingsToggleSection({
                         newSettings.markedNodes.toString(),
                       );
                     }
+                    if (settingsName === "edgePhysics") {
+                      localStorage.setItem(
+                        "edgePhysics",
+                        newSettings.edgePhysics.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -136,6 +142,12 @@ export function SettingsToggleSection({
                         newSettings.markedNodes.toString(),
                       );
                     }
+                    if (settingsName === "edgePhysics") {
+                      localStorage.setItem(
+                        "edgePhysics",
+                        newSettings.edgePhysics.toString(),
+                      );
+                    }
                     return newSettings;
                   });
                   let checkbox = document.getElementById(
@@ -168,6 +180,12 @@ export function SettingsToggleSection({
                   localStorage.setItem(
                     "markedNodes",
                     newSettings.markedNodes.toString(),
+                  );
+                }
+                if (settingsName === "edgePhysics") {
+                  localStorage.setItem(
+                    "edgePhysics",
+                    newSettings.edgePhysics.toString(),
                   );
                 }
                 return newSettings;

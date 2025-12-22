@@ -1,5 +1,7 @@
 import { Settings } from "../types";
 
+import { clamp } from "./utils";
+
 export interface GraphRenderer {
   // 基础绘制属性
   lineWidth: number;
@@ -211,12 +213,7 @@ export class SVGRenderer implements GraphRenderer {
     this.currentPathClosed = false;
     this.currentPoint = null;
 
-    if (
-      x <= 0 &&
-      y <= 0 &&
-      width >= this.width &&
-      height >= this.height
-    ) {
+    if (x <= 0 && y <= 0 && width >= this.width && height >= this.height) {
       this.currentContent = "";
       return;
     }
@@ -279,20 +276,34 @@ export class SVGRenderer implements GraphRenderer {
     const sweepFlag = counterclockwise ? 0 : 1;
 
     if (fullCircle) {
-      const midAngle = counterclockwise ? startAngle - Math.PI : startAngle + Math.PI;
+      const midAngle = counterclockwise
+        ? startAngle - Math.PI
+        : startAngle + Math.PI;
       const midX = x + radius * Math.cos(midAngle);
       const midY = y + radius * Math.sin(midAngle);
 
-      this.currentPath.push(`A${radius},${radius} 0 1 ${sweepFlag} ${midX},${midY}`);
-      this.currentPath.push(`A${radius},${radius} 0 1 ${sweepFlag} ${startX},${startY}`);
+      this.currentPath.push(
+        `A${radius},${radius} 0 1 ${sweepFlag} ${midX},${midY}`,
+      );
+      this.currentPath.push(
+        `A${radius},${radius} 0 1 ${sweepFlag} ${startX},${startY}`,
+      );
       this.currentPoint = { x: startX, y: startY };
       return;
     }
 
-    const delta = counterclockwise ? startAngle - endAngle : endAngle - startAngle;
-    const largeArc = Math.abs(((delta % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) > Math.PI ? 1 : 0;
+    const delta = counterclockwise
+      ? startAngle - endAngle
+      : endAngle - startAngle;
+    const largeArc =
+      Math.abs(((delta % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) >
+      Math.PI
+        ? 1
+        : 0;
 
-    this.currentPath.push(`A${radius},${radius} 0 ${largeArc} ${sweepFlag} ${endX},${endY}`);
+    this.currentPath.push(
+      `A${radius},${radius} 0 ${largeArc} ${sweepFlag} ${endX},${endY}`,
+    );
     this.currentPoint = { x: endX, y: endY };
   }
 
@@ -332,7 +343,7 @@ export class SVGRenderer implements GraphRenderer {
     const path = this.currentPath.join(" ");
     const attributes = [
       `d="${path}"`,
-      "fill=\"none\"",
+      'fill="none"',
       `stroke="${this.strokeStyle}"`,
       `stroke-width="${this.lineWidth}"`,
       `stroke-linecap="${this.lineCap}"`,
@@ -371,7 +382,11 @@ export class SVGRenderer implements GraphRenderer {
     this.currentPoint = { x, y };
   }
 
-  private pointsEqual(a: { x: number; y: number }, b: { x: number; y: number }, epsilon = 1e-6): boolean {
+  private pointsEqual(
+    a: { x: number; y: number },
+    b: { x: number; y: number },
+    epsilon = 1e-6,
+  ): boolean {
     return Math.abs(a.x - b.x) <= epsilon && Math.abs(a.y - b.y) <= epsilon;
   }
 
@@ -433,26 +448,53 @@ function getPointToLineDist(l1: Vector2D, l2: Vector2D, p: Vector2D): number {
   return Math.abs(cross) / getMagnitude(d);
 }
 
+function isPointProjOutsideLine(
+  l1: Vector2D,
+  l2: Vector2D,
+  p: Vector2D,
+): boolean {
+  const ltop: Vector2D = { x: p.x - l1.x, y: p.y - l1.y };
+  const d: Vector2D = { x: l2.x - l1.x, y: l2.y - l1.y };
+
+  const proj: number = (ltop.x * d.x + ltop.y * d.y) / (d.x * d.x + d.y * d.y);
+
+  if (proj < 0) return true;
+  if (proj > 1) return true;
+
+  return false;
+}
+
 export function drawLine(
   ctx: GraphRenderer,
   u: Vector2D,
   v: Vector2D,
-  r: number,
+  idealR: number,
+  edgeStr: string,
+  edgeCurvatureMap: Map<string, number>,
+  nodePositions: Vector2D[],
   nodeBorderWidthHalf: number,
   edgeColor: string,
   mousePos: Vector2D,
   mouseDetectionThreshold: number = 10,
   ebccEdgeColor: string[] | undefined = undefined,
 ) {
+  const mid = (a: Vector2D, b: Vector2D): Vector2D => ({
+    x: (a.x + b.x) / 2,
+    y: (a.y + b.y) / 2,
+  });
+
+  let r = edgeCurvatureMap.get(edgeStr)!;
+  const flexLimit = 1.5;
+
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  const toFlip = r % 2 == 0;
+  let toFlip = r < 0;
 
-  px *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-  py *= 0.5 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  px *= 0.5 * (toFlip ? -1 : 1) * Math.abs(r);
+  py *= 0.5 * (toFlip ? -1 : 1) * Math.abs(r);
 
-  // NOTE: Split bezier curve into multiple line segments to detect mouse intersection
+  // NOTE: Split bezier curve into multiple line segments to detect mouse intersection.
   const steps = 10;
 
   let p0: Vector2D = u;
@@ -461,6 +503,8 @@ export function drawLine(
   const p0c: Vector2D = { x: u.x + px, y: u.y + py };
   const p1c: Vector2D = { x: v.x + px, y: v.y + py };
   const p2: Vector2D = v;
+
+  const nodeContributionMap = new Map<Vector2D, number>();
 
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
@@ -493,16 +537,56 @@ export function drawLine(
     // ctx.lineTo(p1.x, p1.y);
     // ctx.stroke();
 
+    const midpoint: Vector2D = mid(p0, p1);
+    const dbase: Vector2D = { x: p1.x - p0.x, y: p1.y - p0.y };
+
+    if (2 <= i && i <= 9) {
+      for (const pos of nodePositions) {
+        if (isPointProjOutsideLine(u, v, pos)) continue;
+
+        const dnode: Vector2D = { x: pos.x - p0.x, y: pos.y - p0.y };
+        const sign = dbase.x * dnode.y - dbase.y * dnode.x > 0 ? 1 : -1;
+
+        const distMag = euclidDist(pos, midpoint);
+
+        if (
+          !nodeContributionMap.has(pos) ||
+          distMag < Math.abs(nodeContributionMap.get(pos)!)
+        ) {
+          nodeContributionMap.set(pos, sign * distMag);
+        }
+      }
+    }
+
     if (getPointToLineDist(p0, p1, mousePos) <= mouseDetectionThreshold) {
       intersect = true;
     }
     p0 = p1;
   }
 
+  nodeContributionMap.forEach((v, _) => {
+    let vMag = 100 / Math.pow(Math.abs(v), 1.9);
+    vMag = clamp(vMag, -0.3, 0.3);
+    r += (v > 0 ? -1 : 1) * vMag;
+  });
+
+  r -= (r - idealR) / 10;
+
+  r = clamp(r, idealR - flexLimit, idealR + flexLimit);
+
+  edgeCurvatureMap.set(edgeStr, r);
+
+  // NOTE: Reset `px` and `py` with the new `r`.
+  px = u.y - v.y;
+  py = v.x - u.x;
+
+  toFlip = r < 0;
+
+  px *= 0.5 * (toFlip ? -1 : 1) * Math.abs(r);
+  py *= 0.5 * (toFlip ? -1 : 1) * Math.abs(r);
+
   if (ebccEdgeColor !== undefined) {
     ctx.lineWidth = 2 * nodeBorderWidthHalf;
-
-    const mid = (a: Vector2D, b: Vector2D): Vector2D => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 
     const P0 = u;
     const P1 = { x: u.x + px, y: u.y + py };
@@ -559,10 +643,10 @@ export function drawArrow(
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  const toFlip = r % 2 == 0;
+  const toFlip = r < 0;
 
-  px *= 0.375 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-  py *= 0.375 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  px *= 0.375 * (toFlip ? -1 : 1) * Math.abs(r);
+  py *= 0.375 * (toFlip ? -1 : 1) * Math.abs(r);
 
   ctx.lineWidth = 1.5 * nodeBorderWidthHalf;
 
@@ -644,12 +728,12 @@ export function drawEdgeLabel(
   let px = u.y - v.y;
   let py = v.x - u.x;
 
-  const toFlip = r % 2 == 0;
+  const toFlip = r < 0;
   const bx = px / euclidDist(u, v),
     by = py / euclidDist(u, v);
 
-  px *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
-  py *= 0.37 * (toFlip ? -1 : 1) * Math.floor((r + 1) / 2);
+  px *= 0.37 * (toFlip ? -1 : 1) * Math.abs(r);
+  py *= 0.37 * (toFlip ? -1 : 1) * Math.abs(r);
 
   const mult = toReverse ? -1 : 1;
 
@@ -679,9 +763,8 @@ export function drawCircle(
   nodeBorderWidthHalf: number,
   nodeRadius: number,
   isTransparent: boolean,
-  vbccFillColor: {range: number[], color: string}[] | undefined = undefined,
+  vbccFillColor: { range: number[]; color: string }[] | undefined = undefined,
 ) {
-
   if (vbccFillColor !== undefined) {
     for (const item of vbccFillColor) {
       const [start, end] = item.range;
@@ -705,13 +788,13 @@ export function drawCircle(
       ctx.fill();
       ctx.globalCompositeOperation = "source-over";
     }
-  
+
     ctx.arc(u.x, u.y, nodeRadius - nodeBorderWidthHalf, 0, 2 * Math.PI);
-  
+
     if (!isTransparent) {
       ctx.fill();
     }
-  
+
     ctx.stroke();
   }
 

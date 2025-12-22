@@ -5,6 +5,10 @@ export function randInt(l: number, r: number) {
   return Math.floor(Math.random() * len) + l;
 }
 
+export function clamp(x: number, l: number, r: number) {
+  return Math.max(l, Math.min(x, r));
+}
+
 export function isInteger(s: string) {
   return parseInt(s).toString() === s;
 }
@@ -72,4 +76,12 @@ export function getDefaultGraph() {
     edgeLabels: new Map<string, string>(),
     nodeLabels: new Map<string, string>(),
   };
+}
+
+export function getIdealCurvature(edgeIdx: number) {
+  let ans = Math.floor((edgeIdx + 1) / 2);
+  if (edgeIdx % 2 == 1) {
+    ans *= -1;
+  }
+  return ans;
 }

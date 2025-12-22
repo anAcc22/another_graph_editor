@@ -208,6 +208,11 @@ function App() {
               rounded-lg bg-block -left-2 top-8 w-100 invisible
               group-hover:visible max-h-28 no-scrollbar overflow-scroll"
           >
+            <p>22 Dec 2025</p>
+            <ul className="list-disc list-inside">
+              <li>Add edge physics</li>
+            </ul>
+            <hr className="border-dashed border-border" />
             <p>15 Aug 2025</p>
             <ul className="list-disc list-inside">
               <li>Support edge coloring</li>

@@ -167,6 +167,7 @@ function App() {
         : "",
   });
 
+  // Capture mód: ha a path tartalmazza a getpicturet: data URL-t kérünk a vászontól. *d
   const isCaptureMode = useMemo(
     () =>
       typeof window !== "undefined" &&
@@ -174,6 +175,7 @@ function App() {
     [],
   );
 
+// Amikor elkészült a snapshot, logoljuk és kiírjuk a body-ba ==* PNG data URL-t. *d
   const handleCapture = useCallback((dataUrl: string) => {
     console.log("Captured graph PNG:", dataUrl);
     document.body.innerText = dataUrl;

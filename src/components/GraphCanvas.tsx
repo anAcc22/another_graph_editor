@@ -21,6 +21,8 @@ interface Props {
   directed: boolean;
   settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
+  capture?: boolean;
+  onCapture?: (dataUrl: string) => void;
 }
 
 function oversampleCanvas(
@@ -65,10 +67,41 @@ export function GraphCanvas({
   directed,
   settings,
   setSettings,
+  capture,
+  onCapture,
 }: Props) {
   let refMain = useRef<HTMLCanvasElement>(null);
   let refAnnotation = useRef<HTMLCanvasElement>(null);
   let refIndicator = useRef<HTMLCanvasElement>(null);
+
+  // helper : merge canvases , gives back a PNG-data-URL.
+  const getImageDataUrl = (): string | undefined => {
+    let canvasMain = refMain.current;
+    let canvasAnnotation = refAnnotation.current;
+
+    if (canvasMain === null || canvasAnnotation === null) {
+      console.log("Error: canvas(Main/Annotation) is null!");
+      return;
+    }
+
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+
+    if (ctx === null) {
+      console.log("Error: `ctx` is null!");
+      return;
+    }
+
+    canvas.width = canvasMain.width;
+    canvas.height = canvasMain.height;
+
+    ctx.drawImage(canvasMain, 0, 0);
+    ctx.drawImage(canvasAnnotation, 0, 0);
+
+    const dataURL = canvas.toDataURL("image/png");
+    canvas.remove();
+    return dataURL;
+  };
 
   const downloadImage = (): void => {
     let canvasMain = refMain.current;
@@ -311,6 +344,15 @@ export function GraphCanvas({
   useEffect(() => {
     updateSettings(settings);
   }, [settings]);
+
+  // if capture mode is requested, merged snapshot to the callback.
+  useEffect(() => {
+    if (!capture || !onCapture) return;
+    const dataUrl = getImageDataUrl();
+    if (dataUrl) {
+      onCapture(dataUrl);
+    }
+  }, [capture, onCapture]);
 
   useEffect(() => {
     resizeCanvasMain();

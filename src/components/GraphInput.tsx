@@ -10,6 +10,66 @@ import { isInteger, padNode, randInt, sortNodes } from "./utils";
 
 import { generateRandomGraph, generateRandomNodeLabels } from "./generator";
 
+//  Add helpers  (after imports): parse edges from URL, buil  textarea-cont. d
+interface UrlEdgesResult {
+  edges: Array<[number, number]>;
+  maxNode: number;
+}
+
+function parseEdgesFromUrl(): UrlEdgesResult | undefined {
+  if (typeof window === "undefined") return;
+
+  let paramSource = window.location.search;
+  if (!paramSource && window.location.pathname.includes("getpicture")) {
+    const idx =
+      window.location.pathname.indexOf("getpicture") + "getpicture".length;
+    paramSource = window.location.pathname.substring(idx);
+    if (paramSource.startsWith("/")) paramSource = paramSource.substring(1);
+  }
+
+  const params = new URLSearchParams(
+    paramSource.startsWith("?") ? paramSource : paramSource,
+  );
+  const rawEdges = params.getAll("edges");
+  if (rawEdges.length === 0) return;
+
+  const edges: Array<[number, number]> = [];
+  let maxNode = 0;
+
+  for (const raw of rawEdges) {
+    const match = raw.trim().match(/^(\d+)\s*-\s*(\d+)$/);
+    if (!match) continue;
+    const u = Number.parseInt(match[1], 10);
+    const v = Number.parseInt(match[2], 10);
+    if (u <= 0 || v <= 0) continue;
+    edges.push([u, v]);
+    if (u > maxNode) maxNode = u;
+    if (v > maxNode) maxNode = v;
+  }
+
+  if (edges.length === 0) return;
+  return { edges, maxNode };
+}
+
+function buildEdgesInputFromUrl(parsed: UrlEdgesResult) {
+  const nodesInEdges = new Set<number>();
+  const lines: string[] = [];
+
+  for (const [u, v] of parsed.edges) {
+    nodesInEdges.add(u);
+    nodesInEdges.add(v);
+    lines.push(`${u} ${v}`);
+  }
+
+  for (let i = 1; i <= parsed.maxNode; i++) {
+    if (!nodesInEdges.has(i)) {
+      lines.push(String(i));
+    }
+  }
+
+  return lines.join("\n");
+}
+
 interface Props {
   settings: Settings;
   key: number;
@@ -133,8 +193,22 @@ export function GraphInput({
     }
   };
 
+  //In the useEffect in GraphInput, prefill the edges textarea on first tab * id 0. ()used: the URL params, 
+  // then run the baseic default parser:
   useEffect(() => {
     setTimeout(() => {
+      if (inputId === 0) {
+        const parsedEdges = parseEdgesFromUrl();
+        if (parsedEdges) {
+          const edgesValue = buildEdgesInputFromUrl(parsedEdges);
+          const edgesInput = document.getElementById(
+            "graphInputEdges" + inputId,
+          ) as HTMLTextAreaElement | null;
+          if (edgesInput && edgesInput.value.trim().length === 0) {
+            edgesInput.value = edgesValue;
+          }
+        }
+      }
       processGraphInput();
     }, 100);
   }, []);

@@ -14,7 +14,7 @@ import { SettingsFormatList } from "./types";
 
 import { getDefaultGraph } from "./components/utils";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 function App() {
   const [testCaseNumber, setTestCaseNumber] = useState<number>(0);
@@ -166,6 +166,18 @@ function App() {
         ? localStorage.getItem("randomizerEdgeLabelMax")!
         : "",
   });
+
+  const isCaptureMode = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      window.location.pathname.includes("getpicture"),
+    [],
+  );
+
+  const handleCapture = useCallback((dataUrl: string) => {
+    console.log("Captured graph PNG:", dataUrl);
+    document.body.innerText = dataUrl;
+  }, []);
 
   return (
     <>
@@ -388,6 +400,8 @@ function App() {
             directed={directed}
             settings={settings}
             setSettings={setSettings}
+            capture={isCaptureMode}
+            onCapture={handleCapture}
           />
         </div>
 

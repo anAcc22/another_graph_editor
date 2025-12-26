@@ -4,7 +4,7 @@
   简体中文 | <a href="README.md">English</a>
 </p>
 
-这是一个受 [CS Academy 图形编辑器](https://csacademy.com/app/graph_editor/) 启发的图形编辑器，专为竞赛编程设计。
+这是一个受 [CS Academy 图形编辑器](https://csacademy.com/app/graph_editor/) 启发的图形编辑器，专为 OI 设计。
 
 使用 React、Typescript、Tailwind CSS 和 HTML Canvas 构建。
 
@@ -187,6 +187,18 @@
 ### 外观
 
 除了暗黑/亮色主题，还有多个滑块可以调整节点半径、字体大小等参数。你的设置会在刷新后保存在 `localStorage` 中。
+
+## 部署
+- 下载本项目
+- 切换到项目根目录
+- （可选）默认部署路径为 `/another_graph_editor/`。如果需要可以到 `vite.config.ts` 中修改 `base: "/another_graph_editor/"` 为其他的。
+- 安装依赖并构建：
+  ```bash
+  npm install
+  npm run build
+  ```
+- 构建产物会生成在：`dist/`。
+
 
 ## 致谢
 

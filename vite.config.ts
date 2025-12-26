@@ -13,5 +13,5 @@ export default defineConfig({
       },
     }),
   ],
-  base: "https://anacc22.github.io/another_graph_editor/",
+  base: "/another_graph_editor/",
 });

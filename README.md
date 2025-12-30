@@ -22,7 +22,7 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 - Common input formats:
   - A list of edges `u v [w]`, denoting an edge from node `u` to node `v`, where
   `w` is an optional edge label.
-  - Leetcode-style adjacency list strings such as `[[2,4],[1,3],[2,1],[4,3]]`;
+  - Leetcode-style edge list strings such as `[[2,4],[1,3],[2,1],[4,3]]`;
   ensure that you do **not** put any spaces inside the string.
   - A parent and child array, where `p[i]` and `c[i]` denote an edge from
   node `p[i]` to `c[i]`.
@@ -34,7 +34,7 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 - Dark/light themes
 - Undirected/directed graphs
 - Normal/tree/bipartite modes
-- Lock mode (fix marked nodes in place)
+- Lock mode (fix all nodes in place)
 - Bridges and cut vertices
 - (Strongly-connected) components
 - Minimum spanning tree(s)
@@ -102,41 +102,15 @@ the red circle just below it erases the color of any colored node.
 
 ## Configuration
 
-There are two means of configuration: **General** and **Appearance**, the
-former handles the main "modes" while the latter lets you control how
-the graph is rendered.
+There are three settings panels: **Modes**, **Algos**, and **Appearance**.
+**Modes** configures the main editor behavior, **Algos** lets you select
+an algorithm to display, and **Appearance** controls the renderer.
 
-### General
+### Modes
 
-#### Components
-This mode reveals the connected components of a graph.
+#### Label Offset
 
-> [!NOTE]
-> For directed graphs, **strongly connected components** are displayed.
-
-Components are distinguished via different colors.
-
-#### Bridges and Cut Vertices
-
-A *bridge* is an edge that increases the number of components when removed.
-A *cut vertice* (aka articulation point) is defined similarly.
-
-Bridges are represented with two parallel lines, while cut vertices take
-on a hexagonal shape.
-
-#### Minimum Spanning Tree(s)
-
-If *all* edge weights are provided and they are of numeric value, this mode
-becomes available. MSTs are computed for each component, and edges that
-are part of the MSTs are bolded.
-
-<p align="center">
-    <img src="screenshots/mst.png?" />
-</p>
-
-<p align="center">
-<em>A Minimum Spanning Tree</em>
-</p>
+Allows you to convert between zero and one-indexed seamlessly.
 
 #### Tree Mode
 
@@ -199,22 +173,22 @@ colored (and positioned) differently.
 > [!TIP]
 > If the graph isn't bipartite, this mode becomes unavailable.
 
+#### Grid Mode
+
+Displays the graph in a grid layout.
+
 #### Lock Mode
 
 By default, the graph is in *Force Mode*, where edges hold everything together
 and nodes repel one another, creating a cool space-like effect. To disable
-this behavior, simply toggle *Lock Mode*.
+this behavior and fix all nodes in place, simply toggle *Lock Mode*.
 
 #### Mark/Unmark Nodes on Click
 
 When enabled, you may *mark* a node by clicking it. These nodes have a double
 border.
 
-> [!TIP]
-> If you prefer to color nodes instead, you might want to disable this
-> feature.
-
-#### Fixed Mode
+#### Fixed Mode (Requires Mark/Unmark Nodes on Click)
 
 If you wish to fix *marked nodes* in place, toggle *Fixed Mode*.
 
@@ -224,11 +198,67 @@ This mode allows for multiple edges between two nodes, it's enabled by
 default. When disabled, no matter how many times you enter the same edge,
 only a single one would be registered.
 
+#### Edge Physics
+
+When enabled, nodes exert forces on nearby edges, curving them as a result.
+
+### Algos
+
+#### Components
+
+This mode reveals the connected components of a graph.
+
+> [!NOTE]
+> For directed graphs, **strongly connected components** are displayed.
+
+#### Edge-Biconnected Components
+
+Nodes belonging to the same component share the same color.
+
+#### Vertex-Biconnected Components
+
+Edges belonging to the same component share the same color.
+
+#### Bridges and Cut Vertices
+
+A *bridge* is an edge that increases the number of components when removed.
+A *cut vertex* (aka articulation point) is defined similarly.
+
+Bridges are represented with two parallel lines, while cut vertices take
+on a hexagonal shape.
+
+#### Minimum Spanning Tree(s)
+
+If *all* edge weights are provided and they are of numeric value, this mode
+becomes available. MSTs are computed for each component, and edges that
+are part of the MSTs are bolded.
+
+<p align="center">
+    <img src="screenshots/mst.png?" />
+</p>
+
+<p align="center">
+<em>A Minimum Spanning Tree</em>
+</p>
+
 ### Appearance
 
 In addition to the light/dark themes, there are multiple sliders available
 for altering parameters like the node radius, font size, etc. Your settings
 are saved across refreshes using `localStorage`.
+
+## Deployment
+
+- Download the repository (e.g., using `git clone`).
+- Navigate to the project's root directory.
+- (optional) The default deployment path is `/another_graph_editor/`. If necessary, you can 
+   modify `base: "/another_graph_editor/"` in `vite.config.ts` to something else.
+- Install dependencies and build:
+  ```bash
+  npm install
+  npm run build
+  ```
+- The build will be found in `dist/`.
 
 ## Credits
 

@@ -54,7 +54,7 @@ Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 </p>
 
 <p align="center">
-<em>Leetcode-Style Adjacency Lists Work as Well Under Edges</em>
+<em>Leetcode-Style Edge Lists Work as Well Under Edges</em>
 </p>
 
 > [!NOTE]

@@ -12,47 +12,51 @@ import { generateRandomGraph, generateRandomNodeLabels } from "./generator";
 
 //  Add helpers  (after imports): parse edges from URL, buil  textarea-cont. d
 interface UrlEdgesResult {
-  edges: Array<[number, number]>;
-  maxNode: number;
+  edges: Array<[string, string]>;
+  nodes: string[];
 }
 
 function parseEdgesFromUrl(): UrlEdgesResult | undefined {
   if (typeof window === "undefined") return;
 
-  let paramSource = window.location.search;
-  if (!paramSource && window.location.pathname.includes("getpicture")) {
-    const idx =
-      window.location.pathname.indexOf("getpicture") + "getpicture".length;
-    paramSource = window.location.pathname.substring(idx);
-    if (paramSource.startsWith("/")) paramSource = paramSource.substring(1);
-  }
-
-  const params = new URLSearchParams(
-    paramSource.startsWith("?") ? paramSource : paramSource,
-  );
+  const params = new URLSearchParams(window.location.search);
   const rawEdges = params.getAll("edges");
-  if (rawEdges.length === 0) return;
-
-  const edges: Array<[number, number]> = [];
-  let maxNode = 0;
+  const rawNodes = params.getAll("nodes");
+  const rawCount = params.get("n");
+  // corr: Treat node IDs as strings . (explicit nodes from URL pars)
+  const edges: Array<[string, string]> = [];
+  const nodes = new Set<string>();
 
   for (const raw of rawEdges) {
-    const match = raw.trim().match(/^(\d+)\s*-\s*(\d+)$/);
-    if (!match) continue;
-    const u = Number.parseInt(match[1], 10);
-    const v = Number.parseInt(match[2], 10);
-    if (u <= 0 || v <= 0) continue;
+    // corr: Use "_" as the edge delimiter to avoid conflict ( with negative numbers.)
+    const parts = raw.trim().split("_");
+    if (parts.length !== 2) continue;
+    const [u, v] = parts;
+    if (!u || !v) continue;
     edges.push([u, v]);
-    if (u > maxNode) maxNode = u;
-    if (v > maxNode) maxNode = v;
+    nodes.add(u);
+    nodes.add(v);
   }
 
-  if (edges.length === 0) return;
-  return { edges, maxNode };
+  // corr: Support isolated nodes via explicit "nodes" and "n" params.
+  for (const raw of rawNodes) {
+    for (const token of raw.trim().split(/\s*,\s*|\s+/)) {
+      if (token) nodes.add(token);
+    }
+  }
+
+  const count = rawCount ? Number.parseInt(rawCount, 10) : NaN;
+  if (Number.isInteger(count) && count > 0) {
+    for (let i = 1; i <= count; i++) nodes.add(String(i));
+  }
+
+  if (edges.length === 0 && nodes.size === 0) return;
+  return { edges, nodes: [...nodes] };
 }
 
 function buildEdgesInputFromUrl(parsed: UrlEdgesResult) {
-  const nodesInEdges = new Set<number>();
+  // corr: Add isolated nodes from explicit "nodes"/"n" rather than 1..maxNode. &review 5
+  const nodesInEdges = new Set<string>();
   const lines: string[] = [];
 
   for (const [u, v] of parsed.edges) {
@@ -61,10 +65,8 @@ function buildEdgesInputFromUrl(parsed: UrlEdgesResult) {
     lines.push(`${u} ${v}`);
   }
 
-  for (let i = 1; i <= parsed.maxNode; i++) {
-    if (!nodesInEdges.has(i)) {
-      lines.push(String(i));
-    }
+  for (const node of parsed.nodes) {
+    if (!nodesInEdges.has(node)) lines.push(node);
   }
 
   return lines.join("\n");
@@ -136,6 +138,7 @@ export function GraphInput({
           ) as HTMLTextAreaElement
         ).value,
         inputId,
+        directed,
       );
       if (parsedGraph.status === "BAD") {
         setInputStatus(false);

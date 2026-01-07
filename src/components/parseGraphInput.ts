@@ -165,6 +165,7 @@ export function parseGraphInputEdges(
   input: string,
   nodeLabels: string,
   testCaseNumber: number,
+  directed: boolean,
 ): ParsedGraph {
   const leetcodes = new Array<string[]>();
 
@@ -234,8 +235,10 @@ export function parseGraphInputEdges(
         }
 
         let edgeBase = "";
-
-        if (pu <= pv) {
+        // Keep directed edges ordered; normalize only for undirected graphs. &review 4
+        if (directed) {
+          edgeBase = [pu, pv].join(" ");
+        } else if (pu <= pv) {
           edgeBase = [pu, pv].join(" ");
         } else {
           edgeBase = [pv, pu].join(" ");

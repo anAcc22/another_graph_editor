@@ -167,15 +167,14 @@ function App() {
         : "",
   });
 
-  // Capture mód: ha a path tartalmazza a getpicturet: data URL-t kérünk a vászontól. *d
-  const isCaptureMode = useMemo(
-    () =>
-      typeof window !== "undefined" &&
-      window.location.pathname.includes("getpicture"),
-    [],
-  );
+  // corr: Capture mode from query (?edges=...) instead of getpicture path.
+  const isCaptureMode = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    const params = new URLSearchParams(window.location.search);
+    return params.has("edges");
+  }, []);
 
-// Amikor elkészült a snapshot, logoljuk és kiírjuk a body-ba ==* PNG data URL-t. *d
+// When the snapshot is ready, we log it and write the PNG data URL into the body. *d
   const handleCapture = useCallback((dataUrl: string) => {
     console.log("Captured graph PNG:", dataUrl);
     document.body.innerText = dataUrl;

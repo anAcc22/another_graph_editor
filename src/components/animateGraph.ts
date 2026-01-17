@@ -178,6 +178,13 @@ const FILL_COLORS_DARK = [
 
 const FILL_COLORS_LENGTH = 20;
 
+const MAX_UNDO = 15; // WARN: tweak later if needed (should be ok for now)
+
+let undoStates: ImageData[] = [];
+
+let saveMS = performance.now();
+let undoMS = performance.now();
+
 let prevMS = performance.now();
 let latestColorChangeMS = performance.now();
 
@@ -1278,6 +1285,24 @@ export function animateGraph(
     annotationSecondLastPos = mousePos;
     annotationLastPos = mousePos;
 
+    const curMS = performance.now();
+
+    if (curMS - saveMS >= 250) {
+      const savedState = ctxAnnotation.getImageData(
+        0,
+        0,
+        canvasWidth,
+        canvasHeight,
+      );
+      undoStates.push(savedState);
+
+      if (undoStates.length > MAX_UNDO) {
+        undoStates.shift();
+      }
+
+      saveMS = curMS;
+    }
+
     if (settings.drawMode === "pen") {
       inAnnotation = true;
       inErase = false;
@@ -1315,6 +1340,29 @@ export function animateGraph(
     event.preventDefault();
     inAnnotation = false;
     inErase = false;
+  });
+
+  const undo = () => {
+    if (undoStates.length === 0) return;
+
+    const lastState = undoStates.pop();
+
+    ctxAnnotation.putImageData(lastState as ImageData, 0, 0);
+  };
+
+  window.addEventListener("keydown", (event: KeyboardEvent) => {
+    const isCtrl = event.ctrlKey || event.metaKey;
+    const isZ = event.key.toLowerCase() === "z";
+
+    const curMS = performance.now();
+
+    if (isCtrl && isZ) {
+      if (curMS - undoMS <= 100) return;
+
+      undo();
+
+      undoMS = curMS;
+    }
   });
 
   canvas.addEventListener("pointerdown", (event) => {

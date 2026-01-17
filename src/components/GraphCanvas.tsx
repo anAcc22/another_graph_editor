@@ -318,6 +318,12 @@ export function GraphCanvas({
     resizeCanvasIndicator();
   }, [settings.expandedCanvas]);
 
+  const loseInputFocus = () => {
+    if (document.activeElement instanceof HTMLTextAreaElement) {
+      document.activeElement.blur();
+    }
+  };
+
   return (
     <div className="flex h-screen">
       <div
@@ -568,7 +574,7 @@ export function GraphCanvas({
             </button>
           </div>
         </div>
-        <div className="h-full w-full relative">
+        <div onMouseEnter={loseInputFocus} className="h-full w-full relative">
           <canvas
             ref={refMain}
             className="active:cursor-pointer border-2 border-border

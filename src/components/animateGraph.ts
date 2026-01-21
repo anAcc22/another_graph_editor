@@ -1355,12 +1355,12 @@ export function animateGraph(
     const isZ = event.key.toLowerCase() === "z";
     const inInput = document.activeElement instanceof HTMLTextAreaElement;
 
-    if (inInput) return;
-
-    event.preventDefault();
-    const curMS = performance.now();
-
     if (isCtrl && isZ) {
+      if (inInput) return;
+
+      event.preventDefault();
+      const curMS = performance.now();
+
       if (curMS - undoMS <= 100) return;
 
       undo();

@@ -1353,7 +1353,11 @@ export function animateGraph(
   window.addEventListener("keydown", (event: KeyboardEvent) => {
     const isCtrl = event.ctrlKey || event.metaKey;
     const isZ = event.key.toLowerCase() === "z";
+    const inInput = document.activeElement instanceof HTMLTextAreaElement;
 
+    if (inInput) return;
+
+    event.preventDefault();
     const curMS = performance.now();
 
     if (isCtrl && isZ) {

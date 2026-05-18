@@ -4,64 +4,13 @@
     "installCommand": "pnpm install",
     "outputDirectory": "./dist",
     "rewrites": [
-    // 1. 处理 /another_graph_editor/* 路径（等效 Caddy handle_path）
-    {
-      "source": "/another_graph_editor/*",
-      "destination": "/:splat"
-    },
-    
-    // 2. 静态资源目录
-    {
-      "source": "/assets/*",
-      "destination": "/assets/:splat"
-    },
-    {
-      "source": "/github-mark/*",
-      "destination": "/github-mark/:splat"
-    },
-    
-    // 3. 根目录下所有单个静态文件（精确匹配）
-    {
-      "source": "/favicon.png",
-      "destination": "/favicon.png"
-    },
-    {
-      "source": "/favicon.svg",
-      "destination": "/favicon.svg"
-    },
-    {
-      "source": "/JetBrainsMono-Bold.ttf",
-      "destination": "/JetBrainsMono-Bold.ttf"
-    },
-    {
-      "source": "/JetBrainsMono-Regular.ttf",
-      "destination": "/JetBrainsMono-Regular.ttf"
-    },
-    {
-      "source": "/JetBrainsMono-SemiBold.ttf",
-      "destination": "/JetBrainsMono-SemiBold.ttf"
-    },
-    {
-      "source": "/manifest.webmanifest",
-      "destination": "/manifest.webmanifest"
-    },
-    {
-      "source": "/nodes.svg",
-      "destination": "/nodes.svg"
-    },
-    {
-      "source": "/sw.js",
-      "destination": "/sw.js"
-    },
-    {
-      "source": "/workbox-3e8df8c8.js",
-      "destination": "/workbox-3e8df8c8.js"
-    },
-    
-    // 4. 最后：所有其他路径重写到 index.html（SPA 路由）
-    {
-      "source": "/*",
-      "destination": "/index.html"
-    }
+        {
+        "source": "/*",
+        "destination": "/index.html"
+        },
+        {
+        "source": "/another_graph_editor",
+        "destination": "/"
+        }
     ]
 }

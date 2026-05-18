@@ -5,8 +5,12 @@
     "outputDirectory": "./dist",
     "rewrites": [
         {
-            "source": "/another_graph_editor/*",
-            "destination": "/:splat"
+        "source": "/*",
+        "destination": "/index.html"
+        },
+        {
+        "source": "/another_graph_editor",
+        "destination": "/"
         }
     ]
 }

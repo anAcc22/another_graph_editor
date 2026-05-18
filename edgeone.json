@@ -2,5 +2,11 @@
     "name": "another-graph-editor",
     "buildCommand": "pnpm run build",
     "installCommand": "pnpm install",
-    "outputDirectory": "./dist"
+    "outputDirectory": "./dist",
+    "rewrites": [
+        {
+            "source": "/another_graph_editor/*",
+            "destination": "/:splat"
+        }
+    ]
 }

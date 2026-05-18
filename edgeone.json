@@ -6,10 +6,10 @@
     "rewrites": [
         {
             "source": "/another_graph_editor/*",
-            "destination": "/index.html"
+            "destination": "/*"
         },
         {
-            "source": "/*",
+            "source": "/",
             "destination": "/index.html"
         }
     ]

@@ -6,7 +6,7 @@
     "rewrites": [
         {
             "source": "/another_graph_editor",
-            "destination": "/"
+            "destination": "/another_graph_editor/"
         },
         {
             "source": "/another_graph_editor/*",

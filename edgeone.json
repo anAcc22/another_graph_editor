@@ -1,0 +1,16 @@
+{
+    "name": "another-graph-editor",
+    "buildCommand": "pnpm build",
+    "installCommand": "pnpm install",
+    "outputDirectory": "dist",
+    "rewrites": [
+        {
+            "source": "/another_graph_editor/*",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/*",
+            "destination": "/index.html"
+        }
+    ]
+}

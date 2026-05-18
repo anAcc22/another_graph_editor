@@ -2,15 +2,5 @@
     "name": "another-graph-editor",
     "buildCommand": "pnpm run build",
     "installCommand": "pnpm install",
-    "outputDirectory": "./dist",
-    "rewrites": [
-        {
-            "source": "/another_graph_editor/assets/*",
-            "destination": "/another_graph_editor/assets/:splat"
-        },
-        {
-            "source": "/*",
-            "destination": "/index.html"
-        }
-    ]
+    "outputDirectory": "./dist"
 }

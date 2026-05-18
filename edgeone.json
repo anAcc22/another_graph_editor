@@ -5,7 +5,7 @@
     "outputDirectory": "./dist",
     "rewrites": [
         {
-            "source": "/another_graph_editor/assets/*",
+            "source": "/assets/*",
             "destination": "/another_graph_editor/assets/:splat"
         },
         {

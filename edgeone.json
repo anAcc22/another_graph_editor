@@ -1,6 +1,6 @@
 {
     "name": "another-graph-editor",
-    "buildCommand": "pnpm build",
+    "buildCommand": "pnpm run build",
     "installCommand": "pnpm install",
     "outputDirectory": "dist",
     "rewrites": [

@@ -1,0 +1,15 @@
+# Caddyfile
+:3001 {
+    root * ./dist
+    file_server
+    
+    handle_path /another_graph_editor/* {
+        try_files {path} {path}/ /index.html
+    }
+
+    handle {
+        try_files {path} {path}/ /index.html
+    }
+
+    encode gzip
+}

@@ -255,8 +255,8 @@ are saved across refreshes using `localStorage`.
    modify `base: "/another_graph_editor/"` in `vite.config.ts` to something else.
 - Install dependencies and build:
   ```bash
-  npm install
-  npm run build
+  pnpm install
+  pnpm run build
   ```
 - The build will be found in `dist/`.
 

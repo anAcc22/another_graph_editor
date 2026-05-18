@@ -216,8 +216,8 @@
 - （可选）默认部署路径为 `/another_graph_editor/`。如果需要可以到 `vite.config.ts` 中修改 `base: "/another_graph_editor/"` 为其他的。
 - 安装依赖并构建：
   ```bash
-  npm install
-  npm run build
+  pnpm install
+  pnpm run build
   ```
 - 构建产物会生成在：`dist/`。
 

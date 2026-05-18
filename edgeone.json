@@ -5,8 +5,12 @@
     "outputDirectory": "./dist",
     "rewrites": [
         {
-            "source": "/another_graph_editor/assets/*",
-            "destination": "/assets/:splat"
+            "source": "/another_graph_editor/assets/*.css",
+            "destination": "/assets/:splat.css"
+        },
+        {
+            "source": "/another_graph_editor/assets/*.js",
+            "destination": "/assets/:splat.js"
         }
     ]
 }

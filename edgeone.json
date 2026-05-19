@@ -1,13 +1,6 @@
 {
     "name": "another-graph-editor",
-    "buildCommand": "pnpm run build",
+    "buildCommand": "pnpm run build && sed -i 's/\/another_graph_editor//g' dist/index.html",
     "installCommand": "pnpm install",
-    "outputDirectory": "./dist",
-    "redirects": [
-        {
-            "source": "/another_graph_editor/assets",
-            "destination": "/assets",
-            "statusCode": 301
-        }
-    ]
+    "outputDirectory": "./dist"
 }

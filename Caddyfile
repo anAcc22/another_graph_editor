@@ -3,13 +3,9 @@
     root * ./dist
     file_server
     
-    handle_path /another_graph_editor/* {
-        try_files {path}
+    route {
+        try_files {path} /index.html
     }
 
-    handle {
-        try_files /index.html
-    }
-
-    encode gzip
+    encode gzip zstd
 }

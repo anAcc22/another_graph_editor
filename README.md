@@ -1,44 +1,52 @@
 # Another Graph Editor
 
 <p align="center">
-  简体中文 | <a href="README_en.md">English</a>
+  <a href="README_zh.md">简体中文</a> | English
 </p>
 
-这是一个受 [CS Academy 图形编辑器](https://csacademy.com/app/graph_editor/) 启发的图形编辑器，专为 OI 设计。
+A graph editor inspired by [CS Academy's graph editor](https://csacademy.com/app/graph_editor/),
+designed with competitive programming in mind.
 
-使用 React、Typescript、Tailwind CSS 和 HTML Canvas 构建。
+Made with React, Typescript, Tailwind CSS, and HTML Canvas.
 
 <p align="center">
     <img src="screenshots/main.png?" />
 </p>
 
 <p align="center">
-<em>多连通分量的图的示例</em>
+<em>A Multi-Component Graph</em>
 </p>
 
-## 功能
-- 常见输入格式：
-  - 边列表 `u v w`，表示一条从 $u$ 到 $v$，的边，其中边权是 $w$（可选）。
-  - Leetcode 风格的边列表 `[[u1,v1(,w1],[u2,v2,w2]]`，表示同上。确保字符串内部**不要**包含空格。
-  - 父子数组，其中 `p[i]` 和 `c[i]` 表示从节点 $p_i$ 到 $c_i$ 的边。
-  - 在**节点标签**是点权/标签。`a[i]` 表示点 $i$ 的点权/标签为$a_i$。
-- 标签偏移（用于将零索引输入转换为一索引，反之亦然）
-- 亮/暗色主题
-- 无向图/有向图
-- 树/二分图模式
-- 锁定模式：固定所有点的位置
-- 桥和割点
-- 连通分量
-- 最小生成树
-- 支持重边
-- 支持多组样例
+## Features
+
+- Common input formats:
+  - A list of edges `u v [w]`, denoting an edge from node `u` to node `v`, where
+  `w` is an optional edge label.
+  - Leetcode-style edge list strings such as `[[2,4],[1,3],[2,1],[4,3]]`;
+  ensure that you do **not** put any spaces inside the string.
+  - A parent and child array, where `p[i]` and `c[i]` denote an edge from
+  node `p[i]` to `c[i]`.
+  - Assuming a nonzero number of nodes, you may also label each node. This
+  is useful in scenarios where you are offered an array `a`, where `a[i]`
+  corresponds to the value at node `i` (simply copy and paste the given array into
+  **node labels**).
+- Label offset (to convert a zero-indexed input to one-indexed and vice versa)
+- Dark/light themes
+- Undirected/directed graphs
+- Normal/tree/bipartite modes
+- Lock mode (fix all nodes in place)
+- Bridges and cut vertices
+- (Strongly-connected) components
+- Minimum spanning tree(s)
+- Multi-edge support
+- Multi-testcase support
 
 <p align="center">
     <img src="screenshots/parentChild.png?" />
 </p>
 
 <p align="center">
-<em>父-子输入格式示例</em>
+<em>A Demonstration of the Parent-Child Input Format</em>
 </p>
 
 <p align="center">
@@ -46,186 +54,216 @@
 </p>
 
 <p align="center">
-<em>Leetcode 风格的边列表也可用</em>
+<em>Leetcode-Style Edge Lists Work as Well Under Edges</em>
 </p>
 
 > [!NOTE]
-> *树模式*和*桥*仅适用于无向图。
+> *Tree Mode* and *Bridges* are only available for undirected graphs.
 
-## 使用方法
+## Usage
 
-根据需要调整输入格式，然后开始输入。
+Adjust the input format to your liking and type away!
 
 > [!IMPORTANT]
-> 如果你来自像 [Codeforces](https://codeforces.com/) 这样的OJ，且输入数据包含 `n m`，分别表示顶点数和边数，请在复制样例时**删除**这部分内容。
-> 同样，如果你有一个数组 $p$，其中 $p_i$ 表示 $i$ 的父节点，请确保父节点数组和子节点数组匹配。
+> If you're coming from a platform like [Codeforces](https://codeforces.com/)
+> and the input data contains `n m`, representing the number of vertices and
+> edges respectively, please **omit** it when copy-pasting the test case data.
+> Similarly, if you have an array `p` where `p[i]` represents the parent of `i`,
+> double check that the parent array lines up with the child array.
 
 > [!TIP]
-> 输入 `u` 表示单个点。
+> To enter a single node, enter `u` or `u u`.
 
 > [!TIP]
-> 设置点权/标签时，如果点不需要权/标签，使用 `_` 作为占位符。
+> When entering node labels, if you want to skip over a particular node,
+> use the character '_' as a placeholder.
 
-## 处理多个样例
+## Handling Multiple Testcases/Graphs
 
-点击绿色按钮添加新样例。你可以将样例输入到各各样例中。要删除样例，将鼠标悬停在样例标签上，会显示删除按钮。
-
-> [!CAUTION]
-> 删除样例后，该样例内的所有数据将被删除，请小心操作。
-
-## 节点着色
-
-使用主画布上方的调色板选择颜色，并点击点着色。
+To add a new testcase, click the green button to add a new "tab". You
+may enter each test case into its own separate tab. To delete a tab, hover
+over the desired tab for a moment, and a red cross will show up. Click
+the red cross to delete it.
 
 > [!CAUTION]
-> **二分图模式**产生的颜色将覆盖你染颜色。
+> When you delete a tab, all graph data within that tab will be destroyed,
+> so please proceed with caution.
 
-## 设置
+## Node Coloring
 
-有三个设置面板：**模式**，**算法**，**外观**。分别设置：图与编辑器，显示算法，渲染方式。
+Using the palette situated above the main canvas, you may select a color
+and upon clicking a node, it'll take on your selected color.
 
-### 模式
+> [!CAUTION]
+> Your color will override those produced by *Components* or *Bipartite Mode*.
 
-#### 标签偏移量
+The top leftmost circle in the palette resets the cursor to normal, while
+the red circle just below it erases the color of any colored node.
 
-字面意思。
+## Configuration
 
-#### 树模式
+There are three settings panels: **Modes**, **Algos**, and **Appearance**.
+**Modes** configures the main editor behavior, **Algos** lets you select
+an algorithm to display, and **Appearance** controls the renderer.
 
-在此模式下，输入数据中的**第一个**节点成为根节点。节点根据它们在树层次中的位置进行排列，以便更易于可视化。
+### Modes
+
+#### Label Offset
+
+Allows you to convert between zero and one-indexed seamlessly.
+
+#### Tree Mode
+
+In this mode, the *first* node that appears in the input data becomes the root.
+Nodes are arranged in "layers" according to their position within the tree
+hierarchy, allowing for easier visualization.
 
 <p align="center">
     <img src="screenshots/twoRootBefore.png?" />
 </p>
 
 <p align="center">
-<em>节点1是根节点</em>
+<em>Node 1 is the Original Root</em>
 </p>
 
-要设置某个任意的根节点（例如节点2），在 *根节点* 部分输入 `2`，它就会成为树的根。如果有多个树，只需输入逗号分隔的所有根节点。如果输入的两个节点属于同一棵树，那么输入顺序较前的节点会作为根节点，即若输入 `2 1`，节点2为根；若输入 `1 2`，则节点1为根。
+To set some arbitrary root, say node 2, as the root, under the *Roots*
+section, type `2`, and it'll become the root of the tree. In scenarios where
+you have multiple trees, simply type a comma-separated list of all the roots.
+A caveat is that if you type two nodes that belong to the same tree under
+*Roots*, the one that comes first takes precedence, i.e., if you type
+`2 1`, then node 2 is the root, but if you type `1 2`, then node 1 is the root.
 
 <p align="center">
     <img src="screenshots/twoRootAfter.png?" />
 </p>
 
 <p align="center">
-<em>节点2是新的根节点</em>
+<em>Node 2 is the New Root</em>
 </p>
 
-如果图不是树呢？则会显示 **DFS 树**，其中 *反向边（回边）* 以虚线表示。
+What happens if the graph isn't a tree? Well, the **DFS Tree** would be
+displayed instead, where *back edges* are displayed as dotted lines.
 
 <p align="center">
     <img src="screenshots/dfsTree.png?" />
 </p>
 
 <p align="center">
-<em>显示桥和割点的 DFS 树</em>
+<em>A DFS Tree With Bridges and Cut Vertices Shown</em>
 </p>
 
-#### 二分图模式（仅对二分图有效）
+#### Bipartite Mode
 
-显示二分图。每个不相交的集合中的节点都会被着色和位置得不同。
+Bipartite graphs may also be displayed. Nodes of each disjoint set are
+colored (and positioned) differently.
 
 <p align="center">
     <img src="screenshots/bipartite.png?" />
 </p>
 
 <p align="center">
-<em>二分图示例</em>
+<em>A Bipartite Graph</em>
 </p>
 
 > [!CAUTION]
-> 启用时，*树模式* 和 *连通分量* 会被*关闭*。反过来也是一样，当启用 *树模式* 或 *分量* 时，*二分图模式* 会关闭。
+> When enabled, both *Tree Mode* and *Components* will be *unset*. This works
+> in reverse as well, when either *Tree Mode* or *Components* is set, *Bipartite
+> Mode* will be turned off.
 
 > [!TIP]
-> 如果图不是二分图，则此模式不可用。
+> If the graph isn't bipartite, this mode becomes unavailable.
 
-#### 方格模式
+#### Grid Mode
 
-把图显示为方格。
+Displays the graph in a grid layout.
 
-#### 锁定模式
+#### Lock Mode
 
-固定所有点的位置。
+By default, the graph is in *Force Mode*, where edges hold everything together
+and nodes repel one another, creating a cool space-like effect. To disable
+this behavior and fix all nodes in place, simply toggle *Lock Mode*.
 
-#### 点击时标记节点
+#### Mark/Unmark Nodes on Click
 
-标记点，这些点会有双重边框。
+When enabled, you may *mark* a node by clicking it. These nodes have a double
+border.
 
-#### 固定模式（需要与点击时标记节点同时启用）
+#### Fixed Mode (Requires Mark/Unmark Nodes on Click)
 
-固定标记的点的位置。
+If you wish to fix *marked nodes* in place, toggle *Fixed Mode*.
 
-#### 重边模式
+#### Multiedge Mode
 
-允许重边。
+This mode allows for multiple edges between two nodes, it's enabled by
+default. When disabled, no matter how many times you enter the same edge,
+only a single one would be registered.
 
-#### 边的弯曲效果
+#### Edge Physics
 
-允许边弯曲。
+When enabled, nodes exert forces on nearby edges, curving them as a result.
 
-### 算法
+### Algos
 
-#### 连通分量
+#### Components
 
-此模式显示图的连通分量，通过不同的颜色进行区分
+This mode reveals the connected components of a graph.
 
 > [!NOTE]
-> 对于有向图，显示**强连通分量**。
+> For directed graphs, **strongly connected components** are displayed.
 
-#### 边双联通分量
+#### Edge-Biconnected Components
 
-显示边双联通分量，通过不同的颜色进行区分
+Nodes belonging to the same component share the same color.
 
-#### 点双联通分量
+#### Vertex-Biconnected Components
 
-显示点双联通分量，通过不同的颜色进行区分
+Edges belonging to the same component share the same color.
 
-#### 割点和桥
+#### Bridges and Cut Vertices
 
-显示割点和桥。
+A *bridge* is an edge that increases the number of components when removed.
+A *cut vertex* (aka articulation point) is defined similarly.
 
-**桥**是指移除后会增加图的连通分量的边。**割点**定义类似。
+Bridges are represented with two parallel lines, while cut vertices take
+on a hexagonal shape.
 
-桥接通过两条平行线表示，而割点则采用六边形形状。
+#### Minimum Spanning Tree(s)
 
-#### 最小生成树（森林）
-
-如果提供了**所有**边权且为数值，则此模式可用。对于每个分量，计算最小生成树，最小生成树中的边会加粗显示。
+If *all* edge weights are provided and they are of numeric value, this mode
+becomes available. MSTs are computed for each component, and edges that
+are part of the MSTs are bolded.
 
 <p align="center">
     <img src="screenshots/mst.png?" />
 </p>
 
 <p align="center">
-<em>最小生成树</em>
+<em>A Minimum Spanning Tree</em>
 </p>
 
+### Appearance
 
-#### 重边模式
+In addition to the light/dark themes, there are multiple sliders available
+for altering parameters like the node radius, font size, etc. Your settings
+are saved across refreshes using `localStorage`.
 
-此模式允许在重边，默认启用。当禁用时，不论输入多少次相同的边，只会显示一条。
+## Deployment
 
-### 外观
-
-除了亮/暗色主题，还可以调整节点半径、字体大小等参数。你的设置会在刷新后保存在 `localStorage` 中。
-
-## 部署
-- 下载本项目
-- 切换到项目根目录
-- （可选）默认部署路径为 `/another_graph_editor/`。如果需要可以到 `vite.config.ts` 中修改 `base: "/another_graph_editor/"` 为其他的。
-- 安装依赖并构建：
+- Download the repository (e.g., using `git clone`).
+- Navigate to the project's root directory.
+- (optional) The default deployment path is `/another_graph_editor/`. If necessary, you can 
+   modify `base: "/another_graph_editor/"` in `vite.config.ts` to something else.
+- Install dependencies and build:
   ```bash
-  pnpm install
-  pnpm run build
+  npm install
+  npm run build
   ```
-- 构建产物会生成在：`dist/`。
+- The build will be found in `dist/`.
 
+## Credits
 
-## 致谢
-
-- [CS Academy 的 Graph Editor](https://csacademy.com/app/graph_editor/)
+- [CS Academy's Graph Editor](https://csacademy.com/app/graph_editor/)
 - [Codeforces](https://codeforces.com/)
 - [Atcoder](https://atcoder.jp/)
 - [USACO Guide](https://usaco.guide/)
-- [-is-this-fft- 的 DFS 树博客](https://codeforces.com/blog/entry/68138)
+- [-is-this-fft-'s Blog on the DFS Tree](https://codeforces.com/blog/entry/68138)

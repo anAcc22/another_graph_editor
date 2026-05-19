@@ -1,6 +1,6 @@
 {
     "name": "another-graph-editor",
-    "buildCommand": "pnpm run build && sed -i 's|/another_graph_editor||g' dist/index.html",
+    "buildCommand": "pnpm run build && sed -i 's|/another_graph_editor||g' dist/**/*",
     "installCommand": "pnpm install",
     "outputDirectory": "./dist"
 }

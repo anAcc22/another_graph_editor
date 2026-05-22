@@ -1,0 +1,11 @@
+# Caddyfile
+:3001 {
+    root * ./dist
+    file_server
+    
+    route {
+        try_files {path} /index.html
+    }
+
+    encode gzip zstd
+}

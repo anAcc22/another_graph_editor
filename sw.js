@@ -1,1 +1,25 @@
-if(!self.define){let e,i={};const r=(r,s)=>(r=new URL(r+".js",s).href,i[r]||new Promise(i=>{if("document"in self){const e=document.createElement("script");e.src=r,e.onload=i,document.head.appendChild(e)}else e=r,importScripts(r),i()}).then(()=>{let e=i[r];if(!e)throw new Error(`Module ${r} didn’t register its module`);return e}));self.define=(s,n)=>{const t=e||("document"in self?document.currentScript.src:"")||location.href;if(i[t])return;let o={};const c=e=>r(e,t),d={module:{uri:t},exports:o,require:c};i[t]=Promise.all(s.map(e=>d[e]||c(e))).then(e=>(n(...e),o))}}define(["./workbox-9c191d2f"],function(e){"use strict";self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"nodes.svg",revision:"c6e93bc6ff2df0cabac42cdaa956ee82"},{url:"index.html",revision:"8d2e30c8c7c832a35629b7dcb7dba10c"},{url:"favicon.svg",revision:"873c75ab95787502ad88cfb60e1bf32a"},{url:"favicon.png",revision:"a1972b621c0764db099bddbea5566cd5"},{url:"github-mark/github-mark.svg",revision:"8dcc6b5262f3b6138b1566b357ba89a9"},{url:"github-mark/github-mark.png",revision:"43ce87609eb221d09d4832a9c0e709d0"},{url:"github-mark/github-mark-white.svg",revision:"a0b00583d93c2f7084ad151ee0849934"},{url:"github-mark/github-mark-white.png",revision:"1dee40f2668d5c719eafa2c89296f5e7"},{url:"assets/workbox-window.prod.es5-BqEJf4Xk.js",revision:null},{url:"assets/index-DUvjlM3q.js",revision:null},{url:"assets/index-CKSsZ2Lh.css",revision:null},{url:"manifest.webmanifest",revision:"bf178f14badb571fd0c8d3f753312895"}],{}),e.cleanupOutdatedCaches(),e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL("index.html")))});
+
+self.addEventListener('install', (e) => {
+  self.skipWaiting();
+});
+self.addEventListener('activate', (e) => {
+  self.registration.unregister()
+    .then(() => self.clients.matchAll())
+    .then((clients) => {
+      clients.forEach((client) => {
+        if (client instanceof WindowClient)
+          client.navigate(client.url);
+      });
+      return Promise.resolve();
+    })
+    .then(() => {
+      self.caches.keys().then((cacheNames) => {
+        Promise.all(
+          cacheNames.map((cacheName) => {
+            return self.caches.delete(cacheName);
+          }),
+        );
+      })
+    });
+});
+    
